@@ -34,7 +34,7 @@ header {
     padding: 0 0px;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Memastikan logo, nav, dan tombol order terpisah */
+    justify-content: space-between;
     height: 60px;
 }
 
@@ -94,11 +94,10 @@ nav ul li a.active {
     background-color: #e64a19;
 }
 
-/* Cover / Hero */
 #hero {
-    width: 100%; /* supaya lebar penuh */
+    width: 100%;
     height: 100vh;
-    background: url('Assets/Cover\ Cimol\ Bojot.png') no-repeat center center/cover; /* foto kurang lebar*/
+    background: url('Assets/Cover\ Cimol\ Bojot.png') no-repeat center center/cover; /* foto kurang lebar, ganti??*/
     display: flex;
     align-items: center;
     justify-content: center;
@@ -178,7 +177,6 @@ section h2 {
     color: #555;
 }
 
-/* Lokasi */
 #lokasi iframe {
     width: 100%;
     height: 350px;
@@ -187,7 +185,6 @@ section h2 {
     box-shadow: 0 3px 8px rgb(26 115 232 / 0.2);
 }
 
-/* Kontak */
 #kontak form {
     max-width: 600px;
     margin: 0 auto;

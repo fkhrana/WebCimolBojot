@@ -1,4 +1,3 @@
-// Menyorot link navigasi saat scroll
 const sections = document.querySelectorAll('section');
 const navLinks = document.querySelectorAll('nav ul li a');
 
@@ -17,10 +16,3 @@ function changeActiveLink() {
 
 changeActiveLink();
 window.addEventListener('scroll', changeActiveLink);
-
-// Tangani submit form kontak agar tidak reload halaman
-document.getElementById('contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert('Terima kasih sudah menghubungi kami! Pesan Anda telah diterima.');
-    this.reset();
-});
