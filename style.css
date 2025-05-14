@@ -185,53 +185,10 @@ section h2 {
     box-shadow: 0 3px 8px rgb(26 115 232 / 0.2);
 }
 
-#kontak form {
-    max-width: 600px;
-    margin: 0 auto;
-    background: #f9f9f9;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 3px 12px rgb(26 115 232 / 0.2);
-}
-
 #kontak label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-}
-
-#kontak input,
-#kontak textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    font-family: inherit;
-    resize: vertical;
-    transition: border-color 0.3s ease;
-}
-
-#kontak input:focus,
-#kontak textarea:focus {
-    outline: none;
-    border-color: #1a73e8;
-}
-
-#kontak button {
-    background-color: #1a73e8;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    font-size: 1.1rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#kontak button:hover {
-    background-color: #155ab6;
 }
 
 /* Responsive */
