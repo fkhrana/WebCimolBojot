@@ -102,7 +102,6 @@ section h2 {
     align-items: center;
     justify-content: space-between;
     color: white;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
     padding: 40px 50px 80px 50px; /* Kurangi padding atas dari 80px menjadi 40px */
     max-width: 1300px;
     margin: 0 auto 80px auto;
@@ -116,14 +115,12 @@ section h2 {
 }
 
 #profil h2 {
-    font-size: 3.5rem;
+    font-size: 5.2rem;
     /* Ukuran teks CIMOL BOJOT AA */
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: -35px;
     color: white;
-    /* Ubah warna menjadi putih */
     border-bottom: none;
-    /* Hapus garis bawah */
 }
 
 #profil p {
