@@ -96,16 +96,15 @@ section h2 {
     padding-bottom: 5px;
 }
 
-/* Profil */
 #profil {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     color: white;
-    padding: 40px 50px 80px 50px; /* Kurangi padding atas dari 80px menjadi 40px */
+    padding: 40px 0 80px 50px;
     max-width: 1300px;
-    margin: 0 auto 80px auto;
-    min-height: calc(100vh - 70px);
+    margin: 100px auto 80px auto; /* Tambah margin-top 80px */
+    min-height: auto;
     font-family: 'Jua', sans-serif;
 }
 
@@ -153,10 +152,11 @@ section h2 {
 }
 
 .side-image {
-    width: 300px; /* Perbesar gambar, sebelumnya 200px */
+    width: 380px; /* Perbesar gambar, sebelumnya 200px */
     height: auto; /* Tinggi otomatis agar proporsional */
     display: block; /* Pastikan gambar tidak inline */
     margin-right: 0; /* Menempel ke sisi kanan tanpa batas */
+    margin-top: -65px; /* Geser ke atas sebanyak 20px */
 }
 /* Menu produk */
 #menu .products {
