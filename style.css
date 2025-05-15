@@ -147,17 +147,17 @@ section h2 {
 }
 
 .profil-side-text {
-    text-align: right;
-    /* Teks di kanan */
-    font-size: 1.5rem;
-    font-weight: 600;
+    text-align: right; /* Posisi gambar di kanan */
+    margin-right: 0; /* Pastikan tidak ada margin di sisi kanan */
+    padding-right: 0; /* Pastikan tidak ada padding di sisi kanan */
 }
 
-.profil-side-text p:first-child {
-    font-size: 2rem;
-    /* Ukuran tanda tanya lebih besar */
+.side-image {
+    width: 300px; /* Perbesar gambar, sebelumnya 200px */
+    height: auto; /* Tinggi otomatis agar proporsional */
+    display: block; /* Pastikan gambar tidak inline */
+    margin-right: 0; /* Menempel ke sisi kanan tanpa batas */
 }
-
 /* Menu produk */
 #menu .products {
     display: grid;
@@ -248,9 +248,11 @@ section h2 {
     }
 
     .profil-side-text {
-        text-align: center;
-        transform: none;
-        /* Hilangkan rotasi di layar kecil */
-        margin-top: 20px;
+        text-align: center; /* Gambar di tengah pada layar kecil */
+    }
+
+    .side-image {
+        width: 200px; /* Kurangi ukuran gambar di layar kecil */
+        margin: 20px auto; /* Beri jarak dan pusatkan */
     }
 }
