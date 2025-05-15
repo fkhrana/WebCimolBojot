@@ -1,116 +1,83 @@
-/* Reset dan dasar */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Jua', sans-serif;
     line-height: 1.6;
-    color: #333;
+    background: linear-gradient(to bottom, #C92F28, #880010);
     scroll-behavior: smooth;
 }
 
 a {
     text-decoration: none;
-    color: inherit;
+    color: #FFFFFF;
+    position: relative;
 }
 
-/* Header */
 header {
     position: fixed;
     top: 0;
     width: 100%;
-    background: #C92F28;
     color: #F9F2E3;
     z-index: 1000;
-    box-shadow: 0 2px 8px #b92d2587;
 }
 
 .container {
-    max-width: 1100px;
+    max-width: 1300px;
     margin: 0 auto;
-    padding: 0 0px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 60px;
+    height: 70px;
+    width: 100%;
+    position: relative;
+    /* Tambahkan ini untuk mendukung position: absolute */
+}
+
+.logo {
+    flex: 0 0 auto;
+    transform: translateX(-15px);
+    /* Geser logo ke kiri 10px */
+}
+
+.logo img {
+    height: 100px;
+    width: auto;
 }
 
 nav {
+    flex-grow: 1;
     display: flex;
     justify-content: center;
-    flex: 1;
 }
 
 nav ul {
     list-style: none;
     display: flex;
-    gap: 30px;
-    margin: 0;
-    padding: 0;
-}
-
-.logo img {
-    height: 115px;
-    width: auto;
-    display: block;
+    gap: 60px;
 }
 
 nav ul li {
     font-weight: 600;
 }
 
-nav ul li a {
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
+nav a:hover {
+    color: #F9C468;
 }
 
-nav ul li a:hover,
-nav ul li a.active {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-/* Tombol order di pojok kanan */
 .order-button {
-    position: absolute;
-    right: 20px;
+    flex: 0 0 auto;
+    margin-right: 25px;
     font-weight: 700;
-    background-color: #ff7043;
-    color: white;
-    padding: 10px 18px;
-    border-radius: 8px;
-    border: none;
+    background-color: #F9C468;
+    color: #99000D;
+    padding: 5px 18px;
+    border-radius: 150px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     text-decoration: none;
 }
 
 .order-button:hover {
-    background-color: #e64a19;
-}
-
-#hero {
-    width: 100%;
-    height: 100vh;
-    background: url('Assets/Cover\ Cimol\ Bojot.png') no-repeat center center/cover; /* foto kurang lebar, ganti??*/
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
-}
-
-#hero h1 {
-    font-size: 3rem;
-    max-width: 700px;
-    text-align: center;
-    padding: 20px;
-    border-radius: 10px;
+    background-color: #ffb83d;
+    ;
 }
 
 /* Section */
@@ -130,8 +97,68 @@ section h2 {
 }
 
 /* Profil */
+#profil {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+    padding: 40px 50px 80px 50px; /* Kurangi padding atas dari 80px menjadi 40px */
+    max-width: 1300px;
+    margin: 0 auto 80px auto;
+    min-height: calc(100vh - 70px);
+    font-family: 'Jua', sans-serif;
+}
+
+.profil-content {
+    max-width: 700px;
+    /* Batasi lebar konten utama */
+}
+
+#profil h2 {
+    font-size: 3.5rem;
+    /* Ukuran teks CIMOL BOJOT AA */
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: white;
+    /* Ubah warna menjadi putih */
+    border-bottom: none;
+    /* Hapus garis bawah */
+}
+
 #profil p {
     font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.lihat-menu-button {
+    display: inline-block;
+    font-weight: 700;
+    background-color: #F9C468;
+    /* Warna kuning seperti tombol order */
+    color: #99000D;
+    padding: 10px 25px;
+    border-radius: 150px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    text-shadow: none;
+}
+
+.lihat-menu-button:hover {
+    background-color: #ffb83d;
+}
+
+.profil-side-text {
+    text-align: right;
+    /* Teks di kanan */
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.profil-side-text p:first-child {
+    font-size: 2rem;
+    /* Ukuran tanda tanya lebih besar */
 }
 
 /* Menu produk */
@@ -193,11 +220,6 @@ section h2 {
 
 /* Responsive */
 @media (max-width: 600px) {
-    #hero h1 {
-        font-size: 2rem;
-        padding: 15px;
-    }
-
     nav ul {
         gap: 10px;
     }
@@ -210,5 +232,28 @@ section h2 {
         right: 10px;
         padding: 8px 16px;
         font-size: 0.9rem;
+    }
+
+    #profil {
+        flex-direction: column;
+        /* Susun vertikal di layar kecil */
+        text-align: center;
+        padding: 60px 20px;
+        justify-content: center;
+    }
+
+    #profil h2 {
+        font-size: 2rem;
+    }
+
+    .profil-content {
+        max-width: 100%;
+    }
+
+    .profil-side-text {
+        text-align: center;
+        transform: none;
+        /* Hilangkan rotasi di layar kecil */
+        margin-top: 20px;
     }
 }
