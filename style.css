@@ -10,7 +10,6 @@ body {
     background: linear-gradient(to bottom, #C92F28, #880010, #880010, #C22A25, #880010);
     scroll-behavior: smooth;
     font-weight: 400;
-    /* Pastikan font-weight tidak lebih dari 400 */
     letter-spacing: 1px;
 }
 
@@ -29,20 +28,15 @@ header {
     background: #C92F28;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     display: flex;
-    /* Gunakan flex langsung pada header */
     align-items: center;
     justify-content: space-between;
-    /* Atur posisi logo, nav, dan tombol */
     height: 60px;
-    /* Tinggi header */
     padding: 0 15px;
-    /* Beri padding di sisi kanan dan kiri */
 }
 
 .logo {
     flex: 0 0 auto;
     margin-left: -15px;
-    /* Posisi logo */
     margin-top: 10px;
 }
 
@@ -117,7 +111,7 @@ section h2 {
 
 .profil-content {
     max-width: 700px;
-    margin-top: 90px;
+    margin-top: 65px;
 }
 
 #profil h2 {
@@ -173,9 +167,7 @@ section h2 {
     height: auto;
     position: absolute;
     right: 360px;
-    /* Atur jarak dari sisi kanan */
     top: 80px;
-    /* Atur posisi vertikal */
 }
 
 .side-image-tertiary {
@@ -183,19 +175,14 @@ section h2 {
     height: auto;
     position: absolute;
     right: 380px;
-    /* Atur jarak dari sisi kanan */
     top: 420px;
-    /* Atur posisi vertikal */
 }
 
-/* Section Menu */
 #menu {
     padding: 80px 20px;
     max-width: 1300px;
-    /* Sesuaikan dengan #profil */
     margin: 0 auto 80px auto;
     color: white;
-    /* Warna teks putih agar kontras dengan background */
 }
 
 #menu h2 {
@@ -204,24 +191,19 @@ section h2 {
     margin-top: 10px;
     color: #FFFFFF;
     border-bottom: none;
-    /* Menghilangkan garis bawah */
     display: inline-block;
     padding-bottom: 5px;
     text-align: center;
-    /* Pusatkan judul MENU */
     width: 100%;
-    /* Pastikan lebar penuh untuk centering */
 }
 
-/* 4 Kartu Produk */
 #menu .products {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 kolom sejajar */
-    gap: 0px; /* Ubah gap menjadi 10px */
-    margin-bottom: 40px; /* Jarak ke subjudul */
-    justify-items: center; /* Pusatkan kartu dalam kolom */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0px;
+    margin-bottom: 40px;
+    justify-items: center;
 }
-
 
 .product-card {
     border-radius: 10px;
@@ -261,17 +243,12 @@ section h2 {
     font-size: 1.3rem;
     color: #FFFFFF;
     text-align: left;
-    /* Tetap di kiri */
     margin-bottom: 0px;
     margin-top: 20px;
-    /* Tambahkan margin atas jika perlu */
     padding-left: 210px;
-    /* Tambahkan padding kiri untuk menggeser ke kanan */
     font-family: 'Montserrat', sans-serif;
 }
 
-
-/* 3 Kartu Kustomisasi */
 .customization-options {
     display: flex;
     justify-content: center;
@@ -292,10 +269,8 @@ section h2 {
     margin-bottom: 15px;
 }
 
-/* Kartu BUMBU (Lebih Lebar) */
 .bumbu-card {
     flex: 0 0 400px;
-    /* Lebar lebih besar */
 }
 
 .bumbu-card .options {
@@ -335,10 +310,8 @@ section h2 {
     color: #555;
 }
 
-/* Kartu TOPPING (Lebih Ramping) */
 .topping-card {
     flex: 0 0 200px;
-    /* Lebar lebih kecil */
 }
 
 .topping-card .options {
@@ -355,10 +328,8 @@ section h2 {
     color: #555;
 }
 
-/* Kartu LEVEL KEPEDASAN (Sama seperti BUMBU) */
 .level-card {
     flex: 0 0 200px;
-    /* Lebar sama dengan topping */
 }
 
 .level-card .options {
