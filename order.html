@@ -4,28 +4,84 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cimol Bojot AA</title>
+    <title>Order Cimol Bojot AA</title>
     <link rel="stylesheet" href="style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
-
+<body class="order-page">
     <header>
         <div class="logo">
-            <a href="#"><img src="Assets/Logo Cimolpng.png" alt="Logo Cimol Bojot AA" /></a>
+            <a href="index.html"><img src="Assets/Logo Cimolpng.png" alt="Logo Cimol Bojot AA" /></a>
         </div>
         <nav>
             <ul>
-                <li><a href="#" class="nav-link">BERANDA</a></li>
-                <li><a href="#menu" class="nav-link">MENU</a></li>
-                <li><a href="#lokasi" class="nav-link">CABANG</a></li>
-                <li><a href="#kontak" class="nav-link">KONTAK</a></li>
+                <li><a href="index.html" class="nav-link">BERANDA</a></li>
+                <li><a href="index.html#menu" class="nav-link">MENU</a></li>
+                <li><a href="index.html#lokasi" class="nav-link">CABANG</a></li>
+                <li><a href="index.html#kontak" class="nav-link">KONTAK</a></li>
             </ul>
         </nav>
-        <a href="order.html" class="order-button" target="_blank" rel="noopener">ORDER</a>
+        <a href="#" class="order-button">ORDER</a>
     </header>
+
+    <main class="order-section">
+        <h1>Formulir Pemesanan Cimol Bojot AA</h1>
+        <form class="order-form" action="#" method="POST">
+            <label for="nama">Nama Lengkap:</label>
+            <input type="text" id="nama" name="nama" required>
+
+            <label for="telepon">Nomor Telepon:</label>
+            <input type="tel" id="telepon" name="telepon" required>
+
+            <label for="produk">Pilih Produk:</label>
+            <select id="produk" name="produk" required>
+                <option value="">-- Pilih --</option>
+                <option value="Cimol Original">Cimol Original</option>
+                <option value="Cimol Pedas">Cimol Pedas</option>
+                <option value="Cimol Mozarella">Cimol Mozarella</option>
+            </select>
+
+            <label for="jumlah">Jumlah Porsi:</label>
+            <input type="number" id="jumlah" name="jumlah" min="1" max="100" required>
+
+            <label for="catatan">Catatan Tambahan:</label>
+            <textarea id="catatan" name="catatan" rows="3" placeholder="Contoh: Tidak terlalu pedas"></textarea>
+
+            <button type="submit" class="order-submit-button">Kirim Pesanan</button>
+        </form>
+    </main>
+
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <a href="#"><img src="Assets/logofooter.png" alt="Logo Cimol Bojot AA" /></a>
+            </div>
+            <div class="footer-nav">
+                <ul>
+                    <li><a href="#">BERANDA</a></li>
+                    <li><a href="#menu">MENU</a></li>
+                    <li><a href="#lokasi">CABANG</a></li>
+                    <li><a href="#kontak">KONTAK</a></li>
+                </ul>
+                <h4>#Pedasnyanagih #Gacukupsatu #KreasiAA</h4>
+            </div>
+            <div class="footer-contact">
+                <h4>Kontak Kami</h4>
+                <div class="contact-info">
+                    <p>Telepon: <a href="tel:+62123456789">+62 123 456 789</a></p>
+                    <p>Email: <a href="mailto:info@cimolbojotaa.com">info@cimolbojotaa.com</a></p>
+                </div>
+                <div class="social-links">
+                    <p>Follow us:</p>
+                    <a href="https://instagram.com/cimolbojotaa" target="_blank" rel="noopener">Instagram</a>
+                    <a href="https://facebook.com/cimolbojotaa" target="_blank" rel="noopener">Facebook</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 
 </html>

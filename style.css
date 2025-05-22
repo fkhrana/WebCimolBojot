@@ -11,6 +11,11 @@ body {
     scroll-behavior: smooth;
     font-weight: 400;
     letter-spacing: 1px;
+    overflow-x: hidden;
+}
+
+body.order-page {
+    background: linear-gradient(to bottom,  #C92F28, #880010);
 }
 
 a {
@@ -203,13 +208,13 @@ section h2 {
     gap: 0px;
     margin-bottom: 40px;
     justify-items: center;
-    max-width: 870px; /* Sempitkan lebar grid */
+    max-width: 870px;
     margin-left: auto;
     margin-right: auto;
 }
 
 .product-card {
-    width: 190px; /* Kurangi lebar kartu agar lebih rapat */
+    width: 190px;
     height: 200px;
     perspective: 1000px;
     cursor: pointer;
@@ -455,7 +460,7 @@ section h2 {
     width: 100%;
 }
 
-table{
+table {
     font-family: Montserrat;
     width: 100%;
     border-spacing: 20px;
@@ -463,6 +468,7 @@ table{
     text-align: center;
     font-size: 15px;
     color: #FFFFFF;
+    margin-top: 30px;
 }
 
 td {
@@ -470,7 +476,7 @@ td {
     padding: 0 15px;
 }
 
-td b { 
+td b {
     font-size: 18px;
 
 }
@@ -483,19 +489,22 @@ td b {
     box-shadow: 0 3px 8px rgb(26 115 232 / 0.2);
 }
 
-.loc-content{
+.loc-content {
     font-family: 'Montserrat', sans-serif;
 }
-.loc-content h3{
+
+.loc-content h3 {
     font-weight: bold;
     margin-bottom: 10px;
     line-height: 12px;
 }
-.loc-content p{
+
+.loc-content p {
     font-weight: 400;
     margin-bottom: 10px;
     line-height: 12px;
 }
+
 .gm-style .marker-label {
     padding: 2px 4px;
     border-radius: 4px;
@@ -505,8 +514,448 @@ td b {
     text-align: left;
 }
 
-#kontak label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
+/*KONTAK*/
+#kontak {
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto 80px auto;
+    color: white;
+}
+
+#kontak h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    color: #FFFFFF;
+    border-bottom: none;
+    display: inline-block;
+    padding-bottom: 5px;
+    text-align: center;
+    width: 100%;
+}
+
+#kontak p {
+    text-align: center;
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-size: 1rem;
+    color: #FFFFFF;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 10px;
+    border: 2px solid #F9C468;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: #721414;
+    background-color: #FAF3E3;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffb83d;
+    box-shadow: 0 0 5px rgba(249, 196, 104, 0.5);
+}
+
+.form-group textarea {
+    min-height: 100px;
+}
+
+.submit-button {
+    background-color: #F9C468;
+    color: #99000D;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 150px;
+    font-family: 'Jua', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center;
+}
+
+.submit-button:hover {
+    background-color: #ffb83d;
+}
+
+/*FOOTER*/
+footer {
+    background: #C92F28;
+    color: #FFFFFF;
+    padding: 15px 0 5px 0;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.footer-content {
+    max-width: 1250px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    gap: 10px;
+}
+
+.footer-logo {
+    flex: 0 0 120px;
+    overflow: visible;
+}
+
+.footer-logo img {
+    width: 100%;
+    height: auto;
+}
+
+.footer-nav {
+    flex: 0 0 500px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 175px;
+}
+
+.footer-nav h4 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #F9C468;
+}
+
+.footer-nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.footer-nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: color 0.3s ease;
+}
+
+.footer-nav a:hover {
+    color: #F9C468;
+}
+
+.footer-contact {
+    flex: 0 0 300px;
+    text-align: right;
+}
+
+.footer-contact h4 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #F9C468;
+}
+
+.footer-contact p {
+    font-size: 0.75rem;
+    margin-bottom: 3px;
+}
+
+.footer-contact a {
+    color: #F9C468;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-contact a:hover {
+    color: #ffb83d;
+}
+
+.social-links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
+    margin-top: 3px;
+}
+
+.social-links p {
+    font-size: 0.75rem;
+    margin: 0;
+}
+
+.social-links a {
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-bottom p {
+    font-size: 0.75rem;
+    color: #FFFFFF;
+}
+
+/*ORDER*/
+.order-section {
+    padding: 100px 20px;
+    color: white;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.order-section h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #F9C468;
+    font-family: 'Jua', sans-serif;
+}
+
+.order-form {
+    background: #FAF3E3;
+    color: #721414;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 3px 8px rgb(0 0 0 / 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.order-form label {
+    text-align: left;
+    font-weight: bold;
+}
+
+.order-form input,
+.order-form select,
+.order-form textarea {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.order-form textarea {
+    resize: vertical;
+}
+
+.order-submit-button {
+    background-color: #F9C468;
+    color: #99000D;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.order-submit-button:hover {
+    background-color: #ffb83d;
+}
+
+
+/* responsivitas buat layar yang lebih kecil */
+@media (max-width: 768px) {
+    #profil {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        margin-top: 80px;
+    }
+
+    .profil-content {
+        max-width: 100%;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    #profil h2 {
+        font-size: 3rem;
+        margin-bottom: 0;
+    }
+
+    #profil p {
+        font-size: 1rem;
+        max-width: 100%;
+    }
+
+    .lihat-menu-button {
+        padding: 8px 20px;
+        font-size: 0.9rem;
+    }
+
+    .side-image {
+        width: 100%;
+        max-width: 300px;
+        transform: translateX(0);
+        margin: 20px auto;
+    }
+
+    .side-image-secondary,
+    .side-image-tertiary {
+        display: none;
+    }
+
+    /* Header */
+    header {
+        height: auto;
+        padding: 10px 15px;
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        margin-left: 0;
+        margin-top: 0;
+    }
+
+    .logo img {
+        height: 60px;
+    }
+
+    nav ul {
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    nav ul li {
+        font-size: 0.9rem;
+    }
+
+    .order-button {
+        padding: 5px 15px;
+        font-size: 0.9rem;
+    }
+
+    /* Section Menu */
+    #menu .products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        max-width: 100%;
+    }
+
+    .product-card {
+        width: 150px;
+        height: 160px;
+    }
+
+    .card-front img {
+        height: 110px;
+    }
+
+    .product-info h3,
+    .product-info-back h3 {
+        font-size: 0.8rem;
+    }
+
+    .product-info-back p {
+        font-size: 0.75rem;
+    }
+
+    .subheading {
+        padding-left: 0;
+        text-align: center;
+        font-size: 1.1rem;
+    }
+
+    .customization-options {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .bumbu-card,
+    .topping-card,
+    .level-card {
+        flex: 0 0 100%;
+        max-width: 300px;
+    }
+
+    /* Section Lokasi */
+    table {
+        border-spacing: 10px;
+        font-size: 0.9rem;
+    }
+
+    td {
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    #map {
+        height: 300px;
+    }
+
+    /* Section Kontak */
+    #kontak {
+        padding: 40px 20px;
+    }
+
+    #kontak ul {
+        padding-left: 0;
+        list-style: none;
+        text-align: center;
+    }
+
+    #kontak li {
+        margin-bottom: 10px;
+    }
+
+    /* Footer */
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .footer-logo {
+        flex: 0 0 auto;
+    }
+
+    .footer-nav {
+        flex: 0 0 auto;
+        margin-left: 0;
+    }
+
+    .footer-nav ul {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .footer-contact {
+        flex: 0 0 auto;
+        text-align: center;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
 }
