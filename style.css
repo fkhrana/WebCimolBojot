@@ -180,7 +180,7 @@ section h2 {
 
 #menu {
     padding: 80px 20px;
-    max-width: 1300px;
+    max-width: 1200px;
     margin: 0 auto 80px auto;
     color: white;
 }
@@ -203,29 +203,65 @@ section h2 {
     gap: 0px;
     margin-bottom: 40px;
     justify-items: center;
+    max-width: 870px; /* Sempitkan lebar grid */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .product-card {
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 3px 8px rgb(26 115 232 / 0.2);
-    background: #FAF3E3;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 190px; /* Kurangi lebar kartu agar lebih rapat */
+    height: 200px;
+    perspective: 1000px;
     cursor: pointer;
     text-align: center;
-    width: 250px;
 }
 
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgb(26 115 232 / 0.35);
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+    border-radius: 15px;
+    box-shadow: 0 3px 8px rgb(26 115 232 / 0.2);
 }
 
-.product-card img {
+.product-card:hover .card-inner,
+.product-card:focus-within .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    background: #FAF3E3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-front {
+    transform: rotateY(0deg);
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}
+
+.moza-card .card-back {
+    border: 10px solid #F9C468;
+}
+
+.card-front img {
     margin-top: 15px;
     width: 100%;
     height: 150px;
-    object-fit:contain;
+    object-fit: contain;
 }
 
 .product-info {
@@ -233,9 +269,26 @@ section h2 {
 }
 
 .product-info h3 {
-    font-size: 1.2rem;
-    color: #C92F28;
+    font-size: 0.9rem;
+    color: #721414;
     margin: 0;
+}
+
+.product-info-back {
+    padding: 10px;
+}
+
+.product-info-back h3 {
+    font-size: 0.9rem;
+    color: #721414;
+    margin-bottom: 5px;
+}
+
+.product-info-back p {
+    font-size: 0.85rem;
+    color: #b16500;
+    margin: 5px 0;
+    font-family: 'Montserrat', sans-serif;
 }
 
 /* Subjudul */
@@ -245,7 +298,7 @@ section h2 {
     text-align: left;
     margin-bottom: 0px;
     margin-top: 20px;
-    padding-left: 210px;
+    padding-left: 158px;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -257,7 +310,7 @@ section h2 {
 
 .custom-card {
     background: #FAF3E3;
-    border-radius: 10px;
+    border-radius: 15px;
     box-shadow: 0 3px 8px rgb(26 115 232 / 0.2);
     padding: 20px;
     text-align: center;
@@ -265,7 +318,7 @@ section h2 {
 
 .custom-card h4 {
     font-size: 1.3rem;
-    color: #C92F28;
+    color: #83302E;
     margin-bottom: 15px;
 }
 
@@ -300,14 +353,20 @@ section h2 {
 
 .bumbu-card .option:nth-child(5) {
     grid-area: opt5;
+    width: 195px;
+    justify-self: center;
+    display: block;
+    text-align: center;
 }
 
 .bumbu-card .option {
-    border: 1px solid #C92F28;
-    border-radius: 5px;
+    border: 3px solid #D7681C;
+    border-radius: 15px;
     padding: 5px 10px;
-    font-size: 0.9rem;
-    color: #555;
+    font-size: 0.8rem;
+    color: #721414;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0px;
 }
 
 .topping-card {
@@ -321,11 +380,13 @@ section h2 {
 }
 
 .topping-card .option {
-    border: 1px solid #C92F28;
-    border-radius: 5px;
+    border: 3px solid #D7681C;
+    border-radius: 15px;
     padding: 5px 10px;
-    font-size: 0.9rem;
-    color: #555;
+    font-size: 0.8rem;
+    color: #721414;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0px;
 }
 
 .level-card {
@@ -359,22 +420,89 @@ section h2 {
 
 .level-card .option:nth-child(5) {
     grid-area: opt5;
+    width: 80px;
+    justify-self: center;
+    display: block;
+    text-align: center;
 }
 
 .level-card .option {
-    border: 1px solid #C92F28;
-    border-radius: 5px;
+    border: 3px solid #D7681C;
+    border-radius: 15px;
     padding: 5px 10px;
-    font-size: 0.9rem;
-    color: #555;
+    font-size: 0.8rem;
+    color: #721414;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0px;
 }
 
-#lokasi iframe {
+#lokasi {
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto 80px auto;
+    color: white;
+}
+
+#lokasi h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    color: #FFFFFF;
+    border-bottom: none;
+    display: inline-block;
+    padding-bottom: 5px;
+    text-align: center;
     width: 100%;
-    height: 350px;
+}
+
+table{
+    font-family: Montserrat;
+    width: 100%;
+    border-spacing: 20px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 15px;
+    color: #FFFFFF;
+}
+
+td {
+    width: auto;
+    padding: 0 15px;
+}
+
+td b { 
+    font-size: 18px;
+
+}
+
+#map {
+    width: 100%;
+    height: 500px;
     border: none;
     border-radius: 10px;
     box-shadow: 0 3px 8px rgb(26 115 232 / 0.2);
+}
+
+.loc-content{
+    font-family: 'Montserrat', sans-serif;
+}
+.loc-content h3{
+    font-weight: bold;
+    margin-bottom: 10px;
+    line-height: 12px;
+}
+.loc-content p{
+    font-weight: 400;
+    margin-bottom: 10px;
+    line-height: 12px;
+}
+.gm-style .marker-label {
+    padding: 2px 4px;
+    border-radius: 4px;
+    max-width: 120px;
+    white-space: pre-line;
+    transform: translateX(75px);
+    text-align: left;
 }
 
 #kontak label {
