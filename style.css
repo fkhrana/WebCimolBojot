@@ -163,8 +163,8 @@ section h2 {
     height: auto;
     display: block;
     margin-right: 0;
-    margin-top: -20px;
-    transform: translateX(280px);
+    margin-top: -40px;
+    transform: translateX(200px);
 }
 
 .side-image-secondary {
@@ -181,6 +181,14 @@ section h2 {
     position: absolute;
     right: 380px;
     top: 420px;
+}
+
+.star {
+    width: 50px;
+    height: auto;
+    position: absolute;
+    right: 165px;
+    top: -19px;
 }
 
 #menu {
