@@ -727,7 +727,7 @@ footer {
     color: #FFFFFF;
 }
 
-/*ORDER*/
+/*FORMULIR PEMESANAN*/
 .order-section {
     padding: 100px 20px;
     color: white;
@@ -793,6 +793,8 @@ footer {
     background-color: #ffb83d;
 }
 
+
+/* PILIH MENU*/
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
