@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Order Cimol Bojot AA</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="order-page">
+    <header>
+        <div class="logo">
+            <a href="/"><img src="/Logo Cimolpng.png" alt="Logo Cimol Bojot AA" /></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/" class="nav-link">BERANDA</a></li>
+                <li><a href="/#menu" class="nav-link">MENU</a></li>
+                <li><a href="/#lokasi" class="nav-link">CABANG</a></li>
+                <li><a href="/#kontak" class="nav-link">KONTAK</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="order-button">ORDER</a>
+    </header>
+
+    <main>
+        <form action="detailorder.html" method="POST">
+            <div class="order-section">
+                <h1>PILIH CABANG</h1>
+                <div class="order-form">
+                    <label for="cabang">Pilih Cabang Terdekat</label>
+                    <select id="cabang" name="cabang" required>
+                        <option value="">-- Pilih --</option>
+                        <option value="tebet-timur">Cimol Bojot AA - Tebet Timur</option>
+                        <option value="stasiun-tebet">Cimol Bojot AA - Stasiun Tebet</option>
+                        <option value="tebet-utara">Cimol Bojot AA - Tebet Utara</option>
+                        <option value="tebet-raya">Cimol Bojot AA - Tebet Raya</option>
+                        <option value="tebet-barat">Cimol Bojot AA - Tebet Barat</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="order-section">
+                <h1>PILIH MENU</h1>
+                <div class="menu-grid">
+                    <!-- Card 1: Cimol Isi Mozarella Kecil -->
+                    <div class="menu-card">
+                        <div class="menu-image">
+                            <img src="/cimolmoza.png" alt="Cimol Isi Mozarella" />
+                        </div>
+                        <div class="menu-info">
+                            <h3>CIMOL ISI MOZARELLA</h3>
+                            <p>PORSI KECIL</p>
+                            <p class="price">Rp11.000</p>
+                            <div class="quantity-selector">
+                                <button type="button" class="quantity-btn minus">-</button>
+                                <span class="quantity">0</span>
+                                <button type="button" class="quantity-btn plus">+</button>
+                                <input type="hidden" name="cimol_mozarella_kecil" class="quantity-input" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Cimol Isi Mozarella Besar -->
+                    <div class="menu-card">
+                        <div class="menu-image">
+                            <img src="/cimolmoza.png" alt="Cimol Isi Mozarella" />
+                        </div>
+                        <div class="menu-info">
+                            <h3>CIMOL ISI MOZARELLA</h3>
+                            <p>PORSI BESAR</p>
+                            <p class="price">Rp22.000</p>
+                            <div class="quantity-selector">
+                                <button type="button" class="quantity-btn minus">-</button>
+                                <span class="quantity">0</span>
+                                <button type="button" class="quantity-btn plus">+</button>
+                                <input type="hidden" name="cimol_mozarella_besar" class="quantity-input" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Cimol Bojot Kecil -->
+                    <div class="menu-card">
+                        <div class="menu-image">
+                            <img src="/cimolmoza.png" alt="Cimol Bojot" />
+                        </div>
+                        <div class="menu-info">
+                            <h3>CIMOL BOJOT</h3>
+                            <p>PORSI KECIL</p>
+                            <p class="price">Rp6.000</p>
+                            <div class="quantity-selector">
+                                <button type="button" class="quantity-btn minus">-</button>
+                                <span class="quantity">0</span>
+                                <button type="button" class="quantity-btn plus">+</button>
+                                <input type="hidden" name="cimol_bojot_kecil" class="quantity-input" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Cimol Bojot Besar -->
+                    <div class="menu-card">
+                        <div class="menu-image">
+                            <img src="/cimolmoza.png" alt="Cimol Bojot" />
+                        </div>
+                        <div class="menu-info">
+                            <h3>CIMOL BOJOT</h3>
+                            <p>PORSI BESAR</p>
+                            <p class="price">Rp12.000</p>
+                            <div class="quantity-selector">
+                                <button type="button" class="quantity-btn minus">-</button>
+                                <span class="quantity">0</span>
+                                <button type="button" class="quantity-btn plus">+</button>
+                                <input type="hidden" name="cimol_bojot_besar" class="quantity-input" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Cimol Isi Ayam Kecil -->
+                    <div class="menu-card">
+                        <div class="menu-image">
+                            <img src="/cimolmoza.png" alt="Cimol Isi Ayam" />
+                        </div>
+                        <div class="menu-info">
+                            <h3>CIMOL ISI AYAM</h3>
+                            <p>PORSI KECIL</p>
+                            <p class="price">Rp11.000</p>
+                            <div class="quantity-selector">
+                                <button type="button" class="quantity-btn minus">-</button>
+                                <span class="quantity">0</span>
+                                <button type="button" class="quantity-btn plus">+</button>
+                                <input type="hidden" name="cimol_ayam_kecil" class="quantity-input" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: Cimol Isi Ayam Besar -->
+                    <div class="menu-card">
+                        <div class="menu-image">
+                            <img src="/cimolmoza.png" alt="Cimol Isi Ayam" />
+                        </div>
+                        <div class="menu-info">
+                            <h3>CIMOL ISI AYAM</h3>
+                            <p>PORSI BESAR</p>
+                            <p class="price">Rp22.000</p>
+                            <div class="quantity-selector">
+                                <button type="button" class="quantity-btn minus">-</button>
+                                <span class="quantity">0</span>
+                                <button type="button" class="quantity-btn plus">+</button>
+                                <input type="hidden" name="cimol_ayam_besar" class="quantity-input" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 7: Cimol Isi Beef Kecil -->
+                    <div class="menu-card">
+                        <div class="menu-image">
+                            <img src="/cimolmoza.png" alt="Cimol Isi Beef" />
+                        </div>
+                        <div class="menu-info">
+                            <h3>CIMOL ISI BEEF</h3>
+                            <p>PORSI KECIL</p>
+                            <p class="price">Rp11.000</p>
+                            <div class="quantity-selector">
+                                <button type="button" class="quantity-btn minus">-</button>
+                                <span class="quantity">0</span>
+                                <button type="button" class="quantity-btn plus">+</button>
+                                <input type="hidden" name="cimol_beef_kecil" class="quantity-input" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 8: Cimol Isi Beef Besar -->
+                    <div class="menu-card">
+                        <div class="menu-image">
+                            <img src="/cimolmoza.png" alt="Cimol Isi Beef" />
+                        </div>
+                        <div class="menu-info">
+                            <h3>CIMOL ISI BEEF</h3>
+                            <p>PORSI BESAR</p>
+                            <p class="price">Rp22.000</p>
+                            <div class="quantity-selector">
+                                <button type="button" class="quantity-btn minus">-</button>
+                                <span class="quantity">0</span>
+                                <button type="button" class="quantity-btn plus">+</button>
+                                <input type="hidden" name="cimol_beef_besar" class="quantity-input" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-section">
+                <h1>FORMULIR PEMESANAN</h1>
+                <div class="order-form">
+                    <label for="nama">Nama Lengkap :</label>
+                    <input type="text" id="nama" name="nama" required>
+
+                    <label for="telepon">Nomor Telepon :</label>
+                    <input type="tel" id="telepon" name="telepon" required>
+
+                    <label for="bumbu">Bumbu :</label>
+                    <select id="bumbu" name="bumbu" required>
+                        <option value="">-- Pilih --</option>
+                        <option value="ayam-bawang">Ayam Bawang</option>
+                        <option value="jagung-bakar">Jagung Bakar</option>
+                        <option value="pedas-asin">Pedas Asin</option>
+                        <option value="barbeque">Barbeque</option>
+                        <option value="balado">Balado</option>
+                    </select>
+
+                    <label for="topping">Topping :</label>
+                    <select id="topping" name="topping" required>
+                        <option value="">-- Pilih --</option>
+                        <option value="daun-jeruk">Daun Jeruk</option>
+                        <option value="bawang-goreng">Bawang Goreng</option>
+                    </select>
+
+                    <label for="level">Level Kepedasan :</label>
+                    <select id="level" name="level" required>
+                        <option value="">-- Pilih --</option>
+                        <option value="lv0">Level 0</option>
+                        <option value="lv1">Level 1</option>
+                        <option value="lv2">Level 2</option>
+                        <option value="lv3">Level 3</option>
+                        <option value="extra">Extra</option>
+                    </select>
+
+                    <label for="catatan">Catatan Tambahan:</label>
+                    <textarea id="catatan" name="catatan" rows="3" placeholder="Contoh: Tidak terlalu pedas"></textarea>
+
+                    <button type="submit" class="order-submit-button">Cek Detail Order</button>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <a href="#"><img src="/logofooter.png" alt="Logo Cimol Bojot AA" /></a>
+            </div>
+            <div class="footer-nav">
+                <ul>
+                    <li><a href="#">BERANDA</a></li>
+                    <li><a href="#menu">MENU</a></li>
+                    <li><a href="#lokasi">CABANG</a></li>
+                    <li><a href="#kontak">KONTAK</a></li>
+                </ul>
+                <h4>#Pedasnyanagih #Gacukupsatu #KreasiAA</h4>
+            </div>
+            <div class="footer-contact">
+                <h4>Kontak Kami</h4>
+                <div class="contact-info">
+                    <p>Telepon: <a href="tel:+62123456789">+62 123 456 789</a></p>
+                    <p>Email: <a href="mailto:info@cimolbojotaa.com">info@cimolbojotaa.com</a></p>
+                </div>
+                <div class="social-links">
+                    <p>Follow us:</p>
+                    <a href="https://instagram.com/cimolbojotaa" target="_blank" rel="noopener">Instagram</a>
+                    <a href="https://facebook.com/cimolbojotaa" target="_blank" rel="noopener">Facebook</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.quantity-selector').forEach(selector => {
+            const minusBtn = selector.querySelector('.minus');
+            const plusBtn = selector.querySelector('.plus');
+            const quantitySpan = selector.querySelector('.quantity');
+            const quantityInput = selector.querySelector('.quantity-input');
+            let quantity = 0;
+
+            minusBtn.addEventListener('click', () => {
+                if (quantity > 0) {
+                    quantity--;
+                    quantitySpan.textContent = quantity;
+                    quantityInput.value = quantity;
+                }
+            });
+
+            plusBtn.addEventListener('click', () => {
+                quantity++;
+                quantitySpan.textContent = quantity;
+                quantityInput.value = quantity;
+            });
+        });
+    </script>
+</body>
+
+</html>
