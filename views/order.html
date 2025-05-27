@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 
 <body class="order-page">
@@ -32,13 +33,19 @@
                 <h1>PILIH CABANG</h1>
                 <div class="order-form">
                     <label for="cabang">Pilih Cabang Terdekat</label>
-                    <select id="cabang" name="cabang" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="tebet-timur">Cimol Bojot AA - Tebet Timur</option>
+                    <select 
+                        id="cabang"
+                        name="cabang"
+                        hx-get="/api/cabang"
+                        hx-trigger="load"
+                        required
+                    >
+                        <!-- <option value="">-- Pilih --</option> -->
+                        <!-- <option value="tebet-timur">Cimol Bojot AA - Tebet Timur</option>
                         <option value="stasiun-tebet">Cimol Bojot AA - Stasiun Tebet</option>
                         <option value="tebet-utara">Cimol Bojot AA - Tebet Utara</option>
                         <option value="tebet-raya">Cimol Bojot AA - Tebet Raya</option>
-                        <option value="tebet-barat">Cimol Bojot AA - Tebet Barat</option>
+                        <option value="tebet-barat">Cimol Bojot AA - Tebet Barat</option> -->
                     </select>
                 </div>
             </div>

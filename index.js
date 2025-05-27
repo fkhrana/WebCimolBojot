@@ -48,3 +48,20 @@ app.get("/api/menu", (req, res) => {
 app.listen(3000, () => {
   console.log("Server running at http://localhost:3000");
 });
+
+app.get("/api/cabang", (req, res) => {
+  try {
+    let output = ""
+    const stmt = db.prepare("SELECT * FROM cabang_tbl");
+    const cabang = stmt.all();
+
+    for (let i = 0; i < cabang.length; i++) {
+      const element = cabang[i];
+      output += `<option value="${element["id_cabang"]}">${element["cabang"]}</option>`
+    }
+    console.log(output)
+    res.send(output);
+  } catch (err) {
+    res.status(500).json({ error: "Database error", details: err.message });
+  }
+});
