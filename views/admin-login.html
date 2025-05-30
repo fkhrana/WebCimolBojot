@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login Admin - Cimol Bojot AA</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-login-section {
+            padding: 100px 20px;
+            color: white;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .admin-login-section h1 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #FFFFFF;
+            font-family: 'Jua', sans-serif;
+        }
+
+        .login-container {
+            background: #FAF3E3;
+            color: #721414;
+            max-width: 500px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 3px 8px rgb(0 0 0 / 0.2);
+            text-align: left;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #83302E;
+            margin-bottom: 5px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .form-group input {
+            padding: 10px;
+            font-size: 0.9rem;
+            border: 1px solid #D7681C;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #FFFFFF;
+            color: #721414;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            border-color: #D7681C;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .login-button {
+            background-color: #F9C468;
+            color: #99000D;
+            padding: 12px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 20px auto;
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1.15rem;
+        }
+
+        .login-button:hover {
+            background-color: #ffb83d;
+        }
+
+        .not-admin-link {
+            display: block;
+            text-align: center;
+            margin-top: -10px;
+            font-size: 0.9rem;
+            color: #FAF3E3;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .not-admin-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body class="order-page">
+    <header>
+        <div class="logo">
+            <a href="/"><img src="/Logo Cimolpng.png" alt="Logo Cimol Bojot AA" /></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/" class="nav-link">BERANDA</a></li>
+                <li><a href="/#menu" class="nav-link">MENU</a></li>
+                <li><a href="/#lokasi" class="nav-link">CABANG</a></li>
+                <li><a href="/#kontak" class="nav-link">KONTAK</a></li>
+            </ul>
+        </nav>
+        <a href="/order" class="order-button">ORDER</a>
+    </header>
+
+    <main>
+        <div class="admin-login-section">
+            <h1>LOGIN ADMIN</h1>
+            <div class="login-container">
+                <form class="login-form" action="/admin-login" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username :</label>
+                        <input type="text" id="username" name="username" placeholder="Masukkan username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password :</label>
+                        <input type="password" id="password" name="password" placeholder="Masukkan password" required>
+                    </div>
+                </form>
+            </div>
+            <button type="submit" class="login-button" form="login-form">Login</button>
+            <a href="/" class="not-admin-link">Bukan Admin?</a>
+        </div>
+    </main>
+</body>
+
+</html>

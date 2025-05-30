@@ -34,7 +34,7 @@ function HTMLHandler(req, res, htmlPath) {
 app.get("/", (req, res) => HTMLHandler(req, res, "views/index.html"));
 app.get("/order", (req, res) => HTMLHandler(req, res, "views/order.html"));
 app.get("/detailorder", (req, res) => HTMLHandler(req, res, "views/detailorder.html"));
-app.get("/admin", (req, res) => HTMLHandler(req, res, "views/admin.html"));
+app.get("/admin-login", (req, res) => HTMLHandler(req, res, "views/admin-login.html"));
 
 // Dropdown cabang
 app.get("/api/cabang", (req, res) => {
@@ -176,7 +176,7 @@ app.get("/api/orders/:id", async (req, res) => {
       totalHarga += quantity * item.harga;
 
       return {
-        name: item.menu, // Pastikan ini sesuai dengan kolom 'menu' di menu_tbl
+        name: item.menu,
         quantity,
         harga: item.harga,
         bumbu,

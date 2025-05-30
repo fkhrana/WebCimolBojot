@@ -164,7 +164,7 @@ section h2 {
     display: block;
     margin-right: 0;
     margin-top: -40px;
-    transform: translateX(300px);
+    transform: translateX(200px);
 }
 
 .side-image-secondary {
@@ -606,6 +606,23 @@ td b {
 
 .submit-button:hover {
     background-color: #ffb83d;
+}
+
+
+/*BUTTON ADMIN*/
+.admin-login-button {
+    text-align: right;
+    margin-right: 15px;
+    padding: 25px;
+}
+.admin-login-button img {
+    width: 50px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.admin-login-button img:hover {
+    transform: scale(1.1);
 }
 
 /*FOOTER*/

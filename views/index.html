@@ -150,9 +150,7 @@
 
         <section id="lokasi">
             <h2>CABANG</h2>
-
             <div id="map"></div>
-
             <script>
                 function initMap() {
                     const markers = [
@@ -188,10 +186,7 @@
                         },
                     ];
 
-
-                    const centerMap = { lat: -6.2595139449641595, lng: 106.82381767736972 }
-
-                    //objek peta
+                    const centerMap = { lat: -6.2595139449641595, lng: 106.82381767736972 };
                     const map = new google.maps.Map(document.getElementById('map'), {
                         zoom: 12,
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -206,7 +201,6 @@
 
                     const bounds = new google.maps.LatLngBounds();
 
-                    //loop marker
                     for (let i = 0; i < markers.length; i++) {
                         const marker = new google.maps.Marker({
                             position: { lat: markers[i]['lat'], lng: markers[i]['lng'] },
@@ -225,16 +219,14 @@
                             }
                         });
 
-
                         const infoWindowContent = `
-                            <div class ="loc-content">
+                            <div class="loc-content">
                                 <h3>${markers[i]['locationName']}</h3>
                                 <address>
                                     <p>${markers[i]['address']}</p>
                                 </address>
                             </div>
                         `;
-
 
                         marker.addListener('click', function () {
                             infoWindow.setContent(infoWindowContent);
@@ -246,7 +238,6 @@
                     map.fitBounds(bounds);
                 }
             </script>
-
             <script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
             <table>
                 <tr>
@@ -297,6 +288,13 @@
                 <button type="submit" class="submit-button">KIRIM</button>
             </form>
         </section>
+
+        <!-- Tombol Logo PNG untuk Login Admin -->
+        <div class="admin-login-button">
+            <a href="/admin-login">
+                <img src="/logoadmin.png" alt="Admin Login" />
+            </a>
+        </div>
 
     </main>
 
