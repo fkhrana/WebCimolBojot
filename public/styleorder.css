@@ -1,0 +1,374 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Jua', sans-serif;
+    line-height: 1.6;
+    background: linear-gradient(to bottom, #C92F28, #880010, #880010, #C22A25, #880010);
+    scroll-behavior: smooth;
+    font-weight: 400;
+    letter-spacing: 1px;
+    overflow-x: hidden;
+}
+
+body.order-page {
+    background: linear-gradient(to bottom,  #C92F28, #880010);
+}
+
+a {
+    text-decoration: none;
+    color: #FFFFFF;
+    position: relative;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    color: #F9F2E3;
+    z-index: 1000;
+    background: #C92F28;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 15px;
+}
+
+.logo {
+    flex: 0 0 auto;
+    margin-left: -15px;
+    margin-top: 10px;
+}
+
+.logo img {
+    height: 100px;
+    width: auto;
+}
+
+nav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 60px;
+}
+
+nav ul li {
+    font-weight: 600;
+}
+
+nav a:hover {
+    color: #F9C468;
+}
+
+.order-button {
+    flex: 0 0 auto;
+    margin-right: 15px;
+    font-weight: 700;
+    background-color: #F9C468;
+    color: #99000D;
+    padding: 5px 18px;
+    border-radius: 150px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.order-button:hover {
+    background-color: #ffb83d;
+}
+
+section {
+    padding: 80px 20px;
+    max-width: 900px;
+    margin: 0 auto 80px auto;
+}
+
+section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    color: #C92F28;
+    border-bottom: 3px solid #C92F28;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/*FOOTER*/
+footer {
+    background: #C92F28;
+    color: #FFFFFF;
+    padding: 15px 0 5px 0;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.footer-content {
+    max-width: 1250px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    gap: 10px;
+}
+
+.footer-logo {
+    flex: 0 0 120px;
+    overflow: visible;
+}
+
+.footer-logo img {
+    width: 100%;
+    height: auto;
+}
+
+.footer-nav {
+    flex: 0 0 500px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 175px;
+}
+
+.footer-nav h4 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #F9C468;
+}
+
+.footer-nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.footer-nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: color 0.3s ease;
+}
+
+.footer-nav a:hover {
+    color: #F9C468;
+}
+
+.footer-contact {
+    flex: 0 0 300px;
+    text-align: right;
+}
+
+.footer-contact h4 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #F9C468;
+}
+
+.footer-contact p {
+    font-size: 0.75rem;
+    margin-bottom: 3px;
+}
+
+.footer-contact a {
+    color: #F9C468;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-contact a:hover {
+    color: #ffb83d;
+}
+
+.social-links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
+    margin-top: 3px;
+}
+
+.social-links p {
+    font-size: 0.75rem;
+    margin: 0;
+}
+
+.social-links a {
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-bottom p {
+    font-size: 0.75rem;
+    color: #FFFFFF;
+}
+
+/*FORMULIR PEMESANAN*/
+.order-section {
+    padding: 100px 20px;
+    color: white;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: -150px; /* Jeda antar div */
+}
+
+.order-section:last-child {
+    margin-bottom: 0; /* Hilangkan margin-bottom pada div terakhir */
+}
+
+.order-section h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #F9C468;
+    font-family: 'Jua', sans-serif;
+}
+
+.order-form {
+    background: #FAF3E3;
+    color: #721414;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 3px 8px rgb(0 0 0 / 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.order-form label {
+    text-align: left;
+    font-weight: bold;
+}
+
+.order-form input,
+.order-form select,
+.order-form textarea {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.order-form textarea {
+    resize: vertical;
+}
+
+.order-submit-button {
+    background-color: #F9C468;
+    color: #99000D;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.order-submit-button:hover {
+    background-color: #ffb83d;
+}
+
+
+/* PILIH MENU*/
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.menu-card {
+    background: #FAF3E3;
+    border-radius: 15px;
+    box-shadow: 0 3px 8px rgb(0 0 0 / 0.2);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.menu-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-right: 15px;
+}
+
+.menu-info {
+    flex: 1;
+    color: #721414;
+    font-family: 'Montserrat', sans-serif;
+    text-align: left; /* Membuat teks rata kiri */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.menu-info h3 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    font-family: 'Jua', sans-serif;
+}
+
+.menu-info p {
+    font-size: 0.85rem;
+    margin: 5px 0;
+}
+
+.menu-info .price {
+    font-weight: bold;
+    color: #b16500;
+}
+
+.quantity-selector {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quantity-btn {
+    background-color: #F9C468;
+    color: #99000D;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.quantity-btn:hover {
+    background-color: #ffb83d;
+}
+
+.quantity {
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    color: #721414;
+    min-width: 20px;
+    text-align: center;
+}

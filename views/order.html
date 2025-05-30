@@ -5,9 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Order Cimol Bojot AA</title>
-    <link rel="stylesheet" href="/style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styleorder.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 
@@ -29,27 +29,15 @@
 
     <main>
         <form hx-post="/form/order" method="POST">
+            <!-- Pilih Cabang -->
             <div class="order-section">
                 <h1>PILIH CABANG</h1>
                 <div class="order-form">
                     <label for="cabang">Pilih Cabang Terdekat</label>
-                    <select 
-                        id="cabang"
-                        name="cabang"
-                        hx-get="/api/cabang"
-                        hx-trigger="load"
-                        required
-                    >
-                        <!-- <option value="">-- Pilih --</option> -->
-                        <!-- <option value="tebet-timur">Cimol Bojot AA - Tebet Timur</option>
-                        <option value="stasiun-tebet">Cimol Bojot AA - Stasiun Tebet</option>
-                        <option value="tebet-utara">Cimol Bojot AA - Tebet Utara</option>
-                        <option value="tebet-raya">Cimol Bojot AA - Tebet Raya</option>
-                        <option value="tebet-barat">Cimol Bojot AA - Tebet Barat</option> -->
-                    </select>
+                    <select id="cabang" name="cabang" hx-get="/api/cabang" hx-trigger="load" required></select>
                 </div>
             </div>
-
+            <!-- Pilih Menu -->
             <div class="order-section">
                 <h1>PILIH MENU</h1>
                 <div class="menu-grid">
@@ -66,7 +54,7 @@
                                 <button type="button" class="quantity-btn minus">-</button>
                                 <span class="quantity">0</span>
                                 <button type="button" class="quantity-btn plus">+</button>
-                                <input type="hidden" name="cimol_mozarella_kecil" class="quantity-input" value="0">
+                                <input type="hidden" name="cimol_mozarella_kecil" class="quantity-input" value="0" />
                             </div>
                         </div>
                     </div>
@@ -84,7 +72,7 @@
                                 <button type="button" class="quantity-btn minus">-</button>
                                 <span class="quantity">0</span>
                                 <button type="button" class="quantity-btn plus">+</button>
-                                <input type="hidden" name="cimol_mozarella_besar" class="quantity-input" value="0">
+                                <input type="hidden" name="cimol_mozarella_besar" class="quantity-input" value="0" />
                             </div>
                         </div>
                     </div>
@@ -102,7 +90,7 @@
                                 <button type="button" class="quantity-btn minus">-</button>
                                 <span class="quantity">0</span>
                                 <button type="button" class="quantity-btn plus">+</button>
-                                <input type="hidden" name="cimol_bojot_kecil" class="quantity-input" value="0">
+                                <input type="hidden" name="cimol_bojot_kecil" class="quantity-input" value="0" />
                             </div>
                         </div>
                     </div>
@@ -120,7 +108,7 @@
                                 <button type="button" class="quantity-btn minus">-</button>
                                 <span class="quantity">0</span>
                                 <button type="button" class="quantity-btn plus">+</button>
-                                <input type="hidden" name="cimol_bojot_besar" class="quantity-input" value="0">
+                                <input type="hidden" name="cimol_bojot_besar" class="quantity-input" value="0" />
                             </div>
                         </div>
                     </div>
@@ -138,7 +126,7 @@
                                 <button type="button" class="quantity-btn minus">-</button>
                                 <span class="quantity">0</span>
                                 <button type="button" class="quantity-btn plus">+</button>
-                                <input type="hidden" name="cimol_ayam_kecil" class="quantity-input" value="0">
+                                <input type="hidden" name="cimol_ayam_kecil" class="quantity-input" value="0" />
                             </div>
                         </div>
                     </div>
@@ -156,7 +144,7 @@
                                 <button type="button" class="quantity-btn minus">-</button>
                                 <span class="quantity">0</span>
                                 <button type="button" class="quantity-btn plus">+</button>
-                                <input type="hidden" name="cimol_ayam_besar" class="quantity-input" value="0">
+                                <input type="hidden" name="cimol_ayam_besar" class="quantity-input" value="0" />
                             </div>
                         </div>
                     </div>
@@ -174,7 +162,7 @@
                                 <button type="button" class="quantity-btn minus">-</button>
                                 <span class="quantity">0</span>
                                 <button type="button" class="quantity-btn plus">+</button>
-                                <input type="hidden" name="cimol_beef_kecil" class="quantity-input" value="0">
+                                <input type="hidden" name="cimol_beef_kecil" class="quantity-input" value="0" />
                             </div>
                         </div>
                     </div>
@@ -192,22 +180,20 @@
                                 <button type="button" class="quantity-btn minus">-</button>
                                 <span class="quantity">0</span>
                                 <button type="button" class="quantity-btn plus">+</button>
-                                <input type="hidden" name="cimol_beef_besar" class="quantity-input" value="0">
+                                <input type="hidden" name="cimol_beef_besar" class="quantity-input" value="0" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <!-- Formulir Pemesanan -->
             <div class="order-section">
                 <h1>FORMULIR PEMESANAN</h1>
                 <div class="order-form">
                     <label for="nama">Nama Lengkap :</label>
-                    <input type="text" id="nama" name="nama" required>
-
+                    <input type="text" id="nama" name="nama" required />
                     <label for="telepon">Nomor Telepon :</label>
-                    <input type="tel" id="telepon" name="telepon" required>
-
+                    <input type="tel" id="telepon" name="telepon" required />
                     <label for="bumbu">Bumbu :</label>
                     <select id="bumbu" name="bumbu" required>
                         <option value="">-- Pilih --</option>
@@ -217,14 +203,12 @@
                         <option value="barbeque">Barbeque</option>
                         <option value="balado">Balado</option>
                     </select>
-
                     <label for="topping">Topping :</label>
                     <select id="topping" name="topping" required>
                         <option value="">-- Pilih --</option>
                         <option value="daun-jeruk">Daun Jeruk</option>
                         <option value="bawang-goreng">Bawang Goreng</option>
                     </select>
-
                     <label for="level">Level Kepedasan :</label>
                     <select id="level" name="level" required>
                         <option value="">-- Pilih --</option>
@@ -234,11 +218,11 @@
                         <option value="lv3">Level 3</option>
                         <option value="extra">Extra</option>
                     </select>
-
                     <label for="catatan">Catatan Tambahan:</label>
                     <textarea id="catatan" name="catatan" rows="3" placeholder="Contoh: Tidak terlalu pedas"></textarea>
-
-                    <button type="submit" class="order-submit-button">Cek Detail Order</button>
+                    <button type="submit" class="order-submit-button">
+                        Cek Detail Order
+                    </button>
                 </div>
             </div>
         </form>
@@ -262,7 +246,10 @@
                 <h4>Kontak Kami</h4>
                 <div class="contact-info">
                     <p>Telepon: <a href="tel:+62123456789">+62 123 456 789</a></p>
-                    <p>Email: <a href="mailto:info@cimolbojotaa.com">info@cimolbojotaa.com</a></p>
+                    <p>
+                        Email:
+                        <a href="mailto:info@cimolbojotaa.com">info@cimolbojotaa.com</a>
+                    </p>
                 </div>
                 <div class="social-links">
                     <p>Follow us:</p>
@@ -274,14 +261,14 @@
     </footer>
 
     <script>
-        document.querySelectorAll('.quantity-selector').forEach(selector => {
-            const minusBtn = selector.querySelector('.minus');
-            const plusBtn = selector.querySelector('.plus');
-            const quantitySpan = selector.querySelector('.quantity');
-            const quantityInput = selector.querySelector('.quantity-input');
+        document.querySelectorAll(".quantity-selector").forEach((selector) => {
+            const minusBtn = selector.querySelector(".minus");
+            const plusBtn = selector.querySelector(".plus");
+            const quantitySpan = selector.querySelector(".quantity");
+            const quantityInput = selector.querySelector(".quantity-input");
             let quantity = 0;
 
-            minusBtn.addEventListener('click', () => {
+            minusBtn.addEventListener("click", () => {
                 if (quantity > 0) {
                     quantity--;
                     quantitySpan.textContent = quantity;
@@ -289,11 +276,30 @@
                 }
             });
 
-            plusBtn.addEventListener('click', () => {
+            plusBtn.addEventListener("click", () => {
                 quantity++;
                 quantitySpan.textContent = quantity;
                 quantityInput.value = quantity;
             });
+        });
+
+        // Validasi dan debug form
+        document.querySelector("form").addEventListener("submit", (e) => {
+            console.log("Form submitted");
+            const formData = new FormData(e.target);
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+
+            const quantities = document.querySelectorAll(".quantity-input");
+            let hasQuantity = false;
+            quantities.forEach((input) => {
+                if (parseInt(input.value) > 0) hasQuantity = true;
+            });
+            if (!hasQuantity) {
+                e.preventDefault();
+                alert("Pilih minimal satu menu!");
+            }
         });
     </script>
 </body>
