@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard - Cimol Bojot AA</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(to right, #C92F28, #880010);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            width: 250px;
+            background: #C92F28;
+            color: #FAF3E3;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            height: 100%;
+        }
+
+        .navbar-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .navbar-header img {
+            width: 60px;
+            height: auto;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .navbar-header .title {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .navbar-header .title h1 {
+            font-family: 'Jua', sans-serif;
+            font-size: 1.8rem;
+            margin: 0;
+            color: #F9C468;
+        }
+
+        .navbar-header .title p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            margin: 5px 0 0;
+            color: #FAF3E3;
+        }
+
+        .navbar-divider {
+            width: 80%;
+            height: 2px;
+            background: #AA191C;
+            margin: 10px 0 20px;
+        }
+
+        .navbar ul {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            text-align: center; /* Rata tengah */
+        }
+
+        .navbar ul li {
+            margin: 10px 0;
+        }
+
+        .navbar ul li a {
+            display: block;
+            padding: 10px 0; /* Kurangi padding samping */
+            font-family: 'Montserrat', sans-serif; /* Ganti font */
+            font-size: 1.1rem;
+            color: #FAF3E3;
+            text-decoration: none;
+            transition: color 0.3s, text-decoration 0.3s; /* Transisi teks */
+        }
+
+        .navbar ul li a:hover {
+            color: #F9C468; /* Kuning saat hover */
+            text-decoration: underline; /* Underline saat hover */
+        }
+
+        .navbar ul li a.active {
+            color: #F9C468; /* Kuning untuk aktif */
+            font-weight: bold; /* Bold untuk bedain */
+        }
+
+        .main-content {
+            margin-left: 250px;
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .top-bar {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 2.5px solid #AA191C;
+        }
+
+        .top-bar h2 {
+            font-family: 'Jua', sans-serif;
+            font-size: 1.5rem;
+            color: #FAF3E3;
+            margin: 0;
+        }
+
+        .top-bar .admin-info {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            color: #FAF3E3;
+        }
+
+        .order-container {
+            background: #FAF3E3;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .order-container h3 {
+            font-family: 'Jua', sans-serif;
+            font-size: 1.5rem;
+            color: #721414;
+            margin-bottom: 20px;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order-table th,
+        .order-table td {
+            padding: 10px;
+            text-align: left;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: #721414;
+            border-bottom: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+        }
+
+        .order-table th:not(:last-child),
+        .order-table td:not(:last-child) {
+            border-right: 1px solid #ccc;
+        }
+
+        .order-table th:last-child,
+        .order-table td:last-child {
+            border-right: none;
+        }
+
+        .order-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .order-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .order-details .menu-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .order-details .details {
+            font-size: 0.85rem;
+            color: #83302E;
+        }
+
+        .order-table select {
+            padding: 5px;
+            border: 1px solid #D7681C;
+            border-radius: 5px;
+            font-family: 'Montserrat', sans-serif;
+            background: #FFFFFF;
+            color: #721414;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="navbar-header">
+            <img src="/logofooter.png" alt="Logo Cimol Bojot AA" />
+            <div class="title">
+                <h1>ADMIN</h1>
+                <p>CIMOL BOJOT AA</p>
+            </div>
+        </div>
+        <div class="navbar-divider"></div>
+        <ul>
+            <li><a href="#" class="active">Pesanan</a></li>
+            <li><a href="#">Masukan</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h2>HALO AA!</h2>
+            <div class="admin-info">CIMOL BOJOT AA - TEBET TIMUR</div>
+        </div>
+        <div class="order-container">
+            <h3>DAFTAR PESANAN</h3>
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Nama</th>
+                        <th>Pesanan</th>
+                        <th>Jumlah</th>
+                        <th>Harga</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Budi Santoso</td>
+                        <td>
+                            <div class="order-details">
+                                <div class="menu-name">Cimol Mozzarella Kecil</div>
+                                <div class="details">Bumbu: Ayam Bawang<br>Topping: Daun Jeruk<br>Level: LV1<br>Note: Jangan terlalu pedas</div>
+                            </div>
+                        </td>
+                        <td>2</td>
+                        <td>Rp22.000</td>
+                        <td>
+                            <select>
+                                <option value="menunggu">Menunggu</option>
+                                <option value="diterima">Diterima</option>
+                                <option value="selesai">Selesai</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Ani Lestari</td>
+                        <td>
+                            <div class="order-details">
+                                <div class="menu-name">Cimol Bojot Besar</div>
+                                <div class="details">Bumbu: Barbeque<br>Topping: -<br>Level: LV2<br>Note: -</div>
+                            </div>
+                        </td>
+                        <td>1</td>
+                        <td>Rp12.000</td>
+                        <td>
+                            <select>
+                                <option value="menunggu">Menunggu</option>
+                                <option value="diterima">Diterima</option>
+                                <option value="selesai">Selesai</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

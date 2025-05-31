@@ -35,6 +35,7 @@ app.get("/", (req, res) => HTMLHandler(req, res, "views/index.html"));
 app.get("/order", (req, res) => HTMLHandler(req, res, "views/order.html"));
 app.get("/detailorder", (req, res) => HTMLHandler(req, res, "views/detailorder.html"));
 app.get("/admin-login", (req, res) => HTMLHandler(req, res, "views/admin-login.html"));
+app.get("/admin", (req, res) => HTMLHandler(req, res, "views/admin.html"));
 
 // Dropdown cabang
 app.get("/api/cabang", (req, res) => {
