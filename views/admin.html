@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
     <div class="navbar">
         <div class="navbar-header">
@@ -22,8 +20,8 @@
         </div>
         <div class="navbar-divider"></div>
         <ul>
-            <li><a href="#" class="active">PESANAN</a></li>
-            <li><a href="#">MASUKAN</a></li>
+            <li><a href="/admin" class="active">PESANAN</a></li>
+            <li><a href="/masukan">MASUKAN</a></li>
         </ul>
     </div>
 
@@ -33,61 +31,61 @@
             <div class="admin-info"><b>CIMOL BOJOT AA - TEBET TIMUR</b></div>
         </div>
         <div class="order-container">
-            <table class="order-table">
-                <thead>
-                    <tr>
-                        <th>NO.</th>
-                        <th>NAMA</th>
-                        <th>PESANAN</th>
-                        <th>JUMLAH</th>
-                        <th>HARGA</th>
-                        <th>STATUS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- DATA DUMMY (aslinya nanti diganti sesuai database order) -->
-                    <tr>
-                        <td>1</td>
-                        <td>Budi Santoso</td>
-                        <td>
-                            <div class="order-details">
-                                <div class="menu-name">Cimol Mozzarella Kecil</div>
-                                <div class="details">Bumbu: Ayam Bawang<br>Topping: Daun Jeruk<br>Level: LV1<br>Note: Jangan terlalu pedas</div>
-                            </div>
-                        </td>
-                        <td>2</td>
-                        <td>Rp22.000</td>
-                        <td>
-                            <select>
-                                <option value="menunggu">Menunggu</option>
-                                <option value="diterima">Diterima</option>
-                                <option value="selesai">Selesai</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Ani Lestari</td>
-                        <td>
-                            <div class="order-details">
-                                <div class="menu-name">Cimol Bojot Besar</div>
-                                <div class="details">Bumbu: Barbeque<br>Topping: -<br>Level: LV2<br>Note: -</div>
-                            </div>
-                        </td>
-                        <td>1</td>
-                        <td>Rp12.000</td>
-                        <td>
-                            <select>
-                                <option value="menunggu">Menunggu</option>
-                                <option value="diterima">Diterima</option>
-                                <option value="selesai">Selesai</option>
-                            </select>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="pesanan">
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>NO.</th>
+                            <th>NAMA</th>
+                            <th>PESANAN</th>
+                            <th>JUMLAH</th>
+                            <th>HARGA</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Budi Santoso</td>
+                            <td>
+                                <div class="order-details">
+                                    <div class="menu-name">Cimol Mozzarella Kecil</div>
+                                    <div class="details">Bumbu: Ayam Bawang<br>Topping: Daun Jeruk<br>Level: LV1<br>Note: Jangan terlalu pedas</div>
+                                </div>
+                            </td>
+                            <td>2</td>
+                            <td>Rp22.000</td>
+                            <td>
+                                <select>
+                                    <option value="menunggu">Menunggu</option>
+                                    <option value="diterima">Diterima</option>
+                                    <option value="selesai">Selesai</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Ani Lestari</td>
+                            <td>
+                                <div class="order-details">
+                                    <div class="menu-name">Cimol Bojot Besar</div>
+                                    <div class="details">Bumbu: Barbeque<br>Topping: -<br>Level: LV2<br>Note: -</div>
+                                </div>
+                            </td>
+                            <td>1</td>
+                            <td>Rp12.000</td>
+                            <td>
+                                <select>
+                                    <option value="menunggu">Menunggu</option>
+                                    <option value="diterima">Diterima</option>
+                                    <option value="selesai">Selesai</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>
-
 </html>

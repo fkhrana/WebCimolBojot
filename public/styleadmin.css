@@ -98,6 +98,7 @@ body {
     margin-left: 200px;
     flex-grow: 1;
     padding: 20px;
+    background: transparent;
 }
 
 .top-bar {
@@ -196,4 +197,36 @@ body {
     font-family: 'Montserrat', sans-serif;
     background: #FFFFFF;
     color: #721414;
+}
+
+#masukan {
+    background: transparent;
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 0px 20px 20px 20px;
+}
+
+/* Judul MASUKAN */
+#masukan h3 {
+    font-family: 'Jua', sans-serif;
+    font-size: 2rem;
+    color: #FAF3E3; /* Kontras dengan gradien */
+    margin: 0 0 15px;
+    text-align: left;
+}
+
+#masukan .message-container {
+    background: #FAF3E3;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#masukan .message-container p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: #83302E;
+    margin: 0;
+    font-weight: bold;
 }

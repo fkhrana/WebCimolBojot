@@ -15,7 +15,7 @@ body {
 }
 
 body.order-page {
-    background: linear-gradient(to bottom,  #C92F28, #880010);
+    background: linear-gradient(to bottom, #C92F28, #880010);
 }
 
 a {
@@ -203,25 +203,27 @@ section h2 {
 
 #menu::before,
 #menu::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 40px; /* sesuaikan dengan tinggi gambar pattern */
-  background-image: url('/pattern.png'); /* ganti dengan path file kamu */
-  background-repeat: repeat-x;
-  background-size: contain;
-  z-index: 1;
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    /* sesuaikan dengan tinggi gambar pattern */
+    background-image: url('/pattern.png');
+    /* ganti dengan path file kamu */
+    background-repeat: repeat-x;
+    background-size: contain;
+    z-index: 1;
 }
 
 /* Pattern atas */
 #menu::before {
-  top: 0;
+    top: 0;
 }
 
 /* Pattern bawah */
 #menu::after {
-  bottom: 0;
+    bottom: 0;
 }
 
 #menu h2 {
@@ -337,7 +339,7 @@ section h2 {
     text-align: left;
     margin-bottom: 0px;
     margin-top: 20px;
-    padding-left: 330px;
+    padding-left: 230px;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -589,7 +591,7 @@ td b {
     border-radius: 15px;
     padding: 30px;
     box-shadow: 0 3px 8px rgb(0 0 0 / 0.2);
-    
+
 }
 
 .form-group {
@@ -653,12 +655,14 @@ td b {
     margin-right: 15px;
     padding: 25px;
 }
+
 .admin-login-button img {
     width: 50px;
     height: auto;
     cursor: pointer;
     transition: transform 0.2s;
 }
+
 .admin-login-button img:hover {
     transform: scale(1.1);
 }
@@ -704,7 +708,7 @@ footer {
 .footer-nav h4 {
     font-family: Lucida Handwriting;
     font-size: 1rem;
-    font-weight:lighter;
+    font-weight: lighter;
     margin-bottom: 5px;
     color: #FFFFFF;
 }
@@ -729,7 +733,8 @@ footer {
 }
 
 .footer-nav li:hover {
-    opacity: 70%;;
+    opacity: 70%;
+    ;
 }
 
 .footer-contact {

@@ -227,11 +227,11 @@ footer {
     color: white;
     text-align: center;
     font-family: 'Montserrat', sans-serif;
-    margin-bottom: -150px; /* Jeda antar div */
+    margin-bottom: -150px;
 }
 
 .order-section:last-child {
-    margin-bottom: 0; /* Hilangkan margin-bottom pada div terakhir */
+    margin-bottom: 0;
 }
 
 .order-section h1 {
@@ -318,7 +318,7 @@ footer {
     flex: 1;
     color: #721414;
     font-family: 'Montserrat', sans-serif;
-    text-align: left; /* Membuat teks rata kiri */
+    text-align: left;
     display: flex;
     flex-direction: column;
     justify-content: center;
