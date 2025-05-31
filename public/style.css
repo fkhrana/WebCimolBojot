@@ -193,16 +193,42 @@ section h2 {
 
 #menu {
     padding: 80px 20px;
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto 80px auto;
     color: white;
+    background-color: #FFE2B1;
+    position: relative;
+    overflow: hidden;
+}
+
+#menu::before,
+#menu::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 40px; /* sesuaikan dengan tinggi gambar pattern */
+  background-image: url('/pattern.png'); /* ganti dengan path file kamu */
+  background-repeat: repeat-x;
+  background-size: contain;
+  z-index: 1;
+}
+
+/* Pattern atas */
+#menu::before {
+  top: 0;
+}
+
+/* Pattern bawah */
+#menu::after {
+  bottom: 0;
 }
 
 #menu h2 {
     font-size: 2.5rem;
     margin-bottom: 15px;
     margin-top: 10px;
-    color: #FFFFFF;
+    color: #721414;
     border-bottom: none;
     display: inline-block;
     padding-bottom: 5px;
@@ -307,11 +333,11 @@ section h2 {
 /* Subjudul */
 .subheading {
     font-size: 1.3rem;
-    color: #FFFFFF;
+    color: #721414;
     text-align: left;
     margin-bottom: 0px;
     margin-top: 20px;
-    padding-left: 158px;
+    padding-left: 330px;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -373,7 +399,8 @@ section h2 {
 }
 
 .bumbu-card .option {
-    border: 3px solid #D7681C;
+    border: 3px solid #E49C67;
+    background-color: #FFE2B1;
     border-radius: 15px;
     padding: 5px 10px;
     font-size: 0.8rem;
@@ -393,7 +420,8 @@ section h2 {
 }
 
 .topping-card .option {
-    border: 3px solid #D7681C;
+    border: 3px solid #E49C67;
+    background-color: #FFE2B1;
     border-radius: 15px;
     padding: 5px 10px;
     font-size: 0.8rem;
@@ -440,7 +468,8 @@ section h2 {
 }
 
 .level-card .option {
-    border: 3px solid #D7681C;
+    border: 3px solid #E49C67;
+    background-color: #FFE2B1;
     border-radius: 15px;
     padding: 5px 10px;
     font-size: 0.8rem;
@@ -525,33 +554,42 @@ td b {
 /*KONTAK*/
 #kontak {
     padding: 80px 20px;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto 80px auto;
-    color: white;
+    color: 721414;
+
 }
 
 #kontak h2 {
     font-size: 2.5rem;
-    margin-bottom: 15px;
+    margin-bottom: -15px;
     margin-top: 10px;
-    color: #FFFFFF;
+    color: #FAF3E3;
     border-bottom: none;
     display: inline-block;
-    padding-bottom: 5px;
     text-align: center;
     width: 100%;
 }
 
 #kontak p {
     text-align: center;
+    color: #FAF3E3;
+    margin-bottom: 15px;
+
+
 }
 
 .contact-form {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    background-color: #FFE2B1;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 3px 8px rgb(0 0 0 / 0.2);
+    
 }
 
 .form-group {
@@ -562,7 +600,7 @@ td b {
 
 .form-group label {
     font-size: 1rem;
-    color: #FFFFFF;
+    color: #99000D;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
 }
@@ -570,7 +608,7 @@ td b {
 .form-group input,
 .form-group textarea {
     padding: 10px;
-    border: 2px solid #F9C468;
+    border: 1px solid #F9C468;
     border-radius: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
@@ -664,9 +702,11 @@ footer {
 }
 
 .footer-nav h4 {
+    font-family: Lucida Handwriting;
     font-size: 1rem;
+    font-weight:lighter;
     margin-bottom: 5px;
-    color: #F9C468;
+    color: #FFFFFF;
 }
 
 .footer-nav ul {
@@ -686,6 +726,10 @@ footer {
 
 .footer-nav a:hover {
     color: #F9C468;
+}
+
+.footer-nav li:hover {
+    opacity: 70%;;
 }
 
 .footer-contact {
@@ -818,6 +862,7 @@ footer {
     }
 
     /* Section Menu */
+
     #menu .products {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
