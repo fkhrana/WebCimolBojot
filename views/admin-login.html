@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,6 +7,7 @@
     <link rel="stylesheet" href="/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <style>
         .admin-login-section {
             padding: 100px 20px;
@@ -107,7 +107,7 @@
         .not-admin-link {
             display: block;
             text-align: center;
-            margin-top: -10px;
+            margin-top: 10px;
             font-size: 0.9rem;
             color: #FAF3E3;
             text-decoration: none;
@@ -117,9 +117,16 @@
         .not-admin-link:hover {
             text-decoration: underline;
         }
+
+        .error-message {
+            color: #99000D;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
     </style>
 </head>
-
 <body class="order-page">
     <header>
         <div class="logo">
@@ -140,7 +147,7 @@
         <div class="admin-login-section">
             <h1>LOGIN ADMIN</h1>
             <div class="login-container">
-                <form class="login-form" action="/admin-login" method="POST">
+                <form class="login-form" id="login-form" hx-post="/admin-login" hx-target="#error-message" hx-swap="outerHTML">
                     <div class="form-group">
                         <label for="username">Username :</label>
                         <input type="text" id="username" name="username" placeholder="Masukkan username" required>
@@ -149,12 +156,21 @@
                         <label for="password">Password :</label>
                         <input type="password" id="password" name="password" placeholder="Masukkan password" required>
                     </div>
+                    <div id="error-message"></div>
                 </form>
             </div>
             <button type="submit" class="login-button" form="login-form">Login</button>
             <a href="/" class="not-admin-link">Bukan Admin?</a>
         </div>
     </main>
-</body>
 
+    <script>
+        document.querySelector('#login-form').addEventListener('htmx:afterRequest', (event) => {
+            if (event.detail.xhr.status >= 400) {
+                const response = JSON.parse(event.detail.xhr.responseText);
+                document.getElementById('error-message').innerHTML = `<div class="error-message">${response.error}</div>`;
+            }
+        });
+    </script>
+</body>
 </html>

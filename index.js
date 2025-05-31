@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import express from "express";
 import Database from "better-sqlite3";
+import session from "express-session";
 
 const app = express();
 const db = new Database("./cimol.db");
@@ -14,18 +15,40 @@ const PORT = 3000;
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(
+  session({
+    secret: "cimolbojotaa_secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+  })
+);
+
+// Middleware untuk memeriksa apakah pengguna sudah login
+function requireLogin(req, res, next) {
+  if (!req.session.adminId) {
+    res.setHeader("HX-Redirect", "/admin-login");
+    return res.status(401).send();
+  }
+  next();
+}
 
 // Handler untuk file HTML
-function HTMLHandler(req, res, htmlPath) {
+function HTMLHandler(req, res, htmlPath, data = {}) {
   const filePath = path.join(__dirname, htmlPath);
-  fs.readFile(filePath, (err, content) => {
+  fs.readFile(filePath, "utf8", (err, content) => {
     if (err) {
       console.error("Error reading file:", err.message);
       res.writeHead(500);
       res.end("Could not read file");
     } else {
+      // Ganti placeholder dengan data dinamis
+      let modifiedContent = content;
+      for (const [key, value] of Object.entries(data)) {
+        modifiedContent = modifiedContent.replace(`{{${key}}}`, value);
+      }
       res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(content);
+      res.end(modifiedContent);
     }
   });
 }
@@ -35,10 +58,60 @@ app.get("/", (req, res) => HTMLHandler(req, res, "views/index.html"));
 app.get("/order", (req, res) => HTMLHandler(req, res, "views/order.html"));
 app.get("/detailorder", (req, res) => HTMLHandler(req, res, "views/detailorder.html"));
 app.get("/admin-login", (req, res) => HTMLHandler(req, res, "views/admin-login.html"));
-app.get("/admin", (req, res) => HTMLHandler(req, res, "views/admin.html"));
-app.get("/masukan", (req, res) => HTMLHandler(req, res, "views/masukan.html"));
+app.get("/admin", requireLogin, (req, res) => {
+  try {
+    const stmt = db.prepare("SELECT cabang FROM cabang_tbl WHERE kode_cabang = ?");
+    const cabang = stmt.get(req.session.kode_cabang);
+    const cabangName = cabang ? cabang.cabang : "Cabang Tidak Diketahui";
+    HTMLHandler(req, res, "views/admin.html", { cabangName: `CIMOL BOJOT AA - ${cabangName.toUpperCase()}` });
+  } catch (err) {
+    console.error("Error fetching cabang:", err.message);
+    res.status(500).send("Error fetching cabang");
+  }
+});
+app.get("/masukan", requireLogin, (req, res) => {
+  try {
+    const stmt = db.prepare("SELECT cabang FROM cabang_tbl WHERE kode_cabang = ?");
+    const cabang = stmt.get(req.session.kode_cabang);
+    const cabangName = cabang ? cabang.cabang : "Cabang Tidak Diketahui";
+    HTMLHandler(req, res, "views/masukan.html", { cabangName: `CIMOL BOJOT AA - ${cabangName.toUpperCase()}` });
+  } catch (err) {
+    console.error("Error fetching cabang:", err.message);
+    res.status(500).send("Error fetching cabang");
+  }
+});
 
-// Dropdown cabang
+// Endpoint untuk login admin
+app.post("/admin-login", (req, res) => {
+  console.log("POST /admin-login received:", req.body);
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ error: "Username dan password wajib diisi" });
+    }
+
+    const stmt = db.prepare("SELECT * FROM admin_tbl WHERE username = ? AND password = ?");
+    const admin = stmt.get(username, password);
+
+    if (!admin) {
+      console.log("Login failed: Invalid username or password");
+      return res.status(401).json({ error: "Username atau password salah" });
+    }
+
+    req.session.adminId = admin.id_admin;
+    req.session.username = admin.username;
+    req.session.kode_cabang = admin.kode_cabang;
+    console.log("Login successful:", { id_admin: admin.id_admin, username, kode_cabang: admin.kode_cabang });
+
+    res.setHeader("HX-Redirect", "/admin");
+    res.status(200).send();
+  } catch (err) {
+    console.error("Error in POST /admin-login:", err.message);
+    res.status(500).json({ error: "Kesalahan server", details: err.message });
+  }
+});
+
+// Endpoint untuk dropdown cabang
 app.get("/api/cabang", (req, res) => {
   console.log("GET /api/cabang called");
   try {
@@ -155,7 +228,7 @@ app.get("/api/orders/:id", async (req, res) => {
       WHERE o.id_pembeli = ?
     `);
     const items = itemsStmt.all(order.id_pembeli);
-    console.log("Items fetched:", items); // Debugging
+    console.log("Items fetched:", items);
 
     let totalHarga = 0;
     const formattedItems = items.map((item) => {
@@ -196,7 +269,7 @@ app.get("/api/orders/:id", async (req, res) => {
       items: formattedItems,
       totalHarga,
     };
-    console.log("Response sent:", response); // Debugging
+    console.log("Response sent:", response);
     res.json(response);
   } catch (err) {
     console.error("Error in GET /api/orders/:id:", err.message);
