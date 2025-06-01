@@ -137,9 +137,17 @@ section {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #D7681C;
     font-family: 'Montserrat', sans-serif;
     font-size: 1em;
+}
+
+.order-form input:focus,
+.order-form select:focus,
+.order-form textarea:focus {
+    border: 1px solid #D7681C;
+    outline: none;
+    box-shadow: none;
 }
 
 .order-form textarea {
@@ -155,6 +163,10 @@ section {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    display: block;
+    margin: 20px auto;
+    width: 750px;
+    height: 40px;
 }
 
 .order-submit-button:hover {
@@ -246,22 +258,44 @@ section {
 }
 
 .menu-options {
-    margin-top: 20px;
+    max-width: 800px;
+    margin: 30px auto 0 auto;
+}
+
+.menu-group {
+    background: #FFE2B1;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.menu-group .group-title {
+    font-family: 'Montserrat', sans-serif;
+    color: #721414;
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    font-weight: 700;
 }
 
 .menu-detail {
-    background: #ffffff;
-    padding: 20px;
+    background: #FAF3E3;
+    border: 1px solid #D7681C;
+    padding: 15px;
     border-radius: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.menu-detail h3 {
-    font-family: 'Jua', sans-serif;
-    color: #C92F28;
-    font-size: 1.2em;
-    margin-bottom: 15px;
+.menu-detail:last-child {
+    margin-bottom: 0;
+}
+
+.menu-detail h4 {
+    font-family: 'Montserrat', sans-serif;
+    color: #D7681C;
+    font-size: 1.1em;
+    margin-bottom: 10px;
 }
 
 .menu-detail label {
@@ -278,10 +312,17 @@ section {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #D7681C;
     font-family: 'Montserrat', sans-serif;
     font-size: 1em;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    background: #FFFFFF;
+}
+
+.menu-detail select:focus {
+    border: 1px solid #D7681C;
+    outline: none;
+    box-shadow: none;
 }
 
 .menu-detail textarea {
@@ -382,7 +423,7 @@ footer {
     justify-content: flex-end;
     align-items: center;
     gap: 5px;
-    margin-top: 3px;
+    margin-top: 10px;
 }
 
 .social-links p {
@@ -404,8 +445,22 @@ footer {
         padding: 20px;
     }
 
-    .menu-detail {
+    .menu-group {
         padding: 15px;
+    }
+
+    .menu-detail {
+        padding: 10px;
+    }
+
+    .menu-detail select,
+    .menu-detail textarea {
+        margin-bottom: 8px;
+    }
+
+    .order-submit-button {
+        margin: 15px auto;
+        max-width: 150px; 
     }
 
     .footer-nav {
@@ -425,5 +480,13 @@ footer {
 
     .social-links {
         justify-content: center;
+    }
+
+    .pilih-rasa {
+        padding: 80px 15px;
+    }
+
+    .menu-options {
+        margin: 20px 15px 0;
     }
 }
