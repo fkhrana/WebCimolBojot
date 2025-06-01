@@ -133,14 +133,14 @@ app.post("/form/order", async (req, res) => {
     const { nama, telepon, cabang, bumbu, topping, level, catatan } = req.body;
 
     const menuItems = [
-      { formName: "cimol_mozarella_kecil", id_menu: 3, menu: "cimol mozzarella kecil", price: 11000 },
-      { formName: "cimol_mozarella_besar", id_menu: 4, menu: "cimol mozzarella besar", price: 22000 },
-      { formName: "cimol_bojot_kecil", id_menu: 1, menu: "cimol bojot kecil", price: 6000 },
-      { formName: "cimol_bojot_besar", id_menu: 2, menu: "cimol bojot besar", price: 12000 },
-      { formName: "cimol_ayam_kecil", id_menu: 5, menu: "cimol ayam kecil", price: 11000 },
-      { formName: "cimol_ayam_besar", id_menu: 6, menu: "cimol ayam besar", price: 22000 },
-      { formName: "cimol_beef_kecil", id_menu: 7, menu: "cimol beef kecil", price: 11000 },
-      { formName: "cimol_beef_besar", id_menu: 8, menu: "cimol beef besar", price: 22000 },
+      { formName: "cimol_mozarella_kecil", id_menu: 3, menu: "Cimol Mozzarella Kecil", price: 11000 },
+      { formName: "cimol_mozarella_besar", id_menu: 4, menu: "Cimol Mozzarella Besar", price: 22000 },
+      { formName: "cimol_bojot_kecil", id_menu: 1, menu: "Cimol Bojot Kecil", price: 6000 },
+      { formName: "cimol_bojot_besar", id_menu: 2, menu: "Cimol Bojot Besar", price: 12000 },
+      { formName: "cimol_ayam_kecil", id_menu: 5, menu: "Cimol Ayam Kecil", price: 11000 },
+      { formName: "cimol_ayam_besar", id_menu: 6, menu: "Cimol Ayam Besar", price: 22000 },
+      { formName: "cimol_beef_kecil", id_menu: 7, menu: "Cimol Beef Kecil", price: 11000 },
+      { formName: "cimol_beef_besar", id_menu: 8, menu: "Cimol Beef Besar", price: 22000 },
     ];
 
     if (!nama || !telepon || !cabang) {
@@ -306,6 +306,186 @@ app.get("/api/masukan", requireLogin, (req, res) => {
   } catch (err) {
     console.error("Error in GET /api/masukan:", err.message);
     res.status(500).json({ error: "Database error", details: err.message });
+  }
+});
+
+// Endpoint untuk konfirmasi pesanan dari detailorder.html
+app.post("/api/orders/confirm", async (req, res) => {
+  console.log("POST /api/orders/confirm received:", req.body);
+  try {
+    const { orderId } = req.body;
+    if (!orderId) {
+      return res.status(400).json({ error: "Order ID diperlukan" });
+    }
+
+    // Verifikasi pesanan ada
+    const stmt = db.prepare("SELECT id_order FROM order_tbl WHERE id_order = ?");
+    const order = stmt.get(orderId);
+    if (!order) {
+      console.log("Order not found:", orderId);
+      return res.status(404).json({ error: "Pesanan tidak ditemukan" });
+    }
+
+    console.log("Order confirmation acknowledged:", { orderId });
+    res.status(200).json({ success: true, message: "Pesanan telah dikirim!" });
+  } catch (err) {
+    console.error("Error in POST /api/orders/confirm:", err.message);
+    res.status(500).json({ error: "Kesalahan server", details: err.message });
+  }
+});
+
+// Endpoint untuk mengambil daftar pesanan di admin.html
+app.get("/api/orders", requireLogin, async (req, res) => {
+  console.log("GET /api/orders called", req.query);
+  try {
+    const kode_cabang = req.session.kode_cabang;
+    const status = req.query.status || ''; // Ambil parameter status dari query
+    let query = `
+      SELECT o.id_order, c.nama_cust, m.menu, o.note, o.status_order
+      FROM order_tbl o
+      JOIN customer_tbl c ON o.id_pembeli = c.id_pembeli
+      JOIN menu_tbl m ON o.id_menu = m.id_menu
+      JOIN cabang_tbl cb ON o.id_cabang = cb.id_cabang
+      WHERE cb.kode_cabang = ?
+    `;
+    const params = [kode_cabang];
+
+    // Tambahkan filter status jika ada
+    if (status && ['pending', 'confirmed', 'completed'].includes(status)) {
+      query += ` AND o.status_order = ?`;
+      params.push(status);
+    }
+
+    query += ` ORDER BY o.created_at DESC`;
+
+    const stmt = db.prepare(query);
+    const orders = stmt.all(...params);
+    console.log("Orders fetched:", orders);
+
+    const formattedOrders = orders.map((order, index) => {
+      const noteLines = order.note.split('\n');
+      const quantityMatch = noteLines.find((line) => line.startsWith('Quantity:'));
+      const quantity = quantityMatch ? parseInt(quantityMatch.replace('Quantity: ', '')) : 1;
+      const bumbu = noteLines.find((line) => line.startsWith('Bumbu:'))?.replace('Bumbu: ', '') || '-';
+      const topping = noteLines.find((line) => line.startsWith('Topping:'))?.replace('Topping: ', '') || '-';
+      const level = noteLines.find((line) => line.startsWith('Level:'))?.replace('Level: ', '') || '-';
+      const catatan = noteLines
+        .filter(
+          (line) =>
+            !line.startsWith('Bumbu:') &&
+            !line.startsWith('Topping:') &&
+            !line.startsWith('Level:') &&
+            !line.startsWith('Quantity:')
+        )
+        .join('\n') || '-';
+
+      const harga = (() => {
+        switch (order.menu.toLowerCase()) {
+          case 'cimol mozzarella kecil': return quantity * 11000;
+          case 'cimol mozzarella besar': return quantity * 22000;
+          case 'cimol bojot kecil': return quantity * 6000;
+          case 'cimol bojot besar': return quantity * 12000;
+          case 'cimol ayam kecil': return quantity * 11000;
+          case 'cimol ayam besar': return quantity * 22000;
+          case 'cimol beef kecil': return quantity * 11000;
+          case 'cimol beef besar': return quantity * 22000;
+          default: return 0;
+        }
+      })();
+
+      return {
+        id_order: order.id_order,
+        no: index + 1,
+        nama: order.nama_cust,
+        menu: order.menu,
+        quantity,
+        harga,
+        bumbu,
+        topping,
+        level,
+        catatan,
+        status: order.status_order === 'pending' ? 'Menunggu' :
+                order.status_order === 'confirmed' ? 'Diterima' :
+                order.status_order === 'completed' ? 'Selesai' : 'Tidak Diketahui'
+      };
+    });
+
+    res.json(formattedOrders);
+  } catch (err) {
+    console.error("Error in GET /api/orders:", err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
+  }
+});
+
+// Endpoint untuk memperbarui status pesanan
+app.post("/api/orders/:id/status", requireLogin, async (req, res) => {
+  console.log("POST /api/orders/:id/status received:", { id: req.params.id, body: req.body });
+  try {
+    const id = parseInt(req.params.id);
+    const { status } = req.body;
+    console.log("Parsed input:", { id_order: id, status });
+
+    if (isNaN(id)) {
+      console.log("Invalid id_order:", req.params.id);
+      return res.status(400).json({ error: "ID pesanan tidak valid" });
+    }
+
+    if (!status || !['pending', 'confirmed', 'completed'].includes(status)) {
+      console.log("Invalid or missing status:", status);
+      return res.status(400).json({ error: "Status tidak valid atau tidak diberikan" });
+    }
+
+    // Verifikasi pesanan ada
+    const checkStmt = db.prepare("SELECT id_order, status_order FROM order_tbl WHERE id_order = ?");
+    const order = checkStmt.get(id);
+    console.log("Order check result:", order);
+    if (!order) {
+      console.log("Order not found:", id);
+      return res.status(404).json({ error: "Pesanan tidak ditemukan" });
+    }
+
+    // Jalankan update
+    const stmt = db.prepare("UPDATE order_tbl SET status_order = ? WHERE id_order = ?");
+    const result = stmt.run(status, id);
+    console.log("Update result:", { changes: result.changes, id_order: id, status });
+
+    if (result.changes === 0) {
+      console.log("No rows updated for id:", id);
+      return res.status(404).json({ error: "Gagal memperbarui pesanan" });
+    }
+
+    console.log("Order status updated successfully:", { id_order: id, status });
+    res.status(200).json({ success: true, message: "Status pesanan diperbarui" });
+  } catch (err) {
+    console.error("Error in POST /api/orders/:id/status:", err.message, err.stack);
+    res.status(500).json({ error: "Kesalahan server", details: err.message });
+  }
+});
+
+// Endpoint sementara untuk debugging
+app.get("/api/test-update/:id/:status", (req, res) => {
+  console.log("GET /api/test-update called:", req.params);
+  try {
+    const id = parseInt(req.params.id);
+    const status = req.params.status;
+    console.log("Test update:", { id_order: id, status });
+
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "ID pesanan tidak valid" });
+    }
+
+    if (!['pending', 'confirmed', 'completed'].includes(status)) {
+      return res.status(400).json({ error: "Status tidak valid" });
+    }
+
+    const stmt = db.prepare("UPDATE order_tbl SET status_order = ? WHERE id_order = ?");
+    const result = stmt.run(status, id);
+    console.log("Test update result:", result);
+
+    res.json({ success: result.changes > 0, changes: result.changes });
+  } catch (err) {
+    console.error("Error in test-update:", err.message);
+    res.status(500).json({ error: "Kesalahan server", details: err.message });
   }
 });
 

@@ -123,6 +123,65 @@ body {
     color: #FAF3E3;
 }
 
+.filter-container {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-container label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: #721414;
+    font-weight: bold;
+}
+
+.filter-container select {
+    padding: 8px;
+    border: 1px solid #D7681C;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: #721414;
+    background: #FFFFFF;
+    cursor: pointer;
+    outline: none;
+}
+
+.filter-container select:focus {
+    border-color: #F9C468;
+}
+
+.htmx-indicator {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: #721414;
+    display: none;
+}
+
+.htmx-request .htmx-indicator {
+    display: inline;
+}
+
+/* Styling untuk dropdown status di tabel */
+.order-table .status-dropdown {
+    padding: 5px;
+    border: 1px solid #D7681C;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: #721414;
+    background: #FFFFFF;
+    cursor: pointer;
+    outline: none;
+}
+
+.order-table .status-dropdown:focus {
+    border-color: #F9C468;
+}
+
 .order-container {
     background: #FFFFFF;
     max-width: 1150px;

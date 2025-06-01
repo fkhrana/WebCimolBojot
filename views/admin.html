@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/styleadmin.css" />
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body>
     <div class="navbar">
@@ -24,7 +25,6 @@
             <li><a href="/masukan">MASUKAN</a></li>
         </ul>
     </div>
-
     <div class="main-content">
         <div class="top-bar">
             <h2>HALO AA!</h2>
@@ -32,6 +32,21 @@
         </div>
         <div class="order-container">
             <div id="pesanan">
+                <div class="filter-container">
+                    <label for="status-filter">Filter Status:</label>
+                    <select id="status-filter" name="status" 
+                            hx-get="/api/orders" 
+                            hx-target="#order-list" 
+                            hx-swap="innerHTML" 
+                            hx-trigger="change"
+                            hx-indicator=".htmx-indicator">
+                        <option value="">Semua</option>
+                        <option value="pending">Menunggu</option>
+                        <option value="confirmed">Diterima</option>
+                        <option value="completed">Selesai</option>
+                    </select>
+                    <span class="htmx-indicator">Memuat...</span>
+                </div>
                 <table class="order-table">
                     <thead>
                         <tr>
@@ -43,49 +58,93 @@
                             <th>STATUS</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Budi Santoso</td>
-                            <td>
-                                <div class="order-details">
-                                    <div class="menu-name">Cimol Mozzarella Kecil</div>
-                                    <div class="details">Bumbu: Ayam Bawang<br>Topping: Daun Jeruk<br>Level: LV1<br>Note: Jangan terlalu pedas</div>
-                                </div>
-                            </td>
-                            <td>2</td>
-                            <td>Rp22.000</td>
-                            <td>
-                                <select>
-                                    <option value="menunggu">Menunggu</option>
-                                    <option value="diterima">Diterima</option>
-                                    <option value="selesai">Selesai</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Ani Lestari</td>
-                            <td>
-                                <div class="order-details">
-                                    <div class="menu-name">Cimol Bojot Besar</div>
-                                    <div class="details">Bumbu: Barbeque<br>Topping: -<br>Level: LV2<br>Note: -</div>
-                                </div>
-                            </td>
-                            <td>1</td>
-                            <td>Rp12.000</td>
-                            <td>
-                                <select>
-                                    <option value="menunggu">Menunggu</option>
-                                    <option value="diterima">Diterima</option>
-                                    <option value="selesai">Selesai</option>
-                                </select>
-                            </td>
-                        </tr>
+                    <tbody id="order-list" hx-get="/api/orders" hx-trigger="load" hx-swap="innerHTML" hx-indicator=".htmx-indicator">
+                        <!-- Data pesanan akan dimuat di sini -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <script>
+        document.body.addEventListener('htmx:afterSwap', (event) => {
+            if (event.detail.target.id === 'order-list') {
+                try {
+                    const orders = JSON.parse(event.detail.xhr.responseText);
+                    console.log('Orders loaded:', orders);
+                    const container = event.detail.target;
+                    if (orders.length === 0) {
+                        container.innerHTML = '<tr><td colspan="6">Tidak ada pesanan untuk status ini.</td></tr>';
+                        return;
+                    }
+                    container.innerHTML = orders.map(order => `
+                        <tr>
+                            <td>${order.no}</td>
+                            <td>${order.nama}</td>
+                            <td>
+                                <div class="order-details">
+                                    <div class="menu-name">${order.menu}</div>
+                                    <div class="details">
+                                        Bumbu: ${order.bumbu}<br>
+                                        Topping: ${order.topping}<br>
+                                        Level: ${order.level}<br>
+                                        Note: ${order.catatan}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${order.quantity}</td>
+                            <td>Rp${order.harga.toLocaleString('id-ID')}</td>
+                            <td>
+                                <select class="status-dropdown" name="status" 
+                                        hx-post="/api/orders/${order.id_order}/status"
+                                        hx-vals='js:{status: event.target.value}'
+                                        hx-target="#order-list"
+                                        hx-swap="innerHTML"
+                                        hx-trigger="change"
+                                        hx-indicator=".htmx-indicator"
+                                        onchange="console.log('Status changed for order ${order.id_order} to:', event.target.value)">
+                                    <option value="pending" ${order.status === 'Menunggu' ? 'selected' : ''}>Menunggu</option>
+                                    <option value="confirmed" ${order.status === 'Diterima' ? 'selected' : ''}>Diterima</option>
+                                    <option value="completed" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                                </select>
+                            </td>
+                        </tr>
+                    `).join('');
+                } catch (err) {
+                    console.error('Error parsing JSON:', err);
+                    container.innerHTML = '<tr><td colspan="6">Gagal memuat pesanan.</td></tr>';
+                }
+            }
+        });
+
+        document.body.addEventListener('htmx:beforeRequest', (event) => {
+            if (event.detail.requestConfig.verb === 'post' && event.detail.requestConfig.path.includes('/status')) {
+                console.log('Sending POST request:', {
+                    path: event.detail.requestConfig.path,
+                    headers: event.detail.requestConfig.headers,
+                    body: event.detail.requestConfig.parameters
+                });
+            }
+        });
+
+        document.body.addEventListener('htmx:afterRequest', (event) => {
+            if (event.detail.requestConfig.verb === 'post' && event.detail.requestConfig.path.includes('/status')) {
+                try {
+                    const response = JSON.parse(event.detail.xhr.responseText);
+                    console.log('Status update response:', response);
+                    if (response.success) {
+                        const statusFilter = document.getElementById('status-filter').value;
+                        console.log('Refreshing table with filter:', statusFilter);
+                        htmx.ajax('GET', `/api/orders?status=${statusFilter}`, { target: '#order-list', swap: 'innerHTML' });
+                    } else {
+                        console.error('Status update failed:', response.error);
+                        alert('Gagal memperbarui status: ' + response.error);
+                    }
+                } catch (err) {
+                    console.error('Error parsing response:', err);
+                    alert('Gagal memperbarui status: Kesalahan server');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
