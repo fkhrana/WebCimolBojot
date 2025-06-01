@@ -7,12 +7,11 @@ import session from "express-session";
 
 const app = express();
 const db = new Database("./cimol.db");
-db.exec("PRAGMA journal_mode=WAL;"); // Enable WAL mode to prevent database locking
+db.exec("PRAGMA journal_mode=WAL;");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = 3000;
 
-// Middleware
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -25,7 +24,6 @@ app.use(
   })
 );
 
-// Middleware untuk memeriksa apakah pengguna sudah login
 function requireLogin(req, res, next) {
   console.log("Checking session:", req.session);
   if (!req.session.adminId) {
@@ -37,7 +35,6 @@ function requireLogin(req, res, next) {
   next();
 }
 
-// Handler untuk file HTML
 function HTMLHandler(req, res, htmlPath, data = {}) {
   const filePath = path.join(__dirname, htmlPath);
   fs.readFile(filePath, "utf8", (err, content) => {
@@ -56,7 +53,6 @@ function HTMLHandler(req, res, htmlPath, data = {}) {
   });
 }
 
-// Routes untuk halaman HTML
 app.get("/", (req, res) => HTMLHandler(req, res, "views/index.html"));
 app.get("/order", (req, res) => HTMLHandler(req, res, "views/order.html"));
 app.get("/detailorder", (req, res) => HTMLHandler(req, res, "views/detailorder.html"));
@@ -84,7 +80,6 @@ app.get("/masukan", requireLogin, (req, res) => {
   }
 });
 
-// Endpoint untuk login admin
 app.post("/admin-login", (req, res) => {
   console.log("POST /admin-login received:", req.body);
   try {
@@ -114,7 +109,6 @@ app.post("/admin-login", (req, res) => {
   }
 });
 
-// Endpoint untuk dropdown cabang
 app.get("/api/cabang", (req, res) => {
   console.log("GET /api/cabang called");
   try {
@@ -130,11 +124,10 @@ app.get("/api/cabang", (req, res) => {
   }
 });
 
-// Endpoint untuk menyimpan pesanan
 app.post("/form/order", async (req, res) => {
   console.log("POST /form/order received:", req.body);
   try {
-    const { nama, telepon, cabang, bumbu, topping, level, catatan } = req.body;
+    const { nama, telepon, cabang, catatan } = req.body;
 
     const menuItems = [
       { formName: "cimol_mozarella_kecil", id_menu: 3, menu: "Cimol Mozzarella Kecil", price: 11000 },
@@ -153,13 +146,29 @@ app.post("/form/order", async (req, res) => {
     }
 
     let totalHarga = 0;
-    const orderedItems = menuItems
-      .filter((item) => req.body[item.formName] && parseInt(req.body[item.formName]) > 0)
-      .map((item) => {
-        const quantity = parseInt(req.body[item.formName]);
-        totalHarga += quantity * item.price;
-        return { id_menu: item.id_menu, menu: item.menu, quantity, price: item.price };
-      });
+    const orderedItems = [];
+
+    menuItems.forEach((item) => {
+      const quantity = parseInt(req.body[item.formName]) || 0;
+      if (quantity > 0) {
+        for (let i = 1; i <= quantity; i++) {
+          const bumbu = req.body[`bumbu_${item.formName}_${i}`] || '-';
+          const topping = req.body[`topping_${item.formName}_${i}`] || '-';
+          const level = req.body[`level_${item.formName}_${i}`] || '-';
+          totalHarga += item.price;
+          orderedItems.push({
+            id_menu: item.id_menu,
+            menu: item.menu,
+            quantity: 1,
+            price: item.price,
+            bumbu,
+            topping,
+            level,
+            catatan: catatan || '-',
+          });
+        }
+      }
+    });
 
     if (orderedItems.length === 0) {
       console.log("Validation failed: No menu selected");
@@ -185,7 +194,7 @@ app.post("/form/order", async (req, res) => {
       "INSERT INTO order_tbl (id_pembeli, id_menu, id_cabang, note, status_order, created_at) VALUES (?, ?, ?, ?, ?, ?)"
     );
     orderedItems.forEach((item) => {
-      const note = `${catatan || ''}\nBumbu: ${bumbu || '-'}\nTopping: ${topping || '-'}\nLevel: ${level || '-'}\nQuantity: ${item.quantity}`;
+      const note = `${item.catatan}\nBumbu: ${item.bumbu}\nTopping: ${item.topping}\nLevel: ${item.level}\nQuantity: ${item.quantity}`;
       const result = orderStmt.run(
         id_pembeli,
         item.id_menu,
@@ -206,7 +215,6 @@ app.post("/form/order", async (req, res) => {
   }
 });
 
-// Endpoint untuk detail pesanan
 app.get("/api/orders/:id", async (req, res) => {
   console.log("GET /api/orders/:id called:", req.params.id);
   try {
@@ -280,7 +288,6 @@ app.get("/api/orders/:id", async (req, res) => {
   }
 });
 
-// Endpoint untuk menyimpan masukan dari form kontak
 app.post("/kontak", (req, res) => {
   console.log("POST /kontak received:", req.body);
   try {
@@ -300,7 +307,6 @@ app.post("/kontak", (req, res) => {
   }
 });
 
-// Endpoint untuk mengambil semua masukan
 app.get("/api/masukan", requireLogin, (req, res) => {
   console.log("GET /api/masukan called");
   try {
@@ -313,7 +319,6 @@ app.get("/api/masukan", requireLogin, (req, res) => {
   }
 });
 
-// Endpoint untuk konfirmasi pesanan dari detailorder.html
 app.post("/api/orders/confirm", async (req, res) => {
   console.log("POST /api/orders/confirm received:", req.body);
   try {
@@ -337,14 +342,17 @@ app.post("/api/orders/confirm", async (req, res) => {
   }
 });
 
-// Endpoint untuk mengambil daftar pesanan di admin.html
 app.get("/api/orders", requireLogin, async (req, res) => {
   console.log("GET /api/orders called", req.query);
   try {
     const kode_cabang = req.session.kode_cabang;
     const status = req.query.status || '';
+
+    // Query untuk grup berdasarkan id_pembeli
     let query = `
-      SELECT o.id_order, c.nama_cust, m.menu, o.note, o.status_order
+      SELECT o.id_pembeli, MIN(o.id_order) as id_order, c.nama_cust, 
+             GROUP_CONCAT(o.note) as notes, GROUP_CONCAT(m.menu) as menus,
+             GROUP_CONCAT(o.status_order) as statuses
       FROM order_tbl o
       JOIN customer_tbl c ON o.id_pembeli = c.id_pembeli
       JOIN menu_tbl m ON o.id_menu = m.id_menu
@@ -358,57 +366,77 @@ app.get("/api/orders", requireLogin, async (req, res) => {
       params.push(status);
     }
 
-    query += ` ORDER BY o.created_at DESC`;
+    query += ` GROUP BY o.id_pembeli ORDER BY MIN(o.created_at) DESC`;
 
     const stmt = db.prepare(query);
     const orders = stmt.all(...params);
     console.log("Orders fetched:", orders);
 
     const formattedOrders = orders.map((order, index) => {
-      const noteLines = order.note.split('\n');
-      const quantityMatch = noteLines.find((line) => line.startsWith('Quantity:'));
-      const quantity = quantityMatch ? parseInt(quantityMatch.replace('Quantity: ', '')) : 1;
-      const bumbu = noteLines.find((line) => line.startsWith('Bumbu:'))?.replace('Bumbu: ', '') || '-';
-      const topping = noteLines.find((line) => line.startsWith('Topping:'))?.replace('Topping: ', '') || '-';
-      const level = noteLines.find((line) => line.startsWith('Level:'))?.replace('Level: ', '') || '-';
-      const catatan = noteLines
-        .filter(
-          (line) =>
-            !line.startsWith('Bumbu:') &&
-            !line.startsWith('Topping:') &&
-            !line.startsWith('Level:') &&
-            !line.startsWith('Quantity:')
-        )
-        .join('\n') || '-';
+      const noteArray = order.notes.split(',');
+      const menuArray = order.menus.split(',');
+      const statusArray = order.statuses.split(',');
 
-      const harga = (() => {
-        switch (order.menu.toLowerCase()) {
-          case 'cimol mozzarella kecil': return quantity * 11000;
-          case 'cimol mozzarella besar': return quantity * 22000;
-          case 'cimol bojot kecil': return quantity * 6000;
-          case 'cimol bojot besar': return quantity * 12000;
-          case 'cimol ayam kecil': return quantity * 11000;
-          case 'cimol ayam besar': return quantity * 22000;
-          case 'cimol beef kecil': return quantity * 11000;
-          case 'cimol beef besar': return quantity * 22000;
-          default: return 0;
-        }
-      })();
+      // Parse notes untuk setiap menu
+      const items = noteArray.map((note, i) => {
+        const noteLines = note.split('\n');
+        const quantityMatch = noteLines.find((line) => line.startsWith('Quantity:'));
+        const quantity = quantityMatch ? parseInt(quantityMatch.replace('Quantity: ', '')) : 1;
+        const bumbu = noteLines.find((line) => line.startsWith('Bumbu:'))?.replace('Bumbu: ', '') || '-';
+        const topping = noteLines.find((line) => line.startsWith('Topping:'))?.replace('Topping: ', '') || '-';
+        const level = noteLines.find((line) => line.startsWith('Level:'))?.replace('Level: ', '') || '-';
+        const catatan = noteLines
+          .filter(
+            (line) =>
+              !line.startsWith('Bumbu:') &&
+              !line.startsWith('Topping:') &&
+              !line.startsWith('Level:') &&
+              !line.startsWith('Quantity:')
+          )
+          .join('\n') || '-';
+
+        return {
+          menu: menuArray[i],
+          quantity,
+          bumbu,
+          topping,
+          level,
+          catatan,
+          harga: (() => {
+            switch (menuArray[i].toLowerCase()) {
+              case 'cimol mozzarella kecil': return quantity * 11000;
+              case 'cimol mozzarella besar': return quantity * 22000;
+              case 'cimol bojot kecil': return quantity * 6000;
+              case 'cimol bojot besar': return quantity * 12000;
+              case 'cimol ayam kecil': return quantity * 11000;
+              case 'cimol ayam besar': return quantity * 22000;
+              case 'cimol beef kecil': return quantity * 11000;
+              case 'cimol beef besar': return quantity * 22000;
+              default: return 0;
+            }
+          })(),
+        };
+      });
+
+      // Hitung total jumlah dan harga
+      const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+      const totalHarga = items.reduce((sum, item) => sum + item.harga, 0);
+
+      // Ambil status pertama (semua status sama)
+      const status = statusArray[0] === 'pending' ? 'Menunggu' :
+                     statusArray[0] === 'confirmed' ? 'Diterima' :
+                     statusArray[0] === 'completed' ? 'Selesai' : 'Tidak Diketahui';
 
       return {
         id_order: order.id_order,
+        id_pembeli: order.id_pembeli,
         no: index + 1,
         nama: order.nama_cust,
-        menu: order.menu,
-        quantity,
-        harga,
-        bumbu,
-        topping,
-        level,
-        catatan,
-        status: order.status_order === 'pending' ? 'Menunggu' :
-                order.status_order === 'confirmed' ? 'Diterima' :
-                order.status_order === 'completed' ? 'Selesai' : 'Tidak Diketahui'
+        items,
+        totalQuantity,
+        totalHarga,
+        status,
+        catatan: items[0].catatan, // Catatan sama untuk semua item
       };
     });
 
@@ -419,7 +447,6 @@ app.get("/api/orders", requireLogin, async (req, res) => {
   }
 });
 
-// Endpoint untuk memperbarui status pesanan
 app.post("/api/orders/:id/status", requireLogin, async (req, res) => {
   console.log("=== START POST /api/orders/:id/status ===");
   console.log("Request Headers:", req.headers);
@@ -441,7 +468,8 @@ app.post("/api/orders/:id/status", requireLogin, async (req, res) => {
         return res.status(400).json({ error: "Status tidak valid atau tidak diberikan" });
       }
 
-      const checkStmt = db.prepare("SELECT id_order, status_order FROM order_tbl WHERE id_order = ?");
+      // Ambil id_pembeli dari id_order
+      const checkStmt = db.prepare("SELECT id_pembeli FROM order_tbl WHERE id_order = ?");
       const order = checkStmt.get(id);
       console.log("Order check result:", order);
       if (!order) {
@@ -449,17 +477,18 @@ app.post("/api/orders/:id/status", requireLogin, async (req, res) => {
         return res.status(404).json({ error: "Pesanan tidak ditemukan" });
       }
 
-      const stmt = db.prepare("UPDATE order_tbl SET status_order = ? WHERE id_order = ?");
-      console.log("Executing UPDATE with params:", { status, id });
-      const result = stmt.run(status, id);
-      console.log("Update result:", { changes: result.changes, id_order: id, status });
+      // Update semua entri dengan id_pembeli yang sama
+      const stmt = db.prepare("UPDATE order_tbl SET status_order = ? WHERE id_pembeli = ?");
+      console.log("Executing UPDATE with params:", { status, id_pembeli: order.id_pembeli });
+      const result = stmt.run(status, order.id_pembeli);
+      console.log("Update result:", { changes: result.changes, id_pembeli: order.id_pembeli, status });
 
       if (result.changes === 0) {
-        console.log("No rows updated for id:", id);
+        console.log("No rows updated for id_pembeli:", order.id_pembeli);
         return res.status(404).json({ error: "Gagal memperbarui pesanan" });
       }
 
-      console.log("Order status updated successfully:", { id_order: id, status });
+      console.log("Order status updated successfully:", { id_pembeli: order.id_pembeli, status });
       res.status(200).json({ success: true, message: "Status pesanan diperbarui" });
     } catch (err) {
       console.error("Error in POST /api/orders/:id/status:", err.message, err.stack);
@@ -469,7 +498,6 @@ app.post("/api/orders/:id/status", requireLogin, async (req, res) => {
   transaction();
 });
 
-// Endpoint sementara untuk debugging
 app.get("/api/test-update/:id/:status", (req, res) => {
   console.log("GET /api/test-update called:", req.params);
   try {

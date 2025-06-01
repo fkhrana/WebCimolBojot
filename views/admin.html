@@ -76,23 +76,48 @@
                         container.innerHTML = '<tr><td colspan="6">Tidak ada pesanan untuk status ini.</td></tr>';
                         return;
                     }
+
+                    // Map untuk tampilan
+                    const bumbuMap = {
+                        "ayam-bawang": "Ayam Bawang",
+                        "jagung-bakar": "Jagung Bakar",
+                        "pedas-asin": "Pedas Asin",
+                        barbeque: "Barbeque",
+                        balado: "Balado",
+                    };
+                    const toppingMap = {
+                        "daun-jeruk": "Daun Jeruk",
+                        "bawang-goreng": "Bawang Goreng",
+                    };
+                    const levelMap = {
+                        lv0: "Level 0",
+                        lv1: "Level 1",
+                        lv2: "Level 2",
+                        lv3: "Level 3",
+                        extra: "Extra",
+                    };
+
                     container.innerHTML = orders.map(order => `
                         <tr>
                             <td>${order.no}</td>
                             <td>${order.nama}</td>
                             <td>
                                 <div class="order-details">
-                                    <div class="menu-name">${order.menu}</div>
-                                    <div class="details">
-                                        Bumbu: ${order.bumbu}<br>
-                                        Topping: ${order.topping}<br>
-                                        Level: ${order.level}<br>
-                                        Note: ${order.catatan}
-                                    </div>
+                                    ${order.items.map(item => `
+                                        <div class="menu-item">
+                                            <div class="menu-name">${item.menu} (${item.quantity}x)</div>
+                                            <div class="details">
+                                                Bumbu: ${bumbuMap[item.bumbu] || item.bumbu}<br>
+                                                Topping: ${toppingMap[item.topping] || item.topping}<br>
+                                                Level: ${levelMap[item.level] || item.level}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                    <div class="catatan">Catatan: ${order.catatan}</div>
                                 </div>
                             </td>
-                            <td>${order.quantity}</td>
-                            <td>Rp${order.harga.toLocaleString('id-ID')}</td>
+                            <td>${order.totalQuantity}</td>
+                            <td>Rp${order.totalHarga.toLocaleString('id-ID')}</td>
                             <td>
                                 <select class="status-dropdown" data-order-id="${order.id_order}">
                                     <option value="pending" ${order.status === 'Menunggu' ? 'selected' : ''}>Menunggu</option>

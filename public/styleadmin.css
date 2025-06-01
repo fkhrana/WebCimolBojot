@@ -237,16 +237,30 @@ body {
 .order-details {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+}
+
+.order-details .menu-item {
+    margin-bottom: 10px;
 }
 
 .order-details .menu-name {
     font-weight: bold;
     margin-bottom: 5px;
+    color: #721414;
 }
 
 .order-details .details {
     font-size: 0.85rem;
     color: #83302E;
+    margin-left: 10px;
+}
+
+.order-details .catatan {
+    font-size: 0.85rem;
+    color: #83302E;
+    font-style: italic;
+    margin-top: 5px;
 }
 
 .order-table select {
@@ -288,4 +302,28 @@ body {
     color: #83302E;
     margin: 0;
     font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .order-table th,
+    .order-table td {
+        font-size: 0.8rem;
+        padding: 5px;
+    }
+
+    .order-details .details,
+    .order-details .catatan {
+        font-size: 0.8rem;
+    }
 }

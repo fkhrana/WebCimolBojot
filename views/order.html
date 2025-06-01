@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
-
 <body class="order-page">
     <header>
         <div class="logo">
@@ -26,7 +24,6 @@
         </nav>
         <a href="#" class="order-button">ORDER</a>
     </header>
-
     <main>
         <form hx-post="/form/order" method="POST">
             <!-- Pilih Cabang -->
@@ -41,7 +38,6 @@
             <div class="order-section">
                 <h1>PILIH MENU</h1>
                 <div class="menu-grid">
-                    <!-- Card 1: Cimol Isi Mozarella Kecil -->
                     <div class="menu-card">
                         <div class="menu-image">
                             <img src="/cimolmoza.png" alt="Cimol Isi Mozarella" />
@@ -58,8 +54,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Card 2: Cimol Isi Mozarella Besar -->
                     <div class="menu-card">
                         <div class="menu-image">
                             <img src="/cimolmoza.png" alt="Cimol Isi Mozarella" />
@@ -76,8 +70,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Card 3: Cimol Bojot Kecil -->
                     <div class="menu-card">
                         <div class="menu-image">
                             <img src="/cimolmoza.png" alt="Cimol Bojot" />
@@ -94,8 +86,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Card 4: Cimol Bojot Besar -->
                     <div class="menu-card">
                         <div class="menu-image">
                             <img src="/cimolmoza.png" alt="Cimol Bojot" />
@@ -112,8 +102,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Card 5: Cimol Isi Ayam Kecil -->
                     <div class="menu-card">
                         <div class="menu-image">
                             <img src="/cimolmoza.png" alt="Cimol Isi Ayam" />
@@ -130,8 +118,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Card 6: Cimol Isi Ayam Besar -->
                     <div class="menu-card">
                         <div class="menu-image">
                             <img src="/cimolmoza.png" alt="Cimol Isi Ayam" />
@@ -148,8 +134,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Card 7: Cimol Isi Beef Kecil -->
                     <div class="menu-card">
                         <div class="menu-image">
                             <img src="/cimolbeef.png" alt="Cimol Isi Beef" />
@@ -166,8 +150,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Card 8: Cimol Isi Beef Besar -->
                     <div class="menu-card">
                         <div class="menu-image">
                             <img src="/cimolbeef.png" alt="Cimol Isi Beef" />
@@ -194,40 +176,14 @@
                     <input type="text" id="nama" name="nama" required />
                     <label for="telepon">Nomor Telepon :</label>
                     <input type="tel" id="telepon" name="telepon" required />
-                    <label for="bumbu">Bumbu :</label>
-                    <select id="bumbu" name="bumbu" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="ayam-bawang">Ayam Bawang</option>
-                        <option value="jagung-bakar">Jagung Bakar</option>
-                        <option value="pedas-asin">Pedas Asin</option>
-                        <option value="barbeque">Barbeque</option>
-                        <option value="balado">Balado</option>
-                    </select>
-                    <label for="topping">Topping :</label>
-                    <select id="topping" name="topping" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="daun-jeruk">Daun Jeruk</option>
-                        <option value="bawang-goreng">Bawang Goreng</option>
-                    </select>
-                    <label for="level">Level Kepedasan :</label>
-                    <select id="level" name="level" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="lv0">Level 0</option>
-                        <option value="lv1">Level 1</option>
-                        <option value="lv2">Level 2</option>
-                        <option value="lv3">Level 3</option>
-                        <option value="extra">Extra</option>
-                    </select>
                     <label for="catatan">Catatan Tambahan:</label>
-                    <textarea id="catatan" name="catatan" rows="3" placeholder="Contoh: Tidak terlalu pedas"></textarea>
-                    <button type="submit" class="order-submit-button">
-                        Cek Detail Order
-                    </button>
+                    <textarea id="catatan" name="catatan" rows="3" placeholder="Contoh: Tusukannya lebihin ya"></textarea>
+                    <div class="menu-options"></div>
+                    <button type="submit" class="order-submit-button">Cek Detail Order</button>
                 </div>
             </div>
         </form>
     </main>
-
     <footer>
         <div class="footer-content">
             <div class="footer-logo">
@@ -259,7 +215,6 @@
             </div>
         </div>
     </footer>
-
     <script>
         document.querySelectorAll(".quantity-selector").forEach((selector) => {
             const minusBtn = selector.querySelector(".minus");
@@ -273,6 +228,7 @@
                     quantity--;
                     quantitySpan.textContent = quantity;
                     quantityInput.value = quantity;
+                    updateMenuOptions();
                 }
             });
 
@@ -280,8 +236,63 @@
                 quantity++;
                 quantitySpan.textContent = quantity;
                 quantityInput.value = quantity;
+                updateMenuOptions();
             });
         });
+
+        function updateMenuOptions() {
+            const menuItems = [
+                { id: "cimol_mozarella_kecil", name: "Cimol Mozarella Kecil" },
+                { id: "cimol_mozarella_besar", name: "Cimol Mozarella Besar" },
+                { id: "cimol_bojot_kecil", name: "Cimol Bojot Kecil" },
+                { id: "cimol_bojot_besar", name: "Cimol Bojot Besar" },
+                { id: "cimol_ayam_kecil", name: "Cimol Ayam Kecil" },
+                { id: "cimol_ayam_besar", name: "Cimol Ayam Besar" },
+                { id: "cimol_beef_kecil", name: "Cimol Beef Kecil" },
+                { id: "cimol_beef_besar", name: "Cimol Beef Besar" },
+            ];
+
+            const container = document.querySelector(".menu-options");
+            container.innerHTML = "";
+
+            menuItems.forEach((item) => {
+                const input = document.querySelector(`input[name="${item.id}"]`);
+                const quantity = parseInt(input.value);
+                if (quantity > 0) {
+                    for (let i = 1; i <= quantity; i++) {
+                        container.innerHTML += `
+                            <div class="menu-detail">
+                                <h3>${item.name} (Porsi ${i})</h3>
+                                <label for="bumbu_${item.id}_${i}">Bumbu :</label>
+                                <select id="bumbu_${item.id}_${i}" name="bumbu_${item.id}_${i}" required>
+                                    <option value="">-- Pilih --</option>
+                                    <option value="ayam-bawang">Ayam Bawang</option>
+                                    <option value="jagung-bakar">Jagung Bakar</option>
+                                    <option value="pedas-asin">Pedas Asin</option>
+                                    <option value="barbeque">Barbeque</option>
+                                    <option value="balado">Balado</option>
+                                </select>
+                                <label for="topping_${item.id}_${i}">Topping :</label>
+                                <select id="topping_${item.id}_${i}" name="topping_${item.id}_${i}" required>
+                                    <option value="">-- Pilih --</option>
+                                    <option value="daun-jeruk">Daun Jeruk</option>
+                                    <option value="bawang-goreng">Bawang Goreng</option>
+                                </select>
+                                <label for="level_${item.id}_${i}">Level Kepedasan :</label>
+                                <select id="level_${item.id}_${i}" name="level_${item.id}_${i}" required>
+                                    <option value="">-- Pilih --</option>
+                                    <option value="lv0">Level 0</option>
+                                    <option value="lv1">Level 1</option>
+                                    <option value="lv2">Level 2</option>
+                                    <option value="lv3">Level 3</option>
+                                    <option value="extra">Extra</option>
+                                </select>
+                            </div>
+                        `;
+                    }
+                }
+            });
+        }
 
         document.querySelector("form").addEventListener("submit", (e) => {
             console.log("Form submitted");
@@ -300,7 +311,13 @@
                 alert("Pilih minimal satu menu!");
             }
         });
+
+        document.addEventListener("htmx:afterSwap", (event) => {
+            if (event.detail.target.id === "cabang") {
+                const select = event.detail.target;
+                select.innerHTML = '<option value="">-- Pilih Cabang --</option>' + select.innerHTML;
+            }
+        });
     </script>
 </body>
-
 </html>
