@@ -7,6 +7,7 @@ import session from "express-session";
 
 const app = express();
 const db = new Database("./cimol.db");
+db.exec("PRAGMA journal_mode=WAL;"); // Enable WAL mode to prevent database locking
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = 3000;
@@ -26,10 +27,13 @@ app.use(
 
 // Middleware untuk memeriksa apakah pengguna sudah login
 function requireLogin(req, res, next) {
+  console.log("Checking session:", req.session);
   if (!req.session.adminId) {
+    console.log("Session invalid, redirecting to /admin-login");
     res.setHeader("HX-Redirect", "/admin-login");
     return res.status(401).send();
   }
+  console.log("Session valid, proceeding...");
   next();
 }
 
@@ -100,7 +104,7 @@ app.post("/admin-login", (req, res) => {
     req.session.adminId = admin.id_admin;
     req.session.username = admin.username;
     req.session.kode_cabang = admin.kode_cabang;
-    console.log("Login successful:", { id_admin: admin.id_admin, username, kode_cabang: admin.kode_cabang });
+    console.log("Session set:", req.session);
 
     res.setHeader("HX-Redirect", "/admin");
     res.status(200).send();
@@ -318,7 +322,6 @@ app.post("/api/orders/confirm", async (req, res) => {
       return res.status(400).json({ error: "Order ID diperlukan" });
     }
 
-    // Verifikasi pesanan ada
     const stmt = db.prepare("SELECT id_order FROM order_tbl WHERE id_order = ?");
     const order = stmt.get(orderId);
     if (!order) {
@@ -339,7 +342,7 @@ app.get("/api/orders", requireLogin, async (req, res) => {
   console.log("GET /api/orders called", req.query);
   try {
     const kode_cabang = req.session.kode_cabang;
-    const status = req.query.status || ''; // Ambil parameter status dari query
+    const status = req.query.status || '';
     let query = `
       SELECT o.id_order, c.nama_cust, m.menu, o.note, o.status_order
       FROM order_tbl o
@@ -350,7 +353,6 @@ app.get("/api/orders", requireLogin, async (req, res) => {
     `;
     const params = [kode_cabang];
 
-    // Tambahkan filter status jika ada
     if (status && ['pending', 'confirmed', 'completed'].includes(status)) {
       query += ` AND o.status_order = ?`;
       params.push(status);
@@ -419,47 +421,52 @@ app.get("/api/orders", requireLogin, async (req, res) => {
 
 // Endpoint untuk memperbarui status pesanan
 app.post("/api/orders/:id/status", requireLogin, async (req, res) => {
-  console.log("POST /api/orders/:id/status received:", { id: req.params.id, body: req.body });
-  try {
-    const id = parseInt(req.params.id);
-    const { status } = req.body;
-    console.log("Parsed input:", { id_order: id, status });
+  console.log("=== START POST /api/orders/:id/status ===");
+  console.log("Request Headers:", req.headers);
+  console.log("Request Params:", req.params);
+  console.log("Request Body:", req.body);
+  const transaction = db.transaction(() => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      console.log("Parsed input:", { id_order: id, status });
 
-    if (isNaN(id)) {
-      console.log("Invalid id_order:", req.params.id);
-      return res.status(400).json({ error: "ID pesanan tidak valid" });
+      if (isNaN(id)) {
+        console.log("Invalid id_order:", req.params.id);
+        return res.status(400).json({ error: "ID pesanan tidak valid" });
+      }
+
+      if (!status || !['pending', 'confirmed', 'completed'].includes(status)) {
+        console.log("Invalid or missing status:", status);
+        return res.status(400).json({ error: "Status tidak valid atau tidak diberikan" });
+      }
+
+      const checkStmt = db.prepare("SELECT id_order, status_order FROM order_tbl WHERE id_order = ?");
+      const order = checkStmt.get(id);
+      console.log("Order check result:", order);
+      if (!order) {
+        console.log("Order not found:", id);
+        return res.status(404).json({ error: "Pesanan tidak ditemukan" });
+      }
+
+      const stmt = db.prepare("UPDATE order_tbl SET status_order = ? WHERE id_order = ?");
+      console.log("Executing UPDATE with params:", { status, id });
+      const result = stmt.run(status, id);
+      console.log("Update result:", { changes: result.changes, id_order: id, status });
+
+      if (result.changes === 0) {
+        console.log("No rows updated for id:", id);
+        return res.status(404).json({ error: "Gagal memperbarui pesanan" });
+      }
+
+      console.log("Order status updated successfully:", { id_order: id, status });
+      res.status(200).json({ success: true, message: "Status pesanan diperbarui" });
+    } catch (err) {
+      console.error("Error in POST /api/orders/:id/status:", err.message, err.stack);
+      res.status(500).json({ error: "Kesalahan server", details: err.message });
     }
-
-    if (!status || !['pending', 'confirmed', 'completed'].includes(status)) {
-      console.log("Invalid or missing status:", status);
-      return res.status(400).json({ error: "Status tidak valid atau tidak diberikan" });
-    }
-
-    // Verifikasi pesanan ada
-    const checkStmt = db.prepare("SELECT id_order, status_order FROM order_tbl WHERE id_order = ?");
-    const order = checkStmt.get(id);
-    console.log("Order check result:", order);
-    if (!order) {
-      console.log("Order not found:", id);
-      return res.status(404).json({ error: "Pesanan tidak ditemukan" });
-    }
-
-    // Jalankan update
-    const stmt = db.prepare("UPDATE order_tbl SET status_order = ? WHERE id_order = ?");
-    const result = stmt.run(status, id);
-    console.log("Update result:", { changes: result.changes, id_order: id, status });
-
-    if (result.changes === 0) {
-      console.log("No rows updated for id:", id);
-      return res.status(404).json({ error: "Gagal memperbarui pesanan" });
-    }
-
-    console.log("Order status updated successfully:", { id_order: id, status });
-    res.status(200).json({ success: true, message: "Status pesanan diperbarui" });
-  } catch (err) {
-    console.error("Error in POST /api/orders/:id/status:", err.message, err.stack);
-    res.status(500).json({ error: "Kesalahan server", details: err.message });
-  }
+  });
+  transaction();
 });
 
 // Endpoint sementara untuk debugging

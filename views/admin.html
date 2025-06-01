@@ -94,14 +94,7 @@
                             <td>${order.quantity}</td>
                             <td>Rp${order.harga.toLocaleString('id-ID')}</td>
                             <td>
-                                <select class="status-dropdown" name="status" 
-                                        hx-post="/api/orders/${order.id_order}/status"
-                                        hx-vals='js:{status: event.target.value}'
-                                        hx-target="#order-list"
-                                        hx-swap="innerHTML"
-                                        hx-trigger="change"
-                                        hx-indicator=".htmx-indicator"
-                                        onchange="console.log('Status changed for order ${order.id_order} to:', event.target.value)">
+                                <select class="status-dropdown" data-order-id="${order.id_order}">
                                     <option value="pending" ${order.status === 'Menunggu' ? 'selected' : ''}>Menunggu</option>
                                     <option value="confirmed" ${order.status === 'Diterima' ? 'selected' : ''}>Diterima</option>
                                     <option value="completed" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
@@ -109,39 +102,45 @@
                             </td>
                         </tr>
                     `).join('');
+
+                    // Tambah event listener untuk dropdown
+                    document.querySelectorAll('.status-dropdown').forEach(dropdown => {
+                        dropdown.addEventListener('change', async (event) => {
+                            const orderId = event.target.getAttribute('data-order-id');
+                            const status = event.target.value;
+                            console.log('Dropdown changed:', { orderId, status });
+
+                            try {
+                                const response = await fetch(`/api/orders/${orderId}/status`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ status })
+                                });
+                                const result = await response.json();
+                                console.log('Update response:', result);
+
+                                if (result.success) {
+                                    const statusFilter = document.getElementById('status-filter').value || '';
+                                    console.log('Refreshing table with filter:', statusFilter);
+                                    htmx.ajax('GET', `/api/orders${statusFilter ? `?status=${statusFilter}` : ''}`, {
+                                        target: '#order-list',
+                                        swap: 'innerHTML'
+                                    });
+                                } else {
+                                    console.error('Update failed:', result.error);
+                                    alert('Gagal update status: ' + result.error);
+                                }
+                            } catch (err) {
+                                console.error('Error:', err);
+                                alert('Error: Gagal kirim request');
+                            }
+                        });
+                    });
                 } catch (err) {
                     console.error('Error parsing JSON:', err);
                     container.innerHTML = '<tr><td colspan="6">Gagal memuat pesanan.</td></tr>';
-                }
-            }
-        });
-
-        document.body.addEventListener('htmx:beforeRequest', (event) => {
-            if (event.detail.requestConfig.verb === 'post' && event.detail.requestConfig.path.includes('/status')) {
-                console.log('Sending POST request:', {
-                    path: event.detail.requestConfig.path,
-                    headers: event.detail.requestConfig.headers,
-                    body: event.detail.requestConfig.parameters
-                });
-            }
-        });
-
-        document.body.addEventListener('htmx:afterRequest', (event) => {
-            if (event.detail.requestConfig.verb === 'post' && event.detail.requestConfig.path.includes('/status')) {
-                try {
-                    const response = JSON.parse(event.detail.xhr.responseText);
-                    console.log('Status update response:', response);
-                    if (response.success) {
-                        const statusFilter = document.getElementById('status-filter').value;
-                        console.log('Refreshing table with filter:', statusFilter);
-                        htmx.ajax('GET', `/api/orders?status=${statusFilter}`, { target: '#order-list', swap: 'innerHTML' });
-                    } else {
-                        console.error('Status update failed:', response.error);
-                        alert('Gagal memperbarui status: ' + response.error);
-                    }
-                } catch (err) {
-                    console.error('Error parsing response:', err);
-                    alert('Gagal memperbarui status: Kesalahan server');
                 }
             }
         });
