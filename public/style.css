@@ -648,6 +648,21 @@ td b {
     background-color: #ffb83d;
 }
 
+#contact-message .success-message {
+    color: #721414;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 10px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#contact-message .error-message {
+    color: #99000D;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 10px;
+    font-family: 'Montserrat', sans-serif;
+}
 
 /*BUTTON ADMIN*/
 .admin-login-button {

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/styleadmin.css" />
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 <body>
     <div class="navbar">
@@ -24,7 +25,6 @@
             <li><a href="/masukan" class="active">MASUKAN</a></li>
         </ul>
     </div>
-
     <div class="main-content">
         <div class="top-bar">
             <h2>HALO AA!</h2>
@@ -32,13 +32,28 @@
         </div>
         <div id="masukan">
             <h3>MASUKAN DARI SOBAT AA</h3>
-            <div class="message-container">
-                <p>Terlalu pedas, mungkin bisa ditambah opsi level lebih rendah.</p>
-            </div>
-            <div class="message-container">
-                <p>Pelayanan cepat, tapi kemasan bisa lebih menarik.</p>
+            <div id="masukan-list" hx-get="/api/masukan" hx-trigger="load" hx-swap="innerHTML">
+                <!-- Data masukan akan dimuat di sini -->
             </div>
         </div>
     </div>
+    <script>
+        document.body.addEventListener('htmx:afterSwap', (event) => {
+            if (event.detail.target.id === 'masukan-list') {
+                try {
+                    const response = JSON.parse(event.detail.xhr.responseText);
+                    const container = event.detail.target;
+                    container.innerHTML = response.map(item => `
+                        <div class="message-container">
+                            <p>${item.pesan_kontak}</p>
+                        </div>
+                    `).join('');
+                } catch (err) {
+                    console.error('Error parsing JSON:', err);
+                    container.innerHTML = '<p class="error-message">Gagal memuat masukan.</p>';
+                }
+            }
+        });
+    </script>
 </body>
 </html>

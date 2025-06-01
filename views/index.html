@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
 
 <body>
@@ -272,11 +273,7 @@
         <section id="kontak">
             <h2>KONTAK</h2>
             <p>Isi formulir di bawah untuk menghubungi kami.</p>
-            <form action="#" method="POST" class="contact-form">
-                <div class="form-group">
-                    <label for="nama">Nama:</label>
-                    <input type="text" id="nama" name="nama" placeholder="Masukkan nama Anda" required>
-                </div>
+            <form class="contact-form" hx-post="/kontak" hx-target="#contact-message" hx-swap="innerHTML">
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required>
@@ -286,7 +283,21 @@
                     <textarea id="pesan" name="pesan" placeholder="Tulis pesan Anda" rows="5" required></textarea>
                 </div>
                 <button type="submit" class="submit-button">KIRIM</button>
+                <div id="contact-message"></div>
             </form>
+            <script>
+                document.body.addEventListener('htmx:afterRequest', (event) => {
+                    if (event.detail.target.id === 'contact-message') {
+                        const response = JSON.parse(event.detail.xhr.responseText);
+                        const messageDiv = document.getElementById('contact-message');
+                        if (event.detail.xhr.status === 200) {
+                            messageDiv.innerHTML = `<p class="success-message">${response.message}</p>`;
+                        } else {
+                            messageDiv.innerHTML = `<p class="error-message">${response.error}</p>`;
+                        }
+                    }
+                });
+            </script>
         </section>
 
         <!-- Tombol Logo PNG untuk Login Admin -->
@@ -305,8 +316,11 @@
             </div>
             <div class="footer-nav">
                 <ul>
-                    <li><a href="https://www.instagram.com/cimolbojotaa?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><img src="/logoig.png" alt="Logo Instagram" /></a></li>
-                    <li><a href="https://www.tiktok.com/@cimolbojotaa?is_from_webapp=1&sender_device=pc"><img src="/logotiktok.png" alt="Logo Tiktok" /></a></li>
+                    <li><a
+                            href="https://www.instagram.com/cimolbojotaa?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><img
+                                src="/logoig.png" alt="Logo Instagram" /></a></li>
+                    <li><a href="https://www.tiktok.com/@cimolbojotaa?is_from_webapp=1&sender_device=pc"><img
+                                src="/logotiktok.png" alt="Logo Tiktok" /></a></li>
                     <li><a href="https://x.com/Cimolbojot_aa"><img src="/logox.png" alt="Logo X" /></a></li>
                     <li><a href="https://tr.ee/eEDlJl-MlE"><img src="/logoshopee.png" alt="Logo Shopee" /></a></li>
                 </ul>

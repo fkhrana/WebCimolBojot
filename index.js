@@ -42,7 +42,6 @@ function HTMLHandler(req, res, htmlPath, data = {}) {
       res.writeHead(500);
       res.end("Could not read file");
     } else {
-      // Ganti placeholder dengan data dinamis
       let modifiedContent = content;
       for (const [key, value] of Object.entries(data)) {
         modifiedContent = modifiedContent.replace(`{{${key}}}`, value);
@@ -273,6 +272,39 @@ app.get("/api/orders/:id", async (req, res) => {
     res.json(response);
   } catch (err) {
     console.error("Error in GET /api/orders/:id:", err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
+  }
+});
+
+// Endpoint untuk menyimpan masukan dari form kontak
+app.post("/kontak", (req, res) => {
+  console.log("POST /kontak received:", req.body);
+  try {
+    const { email, pesan } = req.body;
+    if (!email || !pesan) {
+      return res.status(400).json({ error: "Email dan pesan wajib diisi" });
+    }
+
+    const stmt = db.prepare("INSERT INTO kontak_tbl (email_kontak, pesan_kontak, created_at) VALUES (?, ?, ?)");
+    const result = stmt.run(email, pesan, new Date().toISOString());
+    console.log("Saved kontak:", { id_kontak: result.lastInsertRowid, email, pesan });
+
+    res.status(200).json({ success: true, message: "Pesan berhasil dikirim!" });
+  } catch (err) {
+    console.error("Error in POST /kontak:", err.message);
+    res.status(500).json({ error: "Kesalahan server", details: err.message });
+  }
+});
+
+// Endpoint untuk mengambil semua masukan
+app.get("/api/masukan", requireLogin, (req, res) => {
+  console.log("GET /api/masukan called");
+  try {
+    const stmt = db.prepare("SELECT pesan_kontak FROM kontak_tbl ORDER BY created_at DESC");
+    const masukan = stmt.all();
+    res.json(masukan);
+  } catch (err) {
+    console.error("Error in GET /api/masukan:", err.message);
     res.status(500).json({ error: "Database error", details: err.message });
   }
 });
