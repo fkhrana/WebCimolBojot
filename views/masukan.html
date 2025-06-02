@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
+
 <body>
     <div class="navbar">
         <div class="navbar-header">
@@ -24,6 +26,11 @@
             <li><a href="/admin">PESANAN</a></li>
             <li><a href="/masukan" class="active">MASUKAN</a></li>
         </ul>
+        <div class="spacer"></div>
+        <div class="logout-line"></div>
+        <a href="/admin-login" class="logout-button">
+            <img src="/logout.png" alt="Logout" />
+        </a>
     </div>
     <div class="main-content">
         <div class="top-bar">
@@ -56,4 +63,5 @@
         });
     </script>
 </body>
+
 </html>

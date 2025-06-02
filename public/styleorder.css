@@ -330,112 +330,6 @@ section {
     min-height: 80px;
 }
 
-footer {
-    background: #C92F28;
-    color: #FFFFFF;
-    padding: 15px 0 5px 0;
-    font-family: 'Montserrat', sans-serif;
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.footer-content {
-    max-width: 1250px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 15px;
-    gap: 10px;
-}
-
-.footer-logo {
-    flex: 0 0 120px;
-    overflow: visible;
-}
-
-.footer-logo img {
-    width: 100%;
-    height: auto;
-}
-
-.footer-nav {
-    flex: 0 0 500px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-left: 175px;
-}
-
-.footer-nav h4 {
-    font-size: 1rem;
-    margin-bottom: 5px;
-    color: #F9C468;
-}
-
-.footer-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 0;
-}
-
-.footer-nav a {
-    color: #FFFFFF;
-    text-decoration: none;
-    font-size: 0.8rem;
-    transition: color 0.3s ease;
-}
-
-.footer-nav a:hover {
-    color: #F9C468;
-}
-
-.footer-contact {
-    flex: 0 0 300px;
-    text-align: right;
-}
-
-.footer-contact h4 {
-    font-size: 1rem;
-    margin-bottom: 5px;
-    color: #F9C468;
-}
-
-.footer-contact p {
-    font-size: 0.75rem;
-    margin-bottom: 3px;
-}
-
-.footer-contact a {
-    color: #F9C468;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-contact a:hover {
-    color: #ffb83d;
-}
-
-.social-links {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 5px;
-    margin-top: 10px;
-}
-
-.social-links p {
-    font-size: 0.75rem;
-    margin: 0;
-}
-
-.social-links a {
-    margin: 0;
-    font-size: 0.75rem;
-}
-
 @media (max-width: 768px) {
     .menu-grid {
         grid-template-columns: 1fr;
@@ -461,25 +355,6 @@ footer {
     .order-submit-button {
         margin: 15px auto;
         max-width: 150px; 
-    }
-
-    .footer-nav {
-        margin-left: 0;
-        flex: 1;
-    }
-
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .footer-contact {
-        text-align: center;
-        margin-top: 10px;
-    }
-
-    .social-links {
-        justify-content: center;
     }
 
     .pilih-rasa {

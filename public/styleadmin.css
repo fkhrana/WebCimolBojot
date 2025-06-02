@@ -87,7 +87,6 @@ body {
 
 .navbar ul li a:hover {
     color: #FFFFFF;
-    text-decoration: underline;
 }
 
 .navbar ul li a.active {
@@ -302,6 +301,36 @@ body {
     color: #83302E;
     margin: 0;
     font-weight: bold;
+}
+
+/* Logout Button */
+.logout-button {
+    display: block;
+    margin-top: auto;
+    margin-bottom: 5px;
+    margin-right: 30px;
+    text-align: center;
+    text-decoration: none;
+    color: transparent;
+}
+
+.logout-button img {
+    width: 130px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* Logout Line */
+.logout-line {
+    width: 90%;
+    height: 2.2px;
+    background: #AA191C;
+    margin: 0px 0 15px 0;
+}
+
+.spacer {
+    flex-grow: 1;
 }
 
 @media (max-width: 768px) {
