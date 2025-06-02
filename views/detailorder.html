@@ -26,7 +26,18 @@
 
         .order-container {
             background: #faf3e3;
-            color: #721414;
+            color: #83302E;
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 3px 8px rgb(0 0 0 / 0.2);
+            text-align: left;
+        }
+
+        .info-container {
+            background: #faf3e3;
+            color: #83302E;
             max-width: 800px;
             margin: 0 auto;
             padding: 30px;
@@ -36,9 +47,16 @@
         }
 
         .order-container h2 {
-            font-size: 1.5rem;
-            color: #721414;
+            font-size: 1.6rem;
+            color: #83302E;
             margin-bottom: 20px;
+            font-family: "Jua", sans-serif;
+        }
+
+        .info-container h2 {
+            font-size: 1.6rem;
+            color: #83302E;
+            margin-bottom: 5px;
             font-family: "Jua", sans-serif;
         }
 
@@ -46,7 +64,7 @@
             display: flex;
             align-items: flex-start;
             margin-bottom: 20px;
-            border-bottom: 1px solid #ccc;
+            border-bottom: 2px solid #f9c468;
             padding-bottom: 20px;
         }
 
@@ -63,55 +81,74 @@
 
         .order-item-details h3 {
             font-size: 1.2rem;
-            margin-bottom: 5px;
-            font-family: "Jua", sans-serif;
+            margin-bottom: 0px;
+            color: #83302E;
         }
 
         .order-item-details p {
             font-size: 0.9rem;
-            margin: 5px 0;
-            color: #721414;
+            font-weight: bold;
+            margin: 0px 0;
+            color: #D7681C;
         }
 
         .order-item-quantity {
-            font-size: 1rem;
+            font-size: 0.8rem;
             font-weight: bold;
-            color: #b16500;
+            color: #83302E;
             text-align: right;
+            background: #ffffff; /* Latar belakang putih */
+            border: 1px solid #E18D54; /* Border oranye */
+            padding: 1px 18px; /* Jarak dalam */
+            border-radius: 7px; /* Sudut melengkung */
         }
 
         .order-note {
-            background: #FFFFFF;
-            /* Nyambung sama menu-detail */
+            background: #ffffff;
             padding: 15px;
             border-radius: 8px;
-            margin: 20px 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 0px 0;
+            border: 1px solid #D7681C;
         }
 
         .order-note h3 {
             font-family: "Jua", sans-serif;
-            color: #C92F28;
+            color: #c92f28;
             font-size: 1.2em;
             margin-bottom: 10px;
         }
 
         .order-note p {
             font-family: "Montserrat", sans-serif;
-            color: #721414;
+            color: #8c8282;
             font-size: 0.9rem;
         }
 
-        .info-pemesan {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #ccc;
-        }
-
-        .info-pemesan p {
+        .info-container p {
             font-size: 0.9rem;
+            font-weight: bold;
             margin: 10px 0;
-            color: #721414;
+            color: #d7681c;
+        }
+
+        #nama-pemesan {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #d7681c;
+            margin: 0 0 0px 0;
+        }
+
+        #telepon-pemesan {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #d7681c;
+            margin: 0 0 0px 0;
+        }
+
+        #cabang-pemesanan {
+            font-size: 0.9rem;
+            color: #d7681c;
+            margin: 0 0 10px 0;
         }
 
         .total-section {
@@ -120,20 +157,21 @@
             margin-top: 20px;
             font-size: 1.1rem;
             font-weight: bold;
-            color: #721414;
+            color: #83302E;
         }
 
         .submit-order-button {
             background-color: #f9c468;
-            color: #99000d;
+            color: #83302E;
             padding: 10px 25px;
             border: none;
             border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            margin: 20px auto;
+            margin: 30px auto 20px auto;
             display: block;
+            font-family: "Montserrat", sans-serif;
         }
 
         .submit-order-button:hover {
@@ -141,11 +179,33 @@
         }
 
         .confirmation-message {
-            color: #721414;
+            color: #ffffff;
             font-size: 0.9rem;
             text-align: center;
-            margin-top: 10px;
-            font-family: 'Montserrat', sans-serif;
+            margin-top: -5px;
+            margin-bottom: 30px;
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .change-order-link {
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-family: "Montserrat", sans-serif;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: -8px;
+            transition: text-decoration 0.3s ease;
+        }
+
+        .change-order-link:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #f9c468;
+            margin: 15px 0;
         }
 
         @media (max-width: 768px) {
@@ -153,7 +213,8 @@
                 padding: 80px 15px;
             }
 
-            .order-container {
+            .order-container,
+            .info-container {
                 padding: 20px;
             }
 
@@ -169,10 +230,44 @@
             .order-item-quantity {
                 text-align: left;
                 margin-top: 10px;
+                padding: 4px 8px; /* Padding lebih kecil di mobile */
+                font-size: 0.85rem; /* Sesuaikan ukuran font */
             }
 
             .order-note {
                 padding: 10px;
+            }
+
+            .detail-order-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .order-container h2,
+            .info-container h2 {
+                font-size: 1.3rem;
+            }
+
+            .order-item-details h3 {
+                font-size: 1rem;
+            }
+
+            .order-item-details p,
+            .info-container p,
+            .order-note p {
+                font-size: 0.85rem;
+            }
+
+            .total-section {
+                font-size: 1rem;
+            }
+
+            .submit-order-button {
+                padding: 8px 20px;
+            }
+
+            .change-order-link {
+                font-size: 0.85rem;
+                margin-top: 8px;
             }
         }
     </style>
@@ -203,20 +298,24 @@
                     <h3>CATATAN TAMBAHAN</h3>
                     <p id="order-catatan">-</p>
                 </div>
-                <div class="info-pemesan">
-                    <h2>INFO PEMESAN</h2>
-                    <p id="nama-pemesan"></p>
-                    <p id="cabang-pemesanan"></p>
-                    <hr />
-                    <div class="total-section">
-                        <span>TOTAL</span>
-                        <span id="total-harga"></span>
-                    </div>
+            </div>
+            <div class="info-container">
+                <h2>INFO PEMESAN</h2>
+                <p id="nama-pemesan"></p>
+                <p id="telepon-pemesan"></p>
+                <p id="cabang-pemesanan"></p>
+                <hr />
+                <div class="total-section">
+                    <span>TOTAL</span>
+                    <span id="total-harga"></span>
                 </div>
             </div>
             <button class="submit-order-button" hx-post="/api/orders/confirm" hx-vals='{"orderId": "{{orderId}}"}'
-                hx-target="#confirmation-message" hx-swap="innerHTML">KIRIM PESANAN</button>
+                hx-target="#confirmation-message" hx-swap="innerHTML">
+                KIRIM PESANAN
+            </button>
             <div id="confirmation-message"></div>
+            <a href="/order" class="change-order-link">Ingin ubah pesanan?</a>
         </div>
     </main>
     <footer>
@@ -237,7 +336,10 @@
                 <h4>Kontak Kami</h4>
                 <div class="contact-info">
                     <p>Telepon: <a href="tel:+62123456789">+62 123 456 789</a></p>
-                    <p>Email: <a href="mailto:info@cimolbojotaa.com">info@cimolbojotaa.com</a></p>
+                    <p>
+                        Email:
+                        <a href="mailto:info@cimolbojotaa.com">info@cimolbojotaa.com</a>
+                    </p>
                 </div>
                 <div class="social-links">
                     <p>Follow us:</p>
@@ -269,6 +371,7 @@
 
                 const orderItemsContainer = document.getElementById("order-items");
                 const namaDetails = document.getElementById("nama-pemesan");
+                const teleponDetails = document.getElementById("telepon-pemesan");
                 const cabangDetails = document.getElementById("cabang-pemesanan");
                 const catatanDetails = document.getElementById("order-catatan");
                 const totalHargaElement = document.getElementById("total-harga");
@@ -302,48 +405,54 @@
                         .join(" ");
                 };
 
-                namaDetails.textContent = `Nama: ${order.nama || "Tidak Diketahui"}`;
-                cabangDetails.textContent = `Cabang: ${order.cabang?.toUpperCase() || "Tidak Diketahui"}`;
-                catatanDetails.textContent = order.items[0]?.catatan || "-"; // Ambil catatan dari item pertama
+                namaDetails.textContent = `${order.nama || "Tidak Diketahui"}`;
+                teleponDetails.textContent = `${order.telepon || "Tidak Diketahui"}`;
+                cabangDetails.textContent = `CIMOL BOJOT AA - ${order.cabang?.toUpperCase() || "Tidak Diketahui"}`;
+                catatanDetails.textContent = order.items[0]?.catatan || "-";
 
                 order.items.forEach((item) => {
                     console.log("Processing item:", item);
                     const orderItem = document.createElement("div");
                     orderItem.className = "order-item";
                     orderItem.innerHTML = `
-                        <img src="/cimolmoza.png" alt="${item.name || "Menu"}">
-                        <div class="order-item-details">
-                            <h3>${formatMenuName(item.name)}</h3>
-                            <p>Bumbu: ${bumbuMap[item.bumbu] || item.bumbu || "-"}</p>
-                            <p>Topping: ${toppingMap[item.topping] || item.topping || "-"}</p>
-                            <p>Level Kepedasan: ${levelMap[item.level] || item.level || "-"}</p>
-                        </div>
-                        <div class="order-item-quantity">
-                            ${item.quantity || 1}x
-                        </div>
-                    `;
+                <img src="/cimolmoza.png" alt="${item.name || "Menu"}">
+                <div class="order-item-details">
+                    <h3>${formatMenuName(item.name)}</h3>
+                    <p>${bumbuMap[item.bumbu] || item.bumbu || "-"}</p>
+                    <p>${toppingMap[item.topping] || item.topping || "-"}</p>
+                    <p>${levelMap[item.level] || item.level || "-"}</p>
+                </div>
+                <div class="order-item-quantity">
+                    ${item.quantity || 1}x
+                </div>
+            `;
                     orderItemsContainer.appendChild(orderItem);
                 });
 
                 totalHargaElement.textContent = `Rp${(order.totalHarga || 0).toLocaleString("id-ID")}`;
 
                 // Simpan orderId untuk digunakan di hx-vals
-                document.querySelector('.submit-order-button').setAttribute('hx-vals', JSON.stringify({ orderId }));
+                document.querySelector(".submit-order-button").setAttribute("hx-vals", JSON.stringify({ orderId }));
             } catch (error) {
                 console.error("Error fetching order:", error.message);
                 document.getElementById("order-items").innerHTML = `<p>Error: ${error.message}</p>`;
             }
         });
 
-        // Tangani respons HTMX untuk tombol KIRIM PESANAN
+        // Tangani respons dari permintaan POST
         document.body.addEventListener('htmx:afterRequest', (event) => {
             if (event.detail.requestConfig.path === '/api/orders/confirm') {
-                const response = JSON.parse(event.detail.xhr.responseText);
-                const messageDiv = document.getElementById('confirmation-message');
-                if (event.detail.xhr.status === 200) {
-                    messageDiv.innerHTML = `<p class="confirmation-message">${response.message}</p>`;
-                } else {
-                    messageDiv.innerHTML = `<p class="confirmation-message" style="color: #99000D">${response.error}</p>`;
+                try {
+                    const response = JSON.parse(event.detail.xhr.responseText);
+                    const messageDiv = document.getElementById('confirmation-message');
+                    if (event.detail.xhr.status === 200 && response.success) {
+                        messageDiv.innerHTML = `<p class="confirmation-message">${response.message}</p>`;
+                    } else {
+                        messageDiv.innerHTML = `<p class="confirmation-message" style="color: #ff0000">${response.error || 'Terjadi kesalahan saat mengirim pesanan.'}</p>`;
+                    }
+                } catch (error) {
+                    console.error('Error parsing response:', error);
+                    document.getElementById('confirmation-message').innerHTML = `<p class="confirmation-message" style="color: #ff0000">Terjadi kesalahan saat memproses respons.</p>`;
                 }
             }
         });
