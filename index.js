@@ -347,6 +347,7 @@ app.get("/api/orders", requireLogin, async (req, res) => {
   try {
     const kode_cabang = req.session.kode_cabang;
     const status = req.query.status || '';
+    const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
 
     // Query untuk grup berdasarkan id_pembeli
     let query = `
@@ -366,13 +367,13 @@ app.get("/api/orders", requireLogin, async (req, res) => {
       params.push(status);
     }
 
-    const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
     query += ` GROUP BY o.id_pembeli ORDER BY MIN(o.created_at) ${order}`;
 
     const stmt = db.prepare(query);
     const orders = stmt.all(...params);
     console.log("Orders fetched:", orders);
 
+    const totalOrders = orders.length; // Total jumlah pesanan
     const formattedOrders = orders.map((order, index) => {
       const noteArray = order.notes.split(',');
       const menuArray = order.menus.split(',');
@@ -425,10 +426,13 @@ app.get("/api/orders", requireLogin, async (req, res) => {
                      statusArray[0] === 'confirmed' ? 'Diterima' :
                      statusArray[0] === 'completed' ? 'Selesai' : 'Tidak Diketahui';
 
+      // Atur nomor urut berdasarkan urutan
+      const no = order === 'desc' ? totalOrders - index : index + 1;
+
       return {
         id_order: order.id_order,
         id_pembeli: order.id_pembeli,
-        no: index + 1,
+        no,
         nama: order.nama_cust,
         items,
         totalQuantity,
