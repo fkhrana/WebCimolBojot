@@ -43,9 +43,9 @@
                     <div class="filter-group">
                         <label for="order-filter">URUTKAN:</label>
                         <select id="order-filter" name="order" hx-get="/api/orders" hx-target="#order-list"
-                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator"
-                            hx-params="order,status"
-                            hx-vals='js:{status: document.getElementById("status-filter").value, ts: Date.now()}'>
+                                hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator"
+                                hx-sync="this:queue" hx-params="order,status"
+                                hx-vals='js:{status: document.getElementById("status-filter").value, ts: Date.now()}'>
                             <option value="asc">Terlama</option>
                             <option value="desc">Terbaru</option>
                         </select>
@@ -53,9 +53,9 @@
                     <div class="filter-group">
                         <label for="status-filter">FILTER STATUS:</label>
                         <select id="status-filter" name="status" hx-get="/api/orders" hx-target="#order-list"
-                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator"
-                            hx-params="order,status"
-                            hx-vals='js:{order: document.getElementById("order-filter").value, ts: Date.now()}'>
+                                hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator"
+                                hx-sync="this:queue" hx-params="order,status"
+                                hx-vals='js:{order: document.getElementById("order-filter").value, ts: Date.now()}'>
                             <option value="">Semua</option>
                             <option value="pending">Menunggu</option>
                             <option value="confirmed">Diterima</option>
@@ -68,16 +68,18 @@
                     <thead>
                         <tr>
                             <th>NO.</th>
-                            <th>PELANGGAN</th> <!-- Ganti NAMA jadi PELANGGAN -->
+                            <th>PELANGGAN</th>
                             <th>PESANAN</th>
                             <th>JUMLAH</th>
                             <th>HARGA</th>
                             <th>STATUS</th>
                         </tr>
                     </thead>
-                    <tbody id="order-list" hx-get="/api/orders" hx-trigger="load" hx-swap="innerHTML"
-                        hx-indicator=".htmx-indicator" hx-headers='{"Cache-Control": "no-cache"}'
-                        hx-params="order,status" hx-vals='js:{ts: Date.now()}'>
+                    <tbody id="order-list" hx-get="/api/orders" 
+                           hx-trigger="load" 
+                           hx-swap="innerHTML" hx-indicator=".htmx-indicator" 
+                           hx-headers='{"Cache-Control": "no-cache"}' 
+                           hx-params="order,status" hx-vals='js:{ts: Date.now()}'>
                         <!-- Data pesanan akan dimuat di sini -->
                     </tbody>
                 </table>
@@ -85,6 +87,15 @@
         </div>
     </div>
     <script>
+        // Log htmx request buat debug
+        document.body.addEventListener('htmx:beforeRequest', (event) => {
+            console.log('HTMX request:', {
+                method: event.detail.verb,
+                url: event.detail.xhr.url,
+                target: event.detail.target.id
+            });
+        });
+
         document.body.addEventListener('htmx:afterSwap', (event) => {
             if (event.detail.target.id === 'order-list') {
                 try {
@@ -102,19 +113,29 @@
                         "jagung-bakar": "Jagung Bakar",
                         "pedas-asin": "Pedas Asin",
                         barbeque: "Barbeque",
-                        balado: "Balado",
+                        balado: "Balado"
                     };
                     const toppingMap = {
                         "daun-jeruk": "Daun Jeruk",
-                        "bawang-goreng": "Bawang Goreng",
+                        "bawang-goreng": "Bawang Goreng"
                     };
                     const levelMap = {
                         lv0: "Level 0",
                         lv1: "Level 1",
                         lv2: "Level 2",
                         lv3: "Level 3",
-                        extra: "Extra",
+                        extra: "Extra"
                     };
+
+                    // Format nomor telepon untuk WA
+                    function formatPhoneForWhatsApp(phone) {
+                        // Pastiin nomor string dan mulai dengan '08'
+                        const phoneStr = phone.toString();
+                        if (phoneStr.startsWith('08')) {
+                            return `+62${phoneStr.slice(1)}`; // Ganti '08' jadi '+62'
+                        }
+                        return phoneStr; // Kalau format lain, biarin
+                    }
 
                     container.innerHTML = orders.map(order => `
                         <tr>
@@ -122,7 +143,7 @@
                             <td>
                                 <div class="pelanggan-details">
                                     <div class="nama">${order.nama}</div>
-                                    <a href="https://wa.me/${order.telepon}" target="_blank" class="telepon">
+                                    <a href="https://wa.me/${formatPhoneForWhatsApp(order.telepon)}" target="_blank" class="telepon">
                                         ${order.telepon}
                                     </a>
                                 </div>
@@ -150,22 +171,19 @@
                                     <option value="confirmed" ${order.status === 'Diterima' ? 'selected' : ''}>Diterima</option>
                                     <option value="completed" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
                                 </select>
-                                <button class="delete-button" 
-                                            hx-delete="/api/orders/${order.id_order}" 
-                                            hx-swap="none" 
-                                            hx-confirm="Yakin mau hapus pesanan ini?">
-                                        <img src="/hapus.png" alt="Hapus" class="delete-icon">
+                                <button class="delete-button delete-order" data-pembeli-id="${order.id_pembeli}" data-order-name="${order.nama}">
+                                    <img src="/hapus.png" alt="Hapus" class="delete-icon">
                                 </button>
                             </td>
                         </tr>
                     `).join('');
 
-                    // Tambah event listener untuk dropdown
+                    // Event listener untuk status dropdown
                     document.querySelectorAll('.status-dropdown').forEach(dropdown => {
                         dropdown.addEventListener('change', async (event) => {
                             const orderId = event.target.getAttribute('data-order-id');
                             const status = event.target.value;
-                            console.log('Dropdown changed:', { orderId, status });
+                            console.log('Dropdown status changed:', { orderId, status });
 
                             try {
                                 const response = await fetch(`/api/orders/${orderId}/status`, {
@@ -182,7 +200,7 @@
                                 if (result.success) {
                                     const statusFilter = document.getElementById('status-filter').value || '';
                                     const orderFilter = document.getElementById('order-filter').value || 'asc';
-                                    console.log('Refreshing table with filters:', { status: statusFilter, order: orderFilter });
+                                    console.log('Refreshing table:', { status: statusFilter, order: orderFilter });
                                     let url = '/api/orders';
                                     const params = new URLSearchParams();
                                     if (statusFilter) params.append('status', statusFilter);
@@ -199,8 +217,54 @@
                                     alert('Gagal update status: ' + result.error);
                                 }
                             } catch (err) {
-                                console.error('Error:', err);
+                                console.error('Error:', err.message);
                                 alert('Error: Gagal kirim request');
+                            }
+                        });
+                    });
+
+                    // Event listener untuk tombol hapus
+                    document.querySelectorAll('.delete-order').forEach(button => {
+                        button.addEventListener('click', async (event) => {
+                            const pembeliId = button.getAttribute('data-pembeli-id');
+                            const orderName = button.getAttribute('data-order-name');
+                            console.log('Delete button clicked:', { pembeliId, orderName });
+
+                            if (confirm(`Yakin hapus semua pesanan ${orderName}?`)) {
+                                try {
+                                    const response = await fetch(`/api/orders/pembeli/${pembeliId}`, {
+                                        method: 'DELETE',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Cache-Control': 'no-cache'
+                                        }
+                                    });
+                                    const result = await response.json();
+                                    console.log('Delete response:', result);
+
+                                    if (result.message === 'Semua pesanan pelanggan berhasil dihapus') {
+                                        const statusFilter = document.getElementById('status-filter').value || '';
+                                        const orderFilter = document.getElementById('order-filter').value || 'asc';
+                                        console.log('Refreshing table:', { status: statusFilter, order: orderFilter });
+                                        let url = '/api/orders';
+                                        const params = new URLSearchParams();
+                                        if (statusFilter) params.append('status', statusFilter);
+                                        if (orderFilter) params.append('order', orderFilter);
+                                        params.append('ts', Date.now());
+                                        if (params.toString()) url += `?${params.toString()}`;
+                                        htmx.ajax('GET', url, {
+                                            target: '#order-list',
+                                            swap: 'innerHTML',
+                                            headers: { 'Cache-Control': 'no-cache' }
+                                        });
+                                    } else {
+                                        console.error('Delete failed:', result.error);
+                                        alert('Gagal hapus pesanan: ' + result.error);
+                                    }
+                                } catch (err) {
+                                    console.error('Error:', err.message);
+                                    alert('Error: Gagal kirim request');
+                                }
                             }
                         });
                     });
@@ -212,5 +276,4 @@
         });
     </script>
 </body>
-
 </html>

@@ -129,6 +129,13 @@ app.post("/form/order", async (req, res) => {
   try {
     const { nama, telepon, cabang, catatan } = req.body;
 
+    // Validasi telepon
+    const phoneStr = telepon.toString().trim();
+    if (!phoneStr.match(/^08[0-9]{8,11}$/)) {
+      console.log("Validation failed: Invalid phone number", phoneStr);
+      return res.status(400).json({ error: "Nomor telepon harus diawali 08 dan berisi 10-13 digit" });
+    }
+
     const menuItems = [
       { formName: "cimol_mozarella_kecil", id_menu: 3, menu: "Cimol Mozzarella Kecil", price: 11000 },
       { formName: "cimol_mozarella_besar", id_menu: 4, menu: "Cimol Mozzarella Besar", price: 22000 },
@@ -140,7 +147,7 @@ app.post("/form/order", async (req, res) => {
       { formName: "cimol_beef_besar", id_menu: 8, menu: "Cimol Beef Besar", price: 22000 },
     ];
 
-    if (!nama || !telepon || !cabang) {
+    if (!nama || !phoneStr || !cabang) {
       console.log("Validation failed: Missing nama, telepon, or cabang");
       return res.status(400).json({ error: "Nama, telepon, dan cabang wajib diisi" });
     }
@@ -175,10 +182,19 @@ app.post("/form/order", async (req, res) => {
       return res.status(400).json({ error: "Pilih minimal satu menu" });
     }
 
-    const customerStmt = db.prepare("INSERT INTO customer_tbl (nama_cust, telepon) VALUES (?, ?)");
-    const customerResult = customerStmt.run(nama, telepon);
-    const id_pembeli = customerResult.lastInsertRowid;
-    console.log("Saved customer:", { id_pembeli, nama, telepon });
+    // Cek apakah pelanggan sudah ada
+    const checkCustomerStmt = db.prepare("SELECT id_pembeli FROM customer_tbl WHERE telepon = ?");
+    const existingCustomer = checkCustomerStmt.get(phoneStr);
+    let id_pembeli;
+
+    if (existingCustomer) {
+      id_pembeli = existingCustomer.id_pembeli;
+    } else {
+      const customerStmt = db.prepare("INSERT INTO customer_tbl (nama_cust, telepon) VALUES (?, ?)");
+      const customerResult = customerStmt.run(nama, phoneStr);
+      id_pembeli = customerResult.lastInsertRowid;
+      console.log("Saved customer:", { id_pembeli, nama, telepon: phoneStr });
+    }
 
     const cabangStmt = db.prepare("SELECT id_cabang FROM cabang_tbl WHERE kode_cabang = ?");
     const cabangRow = cabangStmt.get(cabang);
@@ -551,6 +567,51 @@ app.get("/api/test-update/:id/:status", (req, res) => {
   } catch (err) {
     console.error("Error in test-update:", err.message);
     res.status(500).json({ error: "Kesalahan server", details: err.message });
+  }
+});
+
+app.delete("/api/orders/pembeli/:id_pembeli", requireLogin, async (req, res) => {
+  console.log("DELETE /api/orders/pembeli/:id_pembeli called", {
+    id_pembeli: req.params.id_pembeli,
+    kode_cabang: req.session.kode_cabang,
+    timestamp: new Date().toISOString(),
+  });
+  try {
+    const id_pembeli = parseInt(req.params.id_pembeli);
+    const kode_cabang = req.session.kode_cabang;
+
+    // Cek apakah pelanggan punya pesanan di cabang ini
+    const checkStmt = db.prepare(`
+      SELECT o.id_pembeli
+      FROM order_tbl o
+      JOIN cabang_tbl cb ON o.id_cabang = cb.id_cabang
+      WHERE o.id_pembeli = ? AND cb.kode_cabang = ?
+    `);
+    const pembeliExists = checkStmt.get(id_pembeli, kode_cabang);
+
+    if (!pembeliExists) {
+      console.log("Pembeli not found or unauthorized", { id_pembeli, kode_cabang });
+      return res.status(404).json({ error: "Pesanan pelanggan tidak ditemukan atau tidak diizinkan" });
+    }
+
+    // Hapus semua pesanan pelanggan
+    const deleteStmt = db.prepare(`DELETE FROM order_tbl WHERE id_pembeli = ?`);
+    const result = deleteStmt.run(id_pembeli);
+
+    if (result.changes === 0) {
+      console.log("No orders deleted for pembeli", { id_pembeli });
+      return res.status(500).json({ error: "Gagal menghapus pesanan" });
+    }
+
+    // (Opsional) Hapus pelanggan dari customer_tbl kalau nggak ada pesanan
+    const deleteCustomerStmt = db.prepare(`DELETE FROM customer_tbl WHERE id_pembeli = ?`);
+    deleteCustomerStmt.run(id_pembeli);
+
+    console.log("Semua pesanan pelanggan dihapus", { id_pembeli, changes: result.changes });
+    res.status(200).json({ message: "Semua pesanan pelanggan berhasil dihapus" });
+  } catch (err) {
+    console.error("Error in DELETE /api/orders/pembeli/:id_pembeli:", err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
   }
 });
 
