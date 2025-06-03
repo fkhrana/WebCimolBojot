@@ -112,6 +112,7 @@
 
 .order-note p {
     font-family: "Montserrat", sans-serif;
+    font-weight: bold;
     color: #8c8282;
     font-size: 0.9rem;
 }

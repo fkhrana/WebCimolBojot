@@ -343,22 +343,30 @@ app.post("/api/orders/confirm", async (req, res) => {
 });
 
 app.get("/api/orders", requireLogin, async (req, res) => {
-  console.log("GET /api/orders called", req.query);
+  console.log("GET /api/orders called", {
+    query: req.query,
+    kode_cabang: req.session.kode_cabang,
+    timestamp: new Date().toISOString()
+  });
   try {
     const kode_cabang = req.session.kode_cabang;
     const status = req.query.status || '';
     const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
+    console.log("Filter parameters:", { status, order, kode_cabang });
 
-    // Query untuk grup berdasarkan id_pembeli
+    // Query untuk grup berdasarkan id_pembeli dengan nomor urut dari SQL
     let query = `
-      SELECT o.id_pembeli, MIN(o.id_order) as id_order, c.nama_cust, 
-             GROUP_CONCAT(o.note) as notes, GROUP_CONCAT(m.menu) as menus,
-             GROUP_CONCAT(o.status_order) as statuses
-      FROM order_tbl o
-      JOIN customer_tbl c ON o.id_pembeli = c.id_pembeli
-      JOIN menu_tbl m ON o.id_menu = m.id_menu
-      JOIN cabang_tbl cb ON o.id_cabang = cb.id_cabang
-      WHERE cb.kode_cabang = ?
+      WITH RankedOrders AS (
+        SELECT o.id_pembeli, MIN(o.id_order) as id_order, c.nama_cust, c.telepon,
+               GROUP_CONCAT(o.note) as notes, GROUP_CONCAT(m.menu) as menus,
+               GROUP_CONCAT(o.status_order) as statuses,
+               MIN(o.created_at) as created_at,
+               ROW_NUMBER() OVER (ORDER BY MIN(o.created_at) ${order === 'ASC' ? 'ASC' : 'DESC'}) as row_num
+        FROM order_tbl o
+        JOIN customer_tbl c ON o.id_pembeli = c.id_pembeli
+        JOIN menu_tbl m ON o.id_menu = m.id_menu
+        JOIN cabang_tbl cb ON o.id_cabang = cb.id_cabang
+        WHERE cb.kode_cabang = ?
     `;
     const params = [kode_cabang];
 
@@ -367,14 +375,24 @@ app.get("/api/orders", requireLogin, async (req, res) => {
       params.push(status);
     }
 
-    query += ` GROUP BY o.id_pembeli ORDER BY MIN(o.created_at) ${order}`;
+    query += `
+        GROUP BY o.id_pembeli
+      )
+      SELECT id_pembeli, id_order, created_at, nama_cust, telepon,
+             notes, statuses, menus,
+             ${order === 'ASC' ? 'row_num' : '(SELECT COUNT(*) FROM RankedOrders) - row_num + 1'} as no
+      FROM RankedOrders
+      ORDER BY created_at ${order};
+    `;
 
     const stmt = db.prepare(query);
     const orders = stmt.all(...params);
-    console.log("Orders fetched:", orders);
+    console.log("Orders fetched from DB:", orders);
 
-    const totalOrders = orders.length; // Total jumlah pesanan
-    const formattedOrders = orders.map((order, index) => {
+    const totalOrders = orders.length;
+    console.log("Total orders for cabang:", totalOrders);
+
+    const formattedOrders = orders.map((order) => {
       const noteArray = order.notes.split(',');
       const menuArray = order.menus.split(',');
       const statusArray = order.statuses.split(',');
@@ -426,14 +444,21 @@ app.get("/api/orders", requireLogin, async (req, res) => {
                      statusArray[0] === 'confirmed' ? 'Diterima' :
                      statusArray[0] === 'completed' ? 'Selesai' : 'Tidak Diketahui';
 
-      // Atur nomor urut berdasarkan urutan
-      const no = order === 'desc' ? totalOrders - index : index + 1;
+      console.log("Order formatted:", {
+        id_pembeli: order.id_pembeli,
+        no: order.no,
+        nama_cust: order.nama_cust,
+        telepon: order.telepon,
+        created_at: order.created_at,
+        status
+      });
 
       return {
         id_order: order.id_order,
         id_pembeli: order.id_pembeli,
-        no,
+        no: order.no,
         nama: order.nama_cust,
+        telepon: order.telepon, // Tambahkan telepon ke respons
         items,
         totalQuantity,
         totalHarga,
@@ -442,6 +467,8 @@ app.get("/api/orders", requireLogin, async (req, res) => {
       };
     });
 
+    console.log("Formatted orders sent:", formattedOrders);
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.json(formattedOrders);
 
   } catch (err) {

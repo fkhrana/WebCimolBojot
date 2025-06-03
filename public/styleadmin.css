@@ -67,13 +67,6 @@ body {
     list-style: none;
     padding: 0;
     width: 100%;
-    text-align: left;
-}
-
-.navbar ul {
-    list-style: none;
-    padding: 0;
-    width: 100%;
     text-align: center;
 }
 
@@ -205,8 +198,9 @@ body {
 }
 
 .order-table th {
+    text-align: center; /* Judul kolom rata tengah horizontal */
+    vertical-align: middle; /* Judul kolom rata tengah vertikal */
     padding: 10px;
-    text-align: center;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
     color: #721414;
@@ -215,8 +209,8 @@ body {
 }
 
 .order-table td {
+    vertical-align: top; /* Isi kolom rata atas */
     padding: 10px;
-    text-align: center;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
     color: #721414;
@@ -224,8 +218,45 @@ body {
     border-right: 2px solid #E8AD80;
 }
 
+/* Kolom NO. */
+.order-table th:first-child,
+.order-table td:first-child {
+    width: 60px;
+    text-align: center; /* Tengah untuk isi dan judul */
+}
+
+/* Kolom PELANGGAN */
+.order-table th:nth-child(2) {
+    text-align: center; /* Judul tetap tengah */
+}
+.order-table td:nth-child(2) {
+    text-align: left; /* Isi rata kiri */
+}
+
+/* Kolom PESANAN */
+.order-table th:nth-child(3) {
+    text-align: center; /* Judul tetap tengah */
+}
 .order-table td:nth-child(3) {
-    text-align: left;
+    text-align: left; /* Isi rata kiri */
+}
+
+/* Kolom JUMLAH */
+.order-table th:nth-child(4),
+.order-table td:nth-child(4) {
+    text-align: center; /* Tengah untuk isi dan judul */
+}
+
+/* Kolom HARGA */
+.order-table th:nth-child(5),
+.order-table td:nth-child(5) {
+    text-align: center; /* Tengah untuk isi dan judul */
+}
+
+/* Kolom STATUS */
+.order-table th:nth-child(6),
+.order-table td:nth-child(6) {
+    text-align: center; /* Tengah untuk isi dan judul */
 }
 
 .order-table th:not(:last-child),
@@ -240,6 +271,30 @@ body {
 
 .order-table tr:last-child td {
     border-bottom: none;
+}
+
+/* Styling untuk kolom PELANGGAN */
+.pelanggan-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.pelanggan-details .nama {
+    font-weight: bold;
+    color: #721414;
+    font-size: 0.9rem;
+}
+
+.pelanggan-details .telepon {
+    color: #83302E; /* Warna cokelat tua sesuai update kamu */
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.pelanggan-details .telepon:hover {
+    color: #83302E;
+    text-decoration: underline; /* Underline saat hover sesuai update kamu */
 }
 
 .order-details {
