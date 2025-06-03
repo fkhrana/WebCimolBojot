@@ -40,15 +40,25 @@
         <div class="order-container">
             <div id="pesanan">
                 <div class="filter-container">
-                    <label for="status-filter">Filter Status:</label>
-                    <select id="status-filter" name="status" hx-get="/api/orders" hx-target="#order-list"
-                        hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator">
-                        <option value="">Semua</option>
-                        <option value="pending">Menunggu</option>
-                        <option value="confirmed">Diterima</option>
-                        <option value="completed">Selesai</option>
-                    </select>
-                    <span class="htmx-indicator">Memuat...</span>
+                    <div class="filter-group">
+                        <label for="order-filter">Urutkan:</label>
+                        <select id="order-filter" name="order" hx-get="/api/orders" hx-target="#order-list"
+                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator">
+                            <option value="asc">Terlama</option>
+                            <option value="desc">Terbaru</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="status-filter">Filter Status:</label>
+                        <select id="status-filter" name="status" hx-get="/api/orders" hx-target="#order-list"
+                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator">
+                            <option value="">Semua</option>
+                            <option value="pending">Menunggu</option>
+                            <option value="confirmed">Diterima</option>
+                            <option value="completed">Selesai</option>
+                        </select>
+                        <span class="htmx-indicator">Memuat...</span>
+                    </div>
                 </div>
                 <table class="order-table">
                     <thead>

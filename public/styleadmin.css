@@ -67,11 +67,14 @@ body {
     list-style: none;
     padding: 0;
     width: 100%;
-    text-align: center;
+    text-align: left;
 }
 
-.navbar ul li {
-    margin: 10px 0;
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    text-align: center;
 }
 
 .navbar ul li a {
@@ -83,6 +86,7 @@ body {
     text-decoration: none;
     transition: color 0.3s, text-decoration 0.3s;
     font-weight: bold;
+    text-align: center;
 }
 
 .navbar ul li a:hover {
@@ -123,8 +127,13 @@ body {
 }
 
 .filter-container {
-    margin-bottom: 20px;
-    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0 10px 0;
+}
+
+.filter-group {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -303,6 +312,19 @@ body {
     font-weight: bold;
 }
 
+/* Spacer */
+.spacer {
+    flex-grow: 1;
+}
+
+/* Logout Line */
+.logout-line {
+    width: 90%;
+    height: 2.2px;
+    background: #AA191C;
+    margin: 0px 0 15px 0;
+}
+
 /* Logout Button */
 .logout-button {
     display: block;
@@ -319,18 +341,6 @@ body {
     height: auto;
     cursor: pointer;
     transition: transform 0.3s ease;
-}
-
-/* Logout Line */
-.logout-line {
-    width: 90%;
-    height: 2.2px;
-    background: #AA191C;
-    margin: 0px 0 15px 0;
-}
-
-.spacer {
-    flex-grow: 1;
 }
 
 @media (max-width: 768px) {
@@ -354,5 +364,34 @@ body {
     .order-details .details,
     .order-details .catatan {
         font-size: 0.8rem;
+    }
+
+    .filter-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin: 15px 0 10px 0;
+    }
+
+    .filter-group {
+        justify-content: center;
+    }
+
+    .spacer {
+        flex-grow: 1;
+    }
+
+    .logout-line {
+        margin: 0 0 4px 0;
+    }
+
+    .logout-button {
+        margin-top: auto;
+        margin-bottom: 6px;
+        margin-right: 15px;
+    }
+
+    .logout-button img {
+        width: 100px;
     }
 }

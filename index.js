@@ -366,7 +366,8 @@ app.get("/api/orders", requireLogin, async (req, res) => {
       params.push(status);
     }
 
-    query += ` GROUP BY o.id_pembeli ORDER BY MIN(o.created_at) DESC`;
+    const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
+    query += ` GROUP BY o.id_pembeli ORDER BY MIN(o.created_at) ${order}`;
 
     const stmt = db.prepare(query);
     const orders = stmt.all(...params);
@@ -377,7 +378,6 @@ app.get("/api/orders", requireLogin, async (req, res) => {
       const menuArray = order.menus.split(',');
       const statusArray = order.statuses.split(',');
 
-      // Parse notes untuk setiap menu
       const items = noteArray.map((note, i) => {
         const noteLines = note.split('\n');
         const quantityMatch = noteLines.find((line) => line.startsWith('Quantity:'));
@@ -418,11 +418,9 @@ app.get("/api/orders", requireLogin, async (req, res) => {
         };
       });
 
-      // Hitung total jumlah dan harga
       const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
       const totalHarga = items.reduce((sum, item) => sum + item.harga, 0);
 
-      // Ambil status pertama (semua status sama)
       const status = statusArray[0] === 'pending' ? 'Menunggu' :
                      statusArray[0] === 'confirmed' ? 'Diterima' :
                      statusArray[0] === 'completed' ? 'Selesai' : 'Tidak Diketahui';
@@ -436,11 +434,12 @@ app.get("/api/orders", requireLogin, async (req, res) => {
         totalQuantity,
         totalHarga,
         status,
-        catatan: items[0].catatan, // Catatan sama untuk semua item
+        catatan: items[0].catatan,
       };
     });
 
     res.json(formattedOrders);
+
   } catch (err) {
     console.error("Error in GET /api/orders:", err.message);
     res.status(500).json({ error: "Database error", details: err.message });
