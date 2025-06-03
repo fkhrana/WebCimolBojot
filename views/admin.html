@@ -41,7 +41,7 @@
             <div id="pesanan">
                 <div class="filter-container">
                     <div class="filter-group">
-                        <label for="order-filter">Urutkan:</label>
+                        <label for="order-filter">URUTKAN:</label>
                         <select id="order-filter" name="order" hx-get="/api/orders" hx-target="#order-list"
                             hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" 
                             hx-params="order,status" hx-vals='js:{status: document.getElementById("status-filter").value, ts: Date.now()}'>
@@ -50,7 +50,7 @@
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label for="status-filter">Filter Status:</label>
+                        <label for="status-filter">FILTER STATUS:</label>
                         <select id="status-filter" name="status" hx-get="/api/orders" hx-target="#order-list"
                             hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" 
                             hx-params="order,status" hx-vals='js:{order: document.getElementById("order-filter").value, ts: Date.now()}'>
@@ -131,9 +131,9 @@
                                         <div class="menu-item">
                                             <div class="menu-name">${item.menu} (${item.quantity}x)</div>
                                             <div class="details">
-                                                Bumbu: ${bumbuMap[item.bumbu] || item.bumbu}<br>
-                                                Topping: ${toppingMap[item.topping] || item.topping}<br>
-                                                Level: ${levelMap[item.level] || item.level}
+                                                ${bumbuMap[item.bumbu] || item.bumbu}<br>
+                                                ${toppingMap[item.topping] || item.topping}<br>
+                                                ${levelMap[item.level] || item.level}
                                             </div>
                                         </div>
                                     `).join('')}

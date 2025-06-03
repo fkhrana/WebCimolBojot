@@ -423,14 +423,14 @@ app.get("/api/orders", requireLogin, async (req, res) => {
           catatan,
           harga: (() => {
             switch (menuArray[i].toLowerCase()) {
-              case 'cimol mozzarella kecil': return quantity * 11000;
-              case 'cimol mozzarella besar': return quantity * 22000;
-              case 'cimol bojot kecil': return quantity * 6000;
-              case 'cimol bojot besar': return quantity * 12000;
-              case 'cimol ayam kecil': return quantity * 11000;
-              case 'cimol ayam besar': return quantity * 22000;
-              case 'cimol beef kecil': return quantity * 11000;
-              case 'cimol beef besar': return quantity * 22000;
+              case 'cimol mozzarella porsi kecil': return quantity * 11000;
+              case 'cimol mozzarella porsi besar': return quantity * 22000;
+              case 'cimol bojot porsi kecil': return quantity * 6000;
+              case 'cimol bojot porsi besar': return quantity * 12000;
+              case 'cimol ayam porsi kecil': return quantity * 11000;
+              case 'cimol ayam porsi besar': return quantity * 22000;
+              case 'cimol beef porsi kecil': return quantity * 11000;
+              case 'cimol beef porsi besar': return quantity * 22000;
               default: return 0;
             }
           })(),
@@ -441,8 +441,8 @@ app.get("/api/orders", requireLogin, async (req, res) => {
       const totalHarga = items.reduce((sum, item) => sum + item.harga, 0);
 
       const status = statusArray[0] === 'pending' ? 'Menunggu' :
-                     statusArray[0] === 'confirmed' ? 'Diterima' :
-                     statusArray[0] === 'completed' ? 'Selesai' : 'Tidak Diketahui';
+        statusArray[0] === 'confirmed' ? 'Diterima' :
+          statusArray[0] === 'completed' ? 'Selesai' : 'Tidak Diketahui';
 
       console.log("Order formatted:", {
         id_pembeli: order.id_pembeli,

@@ -77,7 +77,8 @@ body {
     font-size: 1.1rem;
     color: #ffffffa0;
     text-decoration: none;
-    transition: color 0.3s, text-decoration 0.3s;
+    transition: color 0.3s; 
+    text-decoration: ease;
     font-weight: bold;
     text-align: center;
 }
@@ -98,7 +99,7 @@ body {
 }
 
 .top-bar {
-    padding: 6px 0;
+    padding: 6px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -123,7 +124,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0 10px 0;
+    margin: 20px 0;
+    padding: 0px 10px;
 }
 
 .filter-group {
@@ -142,9 +144,10 @@ body {
 .filter-container select {
     padding: 8px;
     border: 1px solid #D7681C;
-    border-radius: 5px;
+    border-radius: 10px;
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
+    font-weight: bold;
+    font-size: 0.85rem;
     color: #721414;
     background: #FFFFFF;
     cursor: pointer;
@@ -152,7 +155,7 @@ body {
 }
 
 .filter-container select:focus {
-    border-color: #F9C468;
+    border: 1px solid #D7681C;
 }
 
 .htmx-indicator {
@@ -168,23 +171,24 @@ body {
 
 /* Styling untuk dropdown status di tabel */
 .order-table .status-dropdown {
-    padding: 5px;
+    padding: 8px;
     border: 1px solid #D7681C;
-    border-radius: 5px;
+    border-radius: 10px;
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #721414;
     background: #FFFFFF;
     cursor: pointer;
     outline: none;
+    font-weight: bold;
 }
 
 .order-table .status-dropdown:focus {
-    border-color: #F9C468;
+    border: 1px solid #D7681C;
 }
 
 .order-container {
-    background: #FFFFFF;
+    background: #FAF3E3;
     max-width: 1150px;
     margin: 0 auto;
     padding: 0.1px 20px 25px;
@@ -198,8 +202,8 @@ body {
 }
 
 .order-table th {
-    text-align: center; /* Judul kolom rata tengah horizontal */
-    vertical-align: middle; /* Judul kolom rata tengah vertikal */
+    text-align: center;
+    vertical-align: middle;
     padding: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
@@ -209,7 +213,7 @@ body {
 }
 
 .order-table td {
-    vertical-align: top; /* Isi kolom rata atas */
+    vertical-align: top;
     padding: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
@@ -222,41 +226,44 @@ body {
 .order-table th:first-child,
 .order-table td:first-child {
     width: 60px;
-    text-align: center; /* Tengah untuk isi dan judul */
+    text-align: center;
+    font-weight: bold;
 }
 
 /* Kolom PELANGGAN */
 .order-table th:nth-child(2) {
-    text-align: center; /* Judul tetap tengah */
+    text-align: center;
 }
 .order-table td:nth-child(2) {
-    text-align: left; /* Isi rata kiri */
+    text-align: left;
 }
 
 /* Kolom PESANAN */
 .order-table th:nth-child(3) {
-    text-align: center; /* Judul tetap tengah */
+    text-align: center;
 }
 .order-table td:nth-child(3) {
-    text-align: left; /* Isi rata kiri */
+    text-align: left;
 }
 
 /* Kolom JUMLAH */
 .order-table th:nth-child(4),
 .order-table td:nth-child(4) {
-    text-align: center; /* Tengah untuk isi dan judul */
+    text-align: center;
+    font-weight: bold; 
 }
 
 /* Kolom HARGA */
 .order-table th:nth-child(5),
 .order-table td:nth-child(5) {
-    text-align: center; /* Tengah untuk isi dan judul */
+    text-align: center; 
+    font-weight: bold;
 }
 
 /* Kolom STATUS */
 .order-table th:nth-child(6),
 .order-table td:nth-child(6) {
-    text-align: center; /* Tengah untuk isi dan judul */
+    text-align: center; 
 }
 
 .order-table th:not(:last-child),
@@ -287,14 +294,14 @@ body {
 }
 
 .pelanggan-details .telepon {
-    color: #83302E; /* Warna cokelat tua sesuai update kamu */
+    color: #83302E;
     font-size: 0.85rem;
     cursor: pointer;
 }
 
 .pelanggan-details .telepon:hover {
     color: #83302E;
-    text-decoration: underline; /* Underline saat hover sesuai update kamu */
+    text-decoration: underline;
 }
 
 .order-details {
@@ -315,13 +322,15 @@ body {
 
 .order-details .details {
     font-size: 0.85rem;
-    color: #83302E;
+    font-weight: bold;
+    color: #D7681C;
     margin-left: 10px;
 }
 
 .order-details .catatan {
     font-size: 0.85rem;
-    color: #83302E;
+    font-weight: bold;
+    color: #CC2D29;
     font-style: italic;
     margin-top: 5px;
 }
@@ -329,10 +338,16 @@ body {
 .order-table select {
     padding: 5px;
     border: 1px solid #D7681C;
-    border-radius: 5px;
+    border-radius: 20px;
     font-family: 'Montserrat', sans-serif;
     background: #FFFFFF;
     color: #721414;
+}
+
+/* Styling untuk td dengan colspan="6" */
+.order-table td[colspan="6"] {
+    font-weight: normal; /* Teks tidak bold */
+    text-align: center;
 }
 
 #masukan {
