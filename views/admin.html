@@ -43,8 +43,9 @@
                     <div class="filter-group">
                         <label for="order-filter">URUTKAN:</label>
                         <select id="order-filter" name="order" hx-get="/api/orders" hx-target="#order-list"
-                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" 
-                            hx-params="order,status" hx-vals='js:{status: document.getElementById("status-filter").value, ts: Date.now()}'>
+                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator"
+                            hx-params="order,status"
+                            hx-vals='js:{status: document.getElementById("status-filter").value, ts: Date.now()}'>
                             <option value="asc">Terlama</option>
                             <option value="desc">Terbaru</option>
                         </select>
@@ -52,8 +53,9 @@
                     <div class="filter-group">
                         <label for="status-filter">FILTER STATUS:</label>
                         <select id="status-filter" name="status" hx-get="/api/orders" hx-target="#order-list"
-                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" 
-                            hx-params="order,status" hx-vals='js:{order: document.getElementById("order-filter").value, ts: Date.now()}'>
+                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator"
+                            hx-params="order,status"
+                            hx-vals='js:{order: document.getElementById("order-filter").value, ts: Date.now()}'>
                             <option value="">Semua</option>
                             <option value="pending">Menunggu</option>
                             <option value="confirmed">Diterima</option>
@@ -74,7 +76,7 @@
                         </tr>
                     </thead>
                     <tbody id="order-list" hx-get="/api/orders" hx-trigger="load" hx-swap="innerHTML"
-                        hx-indicator=".htmx-indicator" hx-headers='{"Cache-Control": "no-cache"}' 
+                        hx-indicator=".htmx-indicator" hx-headers='{"Cache-Control": "no-cache"}'
                         hx-params="order,status" hx-vals='js:{ts: Date.now()}'>
                         <!-- Data pesanan akan dimuat di sini -->
                     </tbody>
@@ -148,6 +150,12 @@
                                     <option value="confirmed" ${order.status === 'Diterima' ? 'selected' : ''}>Diterima</option>
                                     <option value="completed" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
                                 </select>
+                                <button class="delete-button" 
+                                            hx-delete="/api/orders/${order.id_order}" 
+                                            hx-swap="none" 
+                                            hx-confirm="Yakin mau hapus pesanan ini?">
+                                        <img src="/hapus.png" alt="Hapus" class="delete-icon">
+                                </button>
                             </td>
                         </tr>
                     `).join('');
