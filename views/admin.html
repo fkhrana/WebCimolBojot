@@ -85,7 +85,6 @@
         </div>
     </div>
     <script>
-        // Log htmx request buat debug
         document.body.addEventListener('htmx:beforeRequest', (event) => {
             console.log('HTMX request:', {
                 method: event.detail.verb,
@@ -130,7 +129,6 @@
                         let phoneStr = phone.toString().trim();
                         console.log('Raw phone number:', phoneStr);
 
-                        // Bersihkan karakter non-angka
                         phoneStr = phoneStr.replace(/\D/g, '');
 
                         // Format nomor
@@ -144,7 +142,6 @@
                             phoneStr = phoneStr.slice(3); // Hapus '+62'
                         }
 
-                        // Tambah +62
                         phoneStr = `+62${phoneStr}`;
 
                         // Validasi format nomor
@@ -238,7 +235,6 @@
                     `;
                     }).join('');
 
-                    // Event listener untuk status dropdown
                     document.querySelectorAll('.status-dropdown').forEach(dropdown => {
                         dropdown.addEventListener('change', async (event) => {
                             const orderId = event.target.getAttribute('data-order-id');

@@ -132,7 +132,7 @@
 }
 
 #telepon-pemesan {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: #d7681c;
     margin: 0 0 0px 0;
@@ -175,7 +175,7 @@
     color: #ffffff;
     font-size: 0.9rem;
     text-align: center;
-    margin-top: -5px;
+    margin-top: -8px;
     margin-bottom: 30px;
     font-family: "Montserrat", sans-serif;
 }

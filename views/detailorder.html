@@ -118,22 +118,23 @@
                 cabangDetails.textContent = `CIMOL BOJOT AA - ${order.cabang?.toUpperCase() || "Tidak Diketahui"}`;
                 catatanDetails.textContent = order.items[0]?.catatan || "-";
 
+                orderItemsContainer.innerHTML = "";
                 order.items.forEach((item) => {
                     console.log("Processing item:", item);
                     const orderItem = document.createElement("div");
                     orderItem.className = "order-item";
                     orderItem.innerHTML = `
-                <img src="/cimolmoza.png" alt="${item.name || "Menu"}">
-                <div class="order-item-details">
-                    <h3>${formatMenuName(item.name)}</h3>
-                    <p>${bumbuMap[item.bumbu] || item.bumbu || "-"}</p>
-                    <p>${toppingMap[item.topping] || item.topping || "-"}</p>
-                    <p>${levelMap[item.level] || item.level || "-"}</p>
-                </div>
-                <div class="order-item-quantity">
-                    ${item.quantity || 1}x
-                </div>
-            `;
+                        <img src="/cimolmoza.png" alt="${item.name || "Menu"}">
+                        <div class="order-item-details">
+                            <h3>${formatMenuName(item.name)}</h3>
+                            <p>${bumbuMap[item.bumbu] || item.bumbu || "-"}</p>
+                            <p>${toppingMap[item.topping] || item.topping || "-"}</p>
+                            <p>${levelMap[item.level] || item.level || "-"}</p>
+                        </div>
+                        <div class="order-item-quantity">
+                            ${item.quantity || 1}x
+                        </div>
+                    `;
                     orderItemsContainer.appendChild(orderItem);
                 });
 
@@ -144,6 +145,17 @@
                 console.error("Error fetching order:", error.message);
                 document.getElementById("order-items").innerHTML = `<p>Error: ${error.message}</p>`;
             }
+
+            // Tambah konfirmasi sebelum kirim pesanan
+            const submitButton = document.querySelector(".submit-order-button");
+            submitButton.addEventListener("click", (event) => {
+                if (!window.confirm("Yakin ingin kirim pesanan?")) {
+                    event.preventDefault();
+                    console.log("User membatalkan pengiriman pesanan");
+                } else {
+                    console.log("User mengkonfirmasi pengiriman pesanan");
+                }
+            });
         });
 
         document.body.addEventListener('htmx:afterRequest', (event) => {
@@ -153,16 +165,20 @@
                     const messageDiv = document.getElementById('confirmation-message');
                     if (event.detail.xhr.status === 200 && response.success) {
                         messageDiv.innerHTML = `<p class="confirmation-message">${response.message}</p>`;
+                        // Hapus link "Ingin ubah pesanan?" setelah sukses
+                        const changeOrderLink = document.querySelector('.change-order-link');
+                        if (changeOrderLink) {
+                            changeOrderLink.remove();
+                        }
                     } else {
-                        messageDiv.innerHTML = `<p class="confirmation-message" style="color: #ff0000">${response.error || 'Terjadi kesalahan saat mengirim pesanan.'}</p>`;
+                        messageDiv.innerHTML = `<p class="confirmation-message" style="color: red">${response.error || 'Terjadi kesalahan saat mengirim pesanan.'}</p>`;
                     }
                 } catch (error) {
                     console.error('Error parsing response:', error);
-                    document.getElementById('confirmation-message').innerHTML = `<p class="confirmation-message" style="color: #ff0000">Terjadi kesalahan saat memproses respons.</p>`;
+                    document.getElementById('confirmation-message').innerHTML = `<p class="confirmation-message" style="color: red">Terjadi kesalahan saat memproses respons.</p>`;
                 }
             }
         });
     </script>
 </body>
-
 </html>
