@@ -79,7 +79,6 @@ body {
     color: #ffffffa0;
     text-decoration: none;
     transition: color 0.3s;
-    text-decoration: ease;
     font-weight: bold;
     text-align: center;
 }
@@ -135,6 +134,44 @@ body {
     gap: 10px;
 }
 
+.search-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 400px;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 8px 30px 8px 12px;
+    border: 1px solid #D7681C;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: #721414;
+    background: #FFFFFF;
+    outline: none;
+}
+
+.search-bar::placeholder {
+    color: #A0A0A0;
+    font-weight: normal;
+}
+
+.search-bar:focus {
+    border-color: #D7681C;
+}
+
+.search-icon {
+    position: absolute;
+    right: 10px;
+    top: 60%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.search-icon svg {
+    fill: #721414;
+}
 .filter-container label {
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
@@ -500,6 +537,16 @@ body {
 
     .filter-group {
         justify-content: center;
+        width: 100%;
+    }
+
+    .search-wrapper {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .search-bar {
+        width: 100%;
     }
 
     .spacer {

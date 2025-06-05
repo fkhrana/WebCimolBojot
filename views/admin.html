@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
+
 <body>
     <div class="navbar">
         <div class="navbar-header">
@@ -41,19 +43,36 @@
                     <div class="filter-group">
                         <label for="order-filter">URUTKAN:</label>
                         <select id="order-filter" name="order" hx-get="/api/orders" hx-target="#order-list"
-                                hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator"
-                                hx-sync="this:queue" hx-params="order,status"
-                                hx-vals='js:{status: document.getElementById("status-filter").value, ts: Date.now()}'>
+                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" hx-sync="this:queue"
+                            hx-params="order,status"
+                            hx-vals='js:{status: document.getElementById("status-filter").value, ts: Date.now()}'>
                             <option value="asc">Terlama</option>
                             <option value="desc">Terbaru</option>
                         </select>
                     </div>
+                    <!-- Search bar dengan ikon -->
+                    <div class="filter-group search-group">
+                        <div class="search-wrapper">
+                            <input type="text" id="search-input" placeholder="Cari nama pelanggan..." class="search-bar"
+                                hx-target="#order-list" hx-swap="innerHTML" hx-trigger="keyup delay:300ms"
+                                hx-get="/api/orders" hx-params="order,status"
+                                hx-vals='js:{order: document.getElementById("order-filter").value, status: document.getElementById("status-filter").value, ts: Date.now()}'>
+                            <span class="search-icon">
+                                <svg width="25" height="25" viewBox="0 0 16 16" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M11.435 10.07H10.879L10.668 9.864C11.373 9.045 11.8 8.002 11.8 6.9C11.8 4.195 9.605 2 6.9 2C4.195 2 2 4.195 2 6.9C2 9.605 4.195 11.8 6.9 11.8C8.002 11.8 9.045 11.373 9.864 10.668L10.07 10.879V11.435L13.637 15L15 13.637L11.435 10.07ZM6.9 10.07C5.162 10.07 3.73 8.638 3.73 6.9C3.73 5.162 5.162 3.73 6.9 3.73C8.638 3.73 10.07 5.162 10.07 6.9C10.07 8.638 8.638 10.07 6.9 10.07Z"
+                                        fill="#721414" stroke="#721414" stroke-width="0.2" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
                     <div class="filter-group">
                         <label for="status-filter">FILTER STATUS:</label>
                         <select id="status-filter" name="status" hx-get="/api/orders" hx-target="#order-list"
-                                hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator"
-                                hx-sync="this:queue" hx-params="order,status"
-                                hx-vals='js:{order: document.getElementById("order-filter").value, ts: Date.now()}'>
+                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" hx-sync="this:queue"
+                            hx-params="order,status"
+                            hx-vals='js:{order: document.getElementById("order-filter").value, ts: Date.now()}'>
                             <option value="">Semua</option>
                             <option value="pending">Menunggu</option>
                             <option value="confirmed">Diterima</option>
@@ -73,11 +92,9 @@
                             <th>STATUS</th>
                         </tr>
                     </thead>
-                    <tbody id="order-list" hx-get="/api/orders" 
-                           hx-trigger="load" 
-                           hx-swap="innerHTML" hx-indicator=".htmx-indicator" 
-                           hx-headers='{"Cache-Control": "no-cache"}' 
-                           hx-params="order,status" hx-vals='js:{ts: Date.now()}'>
+                    <tbody id="order-list" hx-get="/api/orders" hx-trigger="load" hx-swap="innerHTML"
+                        hx-indicator=".htmx-indicator" hx-headers='{"Cache-Control": "no-cache"}'
+                        hx-params="order,status" hx-vals='js:{ts: Date.now()}'>
                         <!-- Data pesanan akan dimuat di sini -->
                     </tbody>
                 </table>
@@ -85,6 +102,7 @@
         </div>
     </div>
     <script>
+        // Log htmx request buat debug
         document.body.addEventListener('htmx:beforeRequest', (event) => {
             console.log('HTMX request:', {
                 method: event.detail.verb,
@@ -96,11 +114,22 @@
         document.body.addEventListener('htmx:afterSwap', (event) => {
             if (event.detail.target.id === 'order-list') {
                 try {
-                    const orders = JSON.parse(event.detail.xhr.responseText);
+                    let orders = JSON.parse(event.detail.xhr.responseText);
                     console.log('Orders loaded:', orders);
                     const container = event.detail.target;
+                    const searchInput = document.getElementById('search-input');
+                    const searchValue = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+                    // Filter berdasarkan nama pelanggan
+                    if (searchValue) {
+                        orders = orders.filter(order =>
+                            order.nama.toLowerCase().includes(searchValue)
+                        );
+                        console.log('Filtered orders:', orders);
+                    }
+
                     if (orders.length === 0) {
-                        container.innerHTML = '<tr><td colspan="6">Tidak ada pesanan untuk status ini.</td></tr>';
+                        container.innerHTML = '<tr><td colspan="6">Tidak ada pesanan ditemukan.</td></tr>';
                         return;
                     }
 
@@ -129,6 +158,7 @@
                         let phoneStr = phone.toString().trim();
                         console.log('Raw phone number:', phoneStr);
 
+                        // Bersihkan karakter non-angka
                         phoneStr = phoneStr.replace(/\D/g, '');
 
                         // Format nomor
@@ -142,6 +172,7 @@
                             phoneStr = phoneStr.slice(3); // Hapus '+62'
                         }
 
+                        // Tambah +62
                         phoneStr = `+62${phoneStr}`;
 
                         // Validasi format nomor
@@ -189,7 +220,7 @@
                                             ${order.telepon}
                                         </a>
                                     ` : `
-                                        <span class="telepon" style="color: red; cursor: default;" title="Nomor tidak valid">
+                                        <span class="telepon" style="color: red; cursor: default;" title="Nomor tidak ditemukan">
                                             ${order.telepon}
                                         </span>
                                     `}
@@ -235,6 +266,7 @@
                     `;
                     }).join('');
 
+                    // Event listener untuk status dropdown
                     document.querySelectorAll('.status-dropdown').forEach(dropdown => {
                         dropdown.addEventListener('change', async (event) => {
                             const orderId = event.target.getAttribute('data-order-id');
@@ -332,4 +364,5 @@
         });
     </script>
 </body>
+
 </html>
