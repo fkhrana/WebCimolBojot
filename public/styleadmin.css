@@ -208,7 +208,6 @@ body {
     display: inline;
 }
 
-/* Styling untuk dropdown status di tabel */
 .order-table .status-dropdown {
     padding: 8px;
     border: 1px solid #D7681C;
@@ -223,7 +222,6 @@ body {
     margin: 0 auto;
 }
 
-/* Styling untuk kolom STATUS */
 .order-table td:nth-child(6) {
     position: relative;
     text-align: center;
@@ -269,7 +267,6 @@ body {
     position: relative;
 }
 
-/* Kolom NO. */
 .order-table th:first-child,
 .order-table td:first-child {
     width: 60px;
@@ -277,7 +274,6 @@ body {
     font-weight: bold;
 }
 
-/* Kolom PELANGGAN */
 .order-table th:nth-child(2) {
     text-align: center;
 }
@@ -286,7 +282,6 @@ body {
     position: relative;
 }
 
-/* Kolom PESANAN */
 .order-table th:nth-child(3) {
     text-align: center;
 }
@@ -294,21 +289,18 @@ body {
     text-align: left;
 }
 
-/* Kolom JUMLAH */
 .order-table th:nth-child(4),
 .order-table td:nth-child(4) {
     text-align: center;
     font-weight: bold;
 }
 
-/* Kolom HARGA */
 .order-table th:nth-child(5),
 .order-table td:nth-child(5) {
     text-align: center;
     font-weight: bold;
 }
 
-/* Kolom STATUS */
 .order-table th:nth-child(6),
 .order-table td:nth-child(6) {
     text-align: center;
@@ -328,7 +320,6 @@ body {
     border-bottom: none;
 }
 
-/* Styling untuk kolom PELANGGAN */
 .pelanggan-details {
     display: flex;
     flex-direction: column;
@@ -402,13 +393,11 @@ body {
     color: #721414;
 }
 
-/* Styling teks tidak ada pesanan untuk status */
 .order-table td[colspan="6"] {
     font-weight: normal;
     text-align: center;
 }
 
-/* Styling untuk container dropdown dan tombol hapus */
 .status-container {
     display: flex;
     flex-direction: column;
@@ -433,7 +422,6 @@ body {
     opacity: 0.7;
 }
 
-/* Styling untuk tombol hapus */
 .delete-button {
     background: none;
     border: none;
@@ -444,7 +432,6 @@ body {
     right: 10px;
 }
 
-/* Styling untuk ikon hapus */
 .delete-icon {
     width: 25px;
     height: 25px;
@@ -462,7 +449,6 @@ body {
     padding: 0px 20px 20px 20px;
 }
 
-/* Judul MASUKAN */
 #masukan h3 {
     font-family: 'Jua', sans-serif;
     font-size: 2rem;
@@ -487,12 +473,10 @@ body {
     font-weight: bold;
 }
 
-/* Spacer */
 .spacer {
     flex-grow: 1;
 }
 
-/* Logout Line */
 .logout-line {
     width: 90%;
     height: 2.2px;
@@ -500,7 +484,6 @@ body {
     margin: 0px 0 15px 0;
 }
 
-/* Logout Button */
 .logout-button {
     display: block;
     margin-top: auto;

@@ -153,8 +153,7 @@
 
                 totalHargaElement.textContent = `Rp${(order.totalHarga || 0).toLocaleString("id-ID")}`;
 
-                // Cek apakah orderId ada di database (bukan tempOrderId)
-                const isDatabaseOrder = !isNaN(orderId) && orderId < 1000000000000; // Asumsi tempOrderId pake timestamp (13 digit)
+                const isDatabaseOrder = !isNaN(orderId) && orderId < 1000000000000;
                 if (isDatabaseOrder) {
                     console.log("Order is from database, showing 'Pesanan telah dikirim!'", { orderId });
                     confirmationMessage.innerHTML = `<p class="confirmation-message">Pesanan telah dikirim!</p>`;
@@ -174,19 +173,16 @@
             }
         });
 
-        // Handle konfirmasi HTMX
         document.body.addEventListener('htmx:confirm', (event) => {
             if (event.detail.path === '/api/orders/confirm') {
-                event.preventDefault(); // Tunda request HTMX
+                event.preventDefault();
                 const submitButton = document.querySelector(".submit-order-button");
                 if (!window.confirm("Yakin ingin kirim pesanan?")) {
                     console.log("User membatalkan pengiriman pesanan");
-                    // Jangan lanjutin request
                     return;
                 } else {
                     console.log("User mengkonfirmasi pengiriman pesanan");
-                    submitButton.disabled = true; // Disable tombol
-                    // Lanjutin request HTMX
+                    submitButton.disabled = true;
                     event.detail.issueRequest();
                 }
             }
@@ -210,7 +206,7 @@
                 } catch (error) {
                     console.error('Error parsing response:', error);
                     document.getElementById('confirmation-message').innerHTML = `<p class="confirmation-message" style="color: red">Terjadi kesalahan saat memproses respons.</p>`;
-                    document.querySelector(".submit-order-button").disabled = false; // Re-enable kalau error
+                    document.querySelector(".submit-order-button").disabled = false;
                 }
             }
         });

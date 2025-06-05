@@ -282,12 +282,10 @@
                 console.log(`${key}: ${value}`);
             }
 
-            // Validasi nomor telepon
             const teleponInput = document.querySelector("#telepon");
             const telepon = teleponInput.value.trim();
             console.log("Validating telepon:", { raw: telepon, hasLetters: /[a-zA-Z]/.test(telepon) });
 
-            // Cek apakah ada huruf
             if (/[a-zA-Z]/.test(telepon)) {
                 e.preventDefault();
                 alert("Nomor telepon tidak boleh mengandung huruf!");
@@ -295,7 +293,6 @@
                 return;
             }
 
-            // Bersihin non-angka dan cek format
             const cleanTelepon = telepon.replace(/\D/g, '');
             if (!cleanTelepon.match(/^08[0-9]{8,10}$/)) {
                 e.preventDefault();
@@ -304,7 +301,6 @@
                 return;
             }
 
-            // Validasi minimal satu menu
             const quantities = document.querySelectorAll(".quantity-input");
             let hasQuantity = false;
             quantities.forEach((input) => {
