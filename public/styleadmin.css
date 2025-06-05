@@ -366,6 +366,23 @@ body {
     min-height: 100%;
 }
 
+.wa-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 3px;
+    margin-left: 5px;
+    vertical-align: middle;
+    display: inline-block;
+}
+.wa-icon {
+    width: 25px;
+    height: 25px;
+}
+.wa-button:hover .wa-icon {
+    opacity: 0.7;
+}
+
 /* Styling untuk tombol hapus */
 .delete-button {
     background: none;

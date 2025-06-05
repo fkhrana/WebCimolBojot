@@ -125,34 +125,77 @@
                         extra: "Extra"
                     };
 
-                    // Format nomor telepon untuk WA dengan template pesan
-                    function formatPhoneForWhatsApp(phone) {
-                        // Pastikan nomor dalam bentuk string dan mulai dengan '08'
-                        const phoneStr = phone.toString().trim();
-                        let formattedPhone = phoneStr;
+                    // Format nomor telepon untuk WA
+                    function formatPhoneNumber(phone) {
+                        let phoneStr = phone.toString().trim();
+                        console.log('Raw phone number:', phoneStr);
+
+                        // Bersihkan karakter non-angka
+                        phoneStr = phoneStr.replace(/\D/g, '');
+
+                        // Format nomor
                         if (phoneStr.startsWith('08')) {
-                            formattedPhone = `+62${phoneStr.slice(1)}`;
-                        } else if (!phoneStr.startsWith('+62')) {
-                            // Jika nomor tidak diawali '08' atau '+62', asumsikan sudah dalam format internasional
-                            formattedPhone = phoneStr;
+                            phoneStr = phoneStr.slice(1); // Hapus '0'
+                        } else if (phoneStr.startsWith('8')) {
+                            // OK, lanjut
+                        } else if (phoneStr.startsWith('62')) {
+                            phoneStr = phoneStr.slice(2); // Hapus '62'
+                        } else if (phoneStr.startsWith('+62')) {
+                            phoneStr = phoneStr.slice(3); // Hapus '+62'
                         }
-                        // Tambahkan template pesan untuk WhatsApp
+
+                        // Tambah +62
+                        phoneStr = `+62${phoneStr}`;
+
+                        // Validasi format nomor
+                        if (!phoneStr.match(/^\+62[0-9]{8,11}$/)) {
+                            console.error('Invalid phone number format:', phoneStr);
+                            return null;
+                        }
+
+                        return phoneStr;
+                    }
+
+                    // URL untuk chat kosong
+                    function formatPhoneForWhatsAppEmpty(phone) {
+                        const formattedPhone = formatPhoneNumber(phone);
+                        if (!formattedPhone) return null;
+                        const waUrl = `https://wa.me/${formattedPhone}`;
+                        console.log('Generated WhatsApp empty URL:', waUrl);
+                        return waUrl;
+                    }
+
+                    // URL untuk template pesan
+                    function formatPhoneForWhatsAppTemplate(phone) {
+                        const formattedPhone = formatPhoneNumber(phone);
+                        if (!formattedPhone) return null;
                         const message = encodeURIComponent(
                             "Halo, Sobat AA! Pesanan anda sudah siap dan bisa langsung datang ke cabang untuk bayar dan ambil pesanan!"
                         );
-                        console.log('Generated WhatsApp URL:', `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${message}`);
-                        return `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${message}`;
+                        const waUrl = `https://wa.me/${formattedPhone}?text=${message}`;
+                        console.log('Generated WhatsApp template URL:', waUrl);
+                        return waUrl;
                     }
 
-                    container.innerHTML = orders.map(order => `
+                    container.innerHTML = orders.map(order => {
+                        const waEmptyLink = formatPhoneForWhatsAppEmpty(order.telepon);
+                        const waTemplateLink = formatPhoneForWhatsAppTemplate(order.telepon);
+                        const waLink = order.status === 'Selesai' ? waTemplateLink : waEmptyLink;
+                        return `
                         <tr>
                             <td>${order.no}</td>
                             <td>
                                 <div class="pelanggan-details">
                                     <div class="nama">${order.nama}</div>
-                                    <a href="${formatPhoneForWhatsApp(order.telepon)}" target="_blank" class="telepon">
-                                        ${order.telepon}
-                                    </a>
+                                    ${waEmptyLink ? `
+                                        <a href="${waEmptyLink}" target="_blank" class="telepon" title="Chat WhatsApp">
+                                            ${order.telepon}
+                                        </a>
+                                    ` : `
+                                        <span class="telepon" style="color: red; cursor: default;" title="Nomor tidak valid">
+                                            ${order.telepon}
+                                        </span>
+                                    `}
                                 </div>
                             </td>
                             <td>
@@ -173,17 +216,27 @@
                             <td>${order.totalQuantity}</td>
                             <td>Rp${order.totalHarga.toLocaleString('id-ID')}</td>
                             <td>
-                                <select class="status-dropdown" data-order-id="${order.id_order}">
-                                    <option value="pending" ${order.status === 'Menunggu' ? 'selected' : ''}>Menunggu</option>
-                                    <option value="confirmed" ${order.status === 'Diterima' ? 'selected' : ''}>Diterima</option>
-                                    <option value="completed" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
-                                </select>
-                                <button class="delete-button delete-order" data-pembeli-id="${order.id_pembeli}" data-order-name="${order.nama}">
-                                    <img src="/hapus.png" alt="Hapus" class="delete-icon">
-                                </button>
+                                <div class="status-container">
+                                    <div class="status-row">
+                                        <select class="status-dropdown" data-order-id="${order.id_order}">
+                                            <option value="pending" ${order.status === 'Menunggu' ? 'selected' : ''}>Menunggu</option>
+                                            <option value="confirmed" ${order.status === 'Diterima' ? 'selected' : ''}>Diterima</option>
+                                            <option value="completed" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                                        </select>
+                                        ${(order.status === 'Diterima' || order.status === 'Selesai') && waLink ? `
+                                            <button class="wa-button" onclick="window.open('${waLink}', '_blank')" title="${order.status === 'Selesai' ? 'Kirim notifikasi WhatsApp' : 'Kirim Konfirmasi via WhatsApp'}">
+                                                <img src="/whatsapp.png" alt="WhatsApp" class="wa-icon">
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                    <button class="delete-button delete-order" data-pembeli-id="${order.id_pembeli}" data-order-name="${order.nama}">
+                                        <img src="/hapus.png" alt="Hapus" class="delete-icon">
+                                    </button>
+                                </div>
                             </td>
                         </tr>
-                    `).join('');
+                    `;
+                    }).join('');
 
                     // Event listener untuk status dropdown
                     document.querySelectorAll('.status-dropdown').forEach(dropdown => {
