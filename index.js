@@ -362,7 +362,7 @@ app.get("/api/orders", requireLogin, async (req, res) => {
   console.log("GET /api/orders called", {
     query: req.query,
     kode_cabang: req.session.kode_cabang,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
   try {
     const kode_cabang = req.session.kode_cabang;
@@ -370,7 +370,6 @@ app.get("/api/orders", requireLogin, async (req, res) => {
     const order = req.query.order === 'desc' ? 'DESC' : 'ASC';
     console.log("Filter parameters:", { status, order, kode_cabang });
 
-    // Query untuk grup berdasarkan id_pembeli dengan nomor urut dari SQL
     let query = `
       WITH RankedOrders AS (
         SELECT o.id_pembeli, MIN(o.id_order) as id_order, c.nama_cust, c.telepon,
@@ -404,6 +403,9 @@ app.get("/api/orders", requireLogin, async (req, res) => {
     const stmt = db.prepare(query);
     const orders = stmt.all(...params);
     console.log("Orders fetched from DB:", orders);
+    orders.forEach((order, index) => {
+      console.log(`Order ${index + 1} created_at:`, order.created_at);
+    });
 
     const totalOrders = orders.length;
     console.log("Total orders for cabang:", totalOrders);
@@ -466,7 +468,7 @@ app.get("/api/orders", requireLogin, async (req, res) => {
         nama_cust: order.nama_cust,
         telepon: order.telepon,
         created_at: order.created_at,
-        status
+        status,
       });
 
       return {
@@ -474,19 +476,19 @@ app.get("/api/orders", requireLogin, async (req, res) => {
         id_pembeli: order.id_pembeli,
         no: order.no,
         nama: order.nama_cust,
-        telepon: order.telepon, // Tambahkan telepon ke respons
+        telepon: order.telepon,
         items,
         totalQuantity,
         totalHarga,
         status,
         catatan: items[0].catatan,
+        created_at: order.created_at, // Tambahkan created_at ke respons
       };
     });
 
     console.log("Formatted orders sent:", formattedOrders);
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.json(formattedOrders);
-
   } catch (err) {
     console.error("Error in GET /api/orders:", err.message);
     res.status(500).json({ error: "Database error", details: err.message });
@@ -514,7 +516,6 @@ app.post("/api/orders/:id/status", requireLogin, async (req, res) => {
         return res.status(400).json({ error: "Status tidak valid atau tidak diberikan" });
       }
 
-      // Ambil id_pembeli dari id_order
       const checkStmt = db.prepare("SELECT id_pembeli FROM order_tbl WHERE id_order = ?");
       const order = checkStmt.get(id);
       console.log("Order check result:", order);
@@ -523,7 +524,6 @@ app.post("/api/orders/:id/status", requireLogin, async (req, res) => {
         return res.status(404).json({ error: "Pesanan tidak ditemukan" });
       }
 
-      // Update semua entri dengan id_pembeli yang sama
       const stmt = db.prepare("UPDATE order_tbl SET status_order = ? WHERE id_pembeli = ?");
       console.log("Executing UPDATE with params:", { status, id_pembeli: order.id_pembeli });
       const result = stmt.run(status, order.id_pembeli);
@@ -580,7 +580,6 @@ app.delete("/api/orders/pembeli/:id_pembeli", requireLogin, async (req, res) => 
     const id_pembeli = parseInt(req.params.id_pembeli);
     const kode_cabang = req.session.kode_cabang;
 
-    // Cek apakah pelanggan punya pesanan di cabang ini
     const checkStmt = db.prepare(`
       SELECT o.id_pembeli
       FROM order_tbl o
@@ -594,7 +593,6 @@ app.delete("/api/orders/pembeli/:id_pembeli", requireLogin, async (req, res) => 
       return res.status(404).json({ error: "Pesanan pelanggan tidak ditemukan atau tidak diizinkan" });
     }
 
-    // Hapus semua pesanan pelanggan
     const deleteStmt = db.prepare(`DELETE FROM order_tbl WHERE id_pembeli = ?`);
     const result = deleteStmt.run(id_pembeli);
 
@@ -603,7 +601,6 @@ app.delete("/api/orders/pembeli/:id_pembeli", requireLogin, async (req, res) => 
       return res.status(500).json({ error: "Gagal menghapus pesanan" });
     }
 
-    // (Opsional) Hapus pelanggan dari customer_tbl kalau nggak ada pesanan
     const deleteCustomerStmt = db.prepare(`DELETE FROM customer_tbl WHERE id_pembeli = ?`);
     deleteCustomerStmt.run(id_pembeli);
 

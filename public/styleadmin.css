@@ -172,6 +172,7 @@ body {
 .search-icon svg {
     fill: #721414;
 }
+
 .filter-container label {
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
@@ -265,6 +266,7 @@ body {
     color: #721414;
     border-bottom: 2px solid #E8AD80;
     border-right: 2px solid #E8AD80;
+    position: relative;
 }
 
 /* Kolom NO. */
@@ -281,6 +283,7 @@ body {
 }
 .order-table td:nth-child(2) {
     text-align: left;
+    position: relative;
 }
 
 /* Kolom PESANAN */
@@ -295,20 +298,20 @@ body {
 .order-table th:nth-child(4),
 .order-table td:nth-child(4) {
     text-align: center;
-    font-weight: bold; 
+    font-weight: bold;
 }
 
 /* Kolom HARGA */
 .order-table th:nth-child(5),
 .order-table td:nth-child(5) {
-    text-align: center; 
+    text-align: center;
     font-weight: bold;
 }
 
 /* Kolom STATUS */
 .order-table th:nth-child(6),
 .order-table td:nth-child(6) {
-    text-align: center; 
+    text-align: center;
 }
 
 .order-table th:not(:last-child),
@@ -330,6 +333,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    padding-bottom: 25px;
 }
 
 .pelanggan-details .nama {
@@ -347,6 +351,15 @@ body {
 .pelanggan-details .telepon:hover {
     color: #83302E;
     text-decoration: underline;
+}
+
+.pelanggan-details .order-date {
+    color: #DF8B4E;
+    font-size: 0.85rem;
+    font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }
 
 .order-details {
@@ -507,13 +520,13 @@ body {
 
 @media (max-width: 768px) {
     .navbar {
-        width: 100%;
+        width: auto;
         height: auto;
         position: relative;
     }
 
     .main-content {
-        margin-left: 0;
+        margin-left: auto;
         padding: 10px;
     }
 
@@ -521,6 +534,7 @@ body {
     .order-table td {
         font-size: 0.8rem;
         padding: 5px;
+        position: relative;
     }
 
     .order-details .details,
@@ -532,38 +546,53 @@ body {
         flex-direction: column;
         align-items: center;
         gap: 10px;
-        margin: 15px 0 10px 0;
+        margin: 15px auto 0 10px;
     }
 
     .filter-group {
         justify-content: center;
-        width: 100%;
+        width: auto;
     }
 
     .search-wrapper {
-        width: 100%;
-        max-width: 250px;
+        width: auto;
+        max-height: 250px;
     }
 
     .search-bar {
-        width: 100%;
+        width: auto;
+    }
+
+    .pelanggan-details {
+        gap: 3px;
+        padding-bottom: 20px;
+    }
+
+    .pelanggan-details .order-date {
+        font-size: 0.8rem;
+        bottom: 5px;
+        left: 5px;
+    }
+
+    .order-table td:nth-child(2) {
+        position: relative;
     }
 
     .spacer {
-        flex-grow: 1;
+        width: auto;
     }
 
     .logout-line {
-        margin: 0 0 4px 0;
+        margin-right: auto 0 auto 0;
     }
 
     .logout-button {
         margin-top: auto;
-        margin-bottom: 6px;
-        margin-right: 15px;
+        margin-bottom: auto;
+        margin-right: auto;
     }
 
     .logout-button img {
-        width: 100px;
+        height: auto;
     }
 }
