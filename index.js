@@ -24,6 +24,19 @@ app.use(
   })
 );
 
+// Fungsi helper untuk format waktu WIB (UTC+7) ke YYYY-MM-DD HH:mm:ss
+function getWIBDateTime() {
+  const now = new Date();
+  const wibTime = new Date(now.getTime() + 7 * 60 * 60 * 1000); // Tambah 7 jam
+  const year = wibTime.getUTCFullYear();
+  const month = String(wibTime.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(wibTime.getUTCDate()).padStart(2, '0');
+  const hours = String(wibTime.getUTCHours()).padStart(2, '0');
+  const minutes = String(wibTime.getUTCMinutes()).padStart(2, '0');
+  const seconds = String(wibTime.getUTCSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 function requireLogin(req, res, next) {
   console.log("Checking session:", req.session);
   if (!req.session.adminId) {
@@ -182,48 +195,33 @@ app.post("/form/order", async (req, res) => {
       return res.status(400).json({ error: "Pilih minimal satu menu" });
     }
 
-    // Cek apakah pelanggan sudah ada
-    const checkCustomerStmt = db.prepare("SELECT id_pembeli FROM customer_tbl WHERE telepon = ?");
-    const existingCustomer = checkCustomerStmt.get(phoneStr);
-    let id_pembeli;
-
-    if (existingCustomer) {
-      id_pembeli = existingCustomer.id_pembeli;
-    } else {
-      const customerStmt = db.prepare("INSERT INTO customer_tbl (nama_cust, telepon) VALUES (?, ?)");
-      const customerResult = customerStmt.run(nama, phoneStr);
-      id_pembeli = customerResult.lastInsertRowid;
-      console.log("Saved customer:", { id_pembeli, nama, telepon: phoneStr });
-    }
-
+    // Validasi cabang
     const cabangStmt = db.prepare("SELECT id_cabang FROM cabang_tbl WHERE kode_cabang = ?");
     const cabangRow = cabangStmt.get(cabang);
     if (!cabangRow) {
       console.log("Validation failed: Invalid cabang:", cabang);
       return res.status(400).json({ error: "Cabang tidak valid" });
     }
-    const id_cabang = cabangRow.id_cabang;
-    console.log("Found cabang:", { id_cabang, kode_cabang: cabang });
 
-    let firstOrderId = null;
-    const orderStmt = db.prepare(
-      "INSERT INTO order_tbl (id_pembeli, id_menu, id_cabang, note, status_order, created_at) VALUES (?, ?, ?, ?, ?, ?)"
-    );
-    orderedItems.forEach((item) => {
-      const note = `${item.catatan}\nBumbu: ${item.bumbu}\nTopping: ${item.topping}\nLevel: ${item.level}\nQuantity: ${item.quantity}`;
-      const result = orderStmt.run(
-        id_pembeli,
-        item.id_menu,
-        id_cabang,
-        note,
-        "pending",
-        new Date().toISOString()
-      );
-      if (!firstOrderId) firstOrderId = result.lastInsertRowid;
-      console.log("Saved order:", { id_order: result.lastInsertRowid, id_menu: item.id_menu, quantity: item.quantity });
-    });
+    // Simpan data sementara ke session
+    req.session.pendingOrder = {
+      nama,
+      telepon: phoneStr,
+      cabang,
+      id_cabang: cabangRow.id_cabang,
+      items: orderedItems,
+      totalHarga,
+      created_at: getWIBDateTime(), // Pakai waktu WIB
+    };
 
-    res.setHeader('HX-Redirect', `/detailorder?orderId=${firstOrderId}`);
+    // Simpan ID unik untuk order sementara
+    const tempOrderId = Date.now();
+    req.session.pendingOrder.tempOrderId = tempOrderId;
+
+    console.log("Pending order saved to session:", req.session.pendingOrder);
+
+    // Redirect ke detailorder.html dengan tempOrderId
+    res.setHeader('HX-Redirect', `/detailorder?orderId=${tempOrderId}`);
     res.status(200).send();
   } catch (err) {
     console.error("Error in POST /form/order:", err.message);
@@ -234,7 +232,35 @@ app.post("/form/order", async (req, res) => {
 app.get("/api/orders/:id", async (req, res) => {
   console.log("GET /api/orders/:id called:", req.params.id);
   try {
-    const orderId = parseInt(req.params.id);
+    const orderId = req.params.id;
+
+    // Cek apakah ID adalah tempOrderId dari session
+    if (req.session.pendingOrder && req.session.pendingOrder.tempOrderId == orderId) {
+      const order = req.session.pendingOrder;
+      const cabangStmt = db.prepare("SELECT cabang FROM cabang_tbl WHERE id_cabang = ?");
+      const cabang = cabangStmt.get(order.id_cabang);
+
+      const response = {
+        nama: order.nama,
+        telepon: order.telepon,
+        cabang: cabang ? cabang.cabang : "Tidak Diketahui",
+        kode_cabang: order.cabang,
+        items: order.items.map(item => ({
+          name: item.menu,
+          quantity: item.quantity,
+          harga: item.price,
+          bumbu: item.bumbu,
+          topping: item.topping,
+          level: item.level,
+          catatan: item.catatan,
+        })),
+        totalHarga: order.totalHarga,
+      };
+      console.log("Response from session:", response);
+      return res.json(response);
+    }
+
+    // Jika bukan dari session, cek di database
     const orderStmt = db.prepare(`
       SELECT o.*, c.nama_cust, c.telepon, cb.cabang, cb.kode_cabang
       FROM order_tbl o
@@ -304,6 +330,103 @@ app.get("/api/orders/:id", async (req, res) => {
   }
 });
 
+app.post("/api/orders/confirm", async (req, res) => {
+  console.log("POST /api/orders/confirm received:", req.body);
+  try {
+    const { orderId } = req.body;
+    if (!orderId) {
+      console.log("Missing orderId in request body");
+      return res.status(400).json({ error: "Order ID diperlukan" });
+    }
+
+    // Cek apakah orderId adalah tempOrderId dari session
+    if (!req.session.pendingOrder || req.session.pendingOrder.tempOrderId != orderId) {
+      console.log("Pending order not found in session:", { orderId, session: req.session.pendingOrder });
+      return res.status(404).json({ error: "Pesanan sementara tidak ditemukan" });
+    }
+
+    const { nama, telepon, id_cabang, items } = req.session.pendingOrder;
+    const created_at = getWIBDateTime(); // Pakai waktu WIB
+    console.log("Order data from session:", { nama, telepon, id_cabang, items, created_at });
+
+    // Cek apakah pelanggan sudah ada
+    const checkCustomerStmt = db.prepare("SELECT id_pembeli FROM customer_tbl WHERE telepon = ?");
+    const existingCustomer = checkCustomerStmt.get(telepon);
+    let id_pembeli;
+
+    if (existingCustomer) {
+      id_pembeli = existingCustomer.id_pembeli;
+      console.log("Existing customer found:", { id_pembeli, telepon });
+    } else {
+      // Insert customer tanpa created_at dulu (karena kode lama gak pake)
+      const customerStmt = db.prepare("INSERT INTO customer_tbl (nama_cust, telepon) VALUES (?, ?)");
+      const customerResult = customerStmt.run(nama, telepon);
+      id_pembeli = customerResult.lastInsertRowid;
+      console.log("New customer saved:", { id_pembeli, nama, telepon });
+    }
+
+    // Validasi id_cabang
+    const cabangStmt = db.prepare("SELECT id_cabang FROM cabang_tbl WHERE id_cabang = ?");
+    const cabangRow = cabangStmt.get(id_cabang);
+    if (!cabangRow) {
+      console.log("Invalid id_cabang:", id_cabang);
+      return res.status(400).json({ error: "Cabang tidak valid" });
+    }
+
+    // Simpan pesanan ke database
+    let firstOrderId = null;
+    const orderStmt = db.prepare(
+      "INSERT INTO order_tbl (id_pembeli, id_menu, id_cabang, note, status_order, created_at) VALUES (?, ?, ?, ?, ?, ?)"
+    );
+    for (const item of items) {
+      const note = `${item.catatan}\nBumbu: ${item.bumbu}\nTopping: ${item.topping}\nLevel: ${item.level}\nQuantity: ${item.quantity}`;
+      console.log("Inserting order item:", { id_pembeli, id_menu: item.id_menu, id_cabang, note, status: "pending", created_at });
+      const result = orderStmt.run(
+        id_pembeli,
+        item.id_menu,
+        id_cabang,
+        note,
+        "pending",
+        created_at
+      );
+      if (!firstOrderId) firstOrderId = result.lastInsertRowid;
+      console.log("Order saved:", { id_order: result.lastInsertRowid, id_menu: item.id_menu, quantity: item.quantity, created_at });
+    }
+
+    // Hapus pesanan sementara dari session
+    delete req.session.pendingOrder;
+    console.log("Pending order cleared from session");
+
+    // Kirim respons dengan id_order asli dan redirect ke detailorder dengan id_order
+    res.setHeader('HX-Redirect', `/detailorder?orderId=${firstOrderId}`);
+    res.status(200).json({ success: true, message: "Pesanan telah dikirim!", id_order: firstOrderId });
+  } catch (err) {
+    console.error("Error in POST /api/orders/confirm:", err.message, err.stack);
+    res.status(500).json({ error: "Kesalahan server", details: err.message });
+  }
+});
+
+app.post("/api/orders/cancel", async (req, res) => {
+  console.log("POST /api/orders/cancel received:", req.body);
+  try {
+    const { orderId } = req.body;
+    if (!orderId || !req.session.pendingOrder || req.session.pendingOrder.tempOrderId != orderId) {
+      console.log("No pending order to cancel:", orderId);
+      return res.status(404).json({ error: "Pesanan sementara tidak ditemukan" });
+    }
+
+    // Hapus pesanan sementara dari session
+    delete req.session.pendingOrder;
+    console.log("Pending order cancelled and cleared from session");
+
+    res.setHeader('HX-Redirect', '/order');
+    res.status(200).send();
+  } catch (err) {
+    console.error("Error in POST /api/orders/cancel:", err.message);
+    res.status(500).json({ error: "Kesalahan server", details: err.message });
+  }
+});
+
 app.post("/kontak", (req, res) => {
   console.log("POST /kontak received:", req.body);
   try {
@@ -313,8 +436,8 @@ app.post("/kontak", (req, res) => {
     }
 
     const stmt = db.prepare("INSERT INTO kontak_tbl (email_kontak, pesan_kontak, created_at) VALUES (?, ?, ?)");
-    const result = stmt.run(email, pesan, new Date().toISOString());
-    console.log("Saved kontak:", { id_kontak: result.lastInsertRowid, email, pesan });
+    const result = stmt.run(email, pesan, getWIBDateTime());
+    console.log("Saved kontak:", { id_kontak: result.lastInsertRowid, email, pesan, created_at: getWIBDateTime() });
 
     res.status(200).json({ success: true, message: "Pesan berhasil dikirim!" });
   } catch (err) {
@@ -335,34 +458,11 @@ app.get("/api/masukan", requireLogin, (req, res) => {
   }
 });
 
-app.post("/api/orders/confirm", async (req, res) => {
-  console.log("POST /api/orders/confirm received:", req.body);
-  try {
-    const { orderId } = req.body;
-    if (!orderId) {
-      return res.status(400).json({ error: "Order ID diperlukan" });
-    }
-
-    const stmt = db.prepare("SELECT id_order FROM order_tbl WHERE id_order = ?");
-    const order = stmt.get(orderId);
-    if (!order) {
-      console.log("Order not found:", orderId);
-      return res.status(404).json({ error: "Pesanan tidak ditemukan" });
-    }
-
-    console.log("Order confirmation acknowledged:", { orderId });
-    res.status(200).json({ success: true, message: "Pesanan telah dikirim!" });
-  } catch (err) {
-    console.error("Error in POST /api/orders/confirm:", err.message);
-    res.status(500).json({ error: "Kesalahan server", details: err.message });
-  }
-});
-
 app.get("/api/orders", requireLogin, async (req, res) => {
   console.log("GET /api/orders called", {
     query: req.query,
     kode_cabang: req.session.kode_cabang,
-    timestamp: new Date().toISOString(),
+    timestamp: getWIBDateTime(),
   });
   try {
     const kode_cabang = req.session.kode_cabang;
@@ -374,9 +474,9 @@ app.get("/api/orders", requireLogin, async (req, res) => {
       WITH RankedOrders AS (
         SELECT o.id_pembeli, MIN(o.id_order) as id_order, c.nama_cust, c.telepon,
                GROUP_CONCAT(o.note) as notes, GROUP_CONCAT(m.menu) as menus,
-               GROUP_CONCAT(o.status_order) as statuses,
+               GROUP_CONCAT(o.status_order) as statuses, GROUP_CONCAT(m.harga) as harga_menu,
                MIN(o.created_at) as created_at,
-               ROW_NUMBER() OVER (ORDER BY MIN(o.created_at) ${order === 'ASC' ? 'ASC' : 'DESC'}) as row_num
+               ROW_NUMBER() OVER (ORDER BY MIN(o.created_at) ${order}) as row_num
         FROM order_tbl o
         JOIN customer_tbl c ON o.id_pembeli = c.id_pembeli
         JOIN menu_tbl m ON o.id_menu = m.id_menu
@@ -394,15 +494,15 @@ app.get("/api/orders", requireLogin, async (req, res) => {
         GROUP BY o.id_pembeli
       )
       SELECT id_pembeli, id_order, created_at, nama_cust, telepon,
-             notes, statuses, menus,
-             ${order === 'ASC' ? 'row_num' : '(SELECT COUNT(*) FROM RankedOrders) - row_num + 1'} as no
+             notes, statuses, menus, harga_menu,
+             ${order === 'ASC' ? 'row_num' : '(SELECT COUNT(*) FROM RankedOrders) - row_num + 1'} as row_num
       FROM RankedOrders
       ORDER BY created_at ${order};
     `;
 
     const stmt = db.prepare(query);
     const orders = stmt.all(...params);
-    console.log("Orders fetched from DB:", orders);
+    console.log("Orders retrieved from DB:", orders);
     orders.forEach((order, index) => {
       console.log(`Order ${index + 1} created_at:`, order.created_at);
     });
@@ -414,6 +514,15 @@ app.get("/api/orders", requireLogin, async (req, res) => {
       const noteArray = order.notes.split(',');
       const menuArray = order.menus.split(',');
       const statusArray = order.statuses.split(',');
+      const hargaArray = order.harga_menu.split(',').map(Number);
+
+      console.log("Processing order:", {
+        id_pembeli: order.id_pembeli,
+        menus: menuArray,
+        notes: noteArray,
+        statuses: statusArray,
+        harga_menu: hargaArray,
+      });
 
       const items = noteArray.map((note, i) => {
         const noteLines = note.split('\n');
@@ -432,6 +541,43 @@ app.get("/api/orders", requireLogin, async (req, res) => {
           )
           .join('\n') || '-';
 
+        // Normalisasi nama menu: lowercase, trim, ganti spasi jadi single space
+        const menuName = menuArray[i]?.trim().toLowerCase().replace(/\s+/g, ' ') || '';
+        console.log("Menu item:", { menu: menuName, quantity, index: i, harga_menu: hargaArray[i] });
+
+        // Hitung harga berdasarkan menu
+        let harga = 0;
+        switch (menuName) {
+          case 'cimol mozzarella kecil':
+            harga = quantity * 11000;
+            break;
+          case 'cimol mozzarella besar':
+            harga = quantity * 22000;
+            break;
+          case 'cimol bojot kecil':
+            harga = quantity * 6000;
+            break;
+          case 'cimol bojot besar':
+            harga = quantity * 12000;
+            break;
+          case 'cimol ayam kecil':
+            harga = quantity * 11000;
+            break;
+          case 'cimol ayam besar':
+            harga = quantity * 22000;
+            break;
+          case 'cimol beef kecil':
+            harga = quantity * 11000;
+            break;
+          case 'cimol beef besar':
+            harga = quantity * 22000;
+            break;
+          default:
+            // Fallback ke harga dari menu_tbl
+            harga = hargaArray[i] ? quantity * hargaArray[i] : 0;
+            console.warn(`Unknown menu: ${menuName}, using harga_menu: ${hargaArray[i]}`);
+        }
+
         return {
           menu: menuArray[i],
           quantity,
@@ -439,24 +585,12 @@ app.get("/api/orders", requireLogin, async (req, res) => {
           topping,
           level,
           catatan,
-          harga: (() => {
-            switch (menuArray[i].toLowerCase()) {
-              case 'cimol mozzarella porsi kecil': return quantity * 11000;
-              case 'cimol mozzarella porsi besar': return quantity * 22000;
-              case 'cimol bojot porsi kecil': return quantity * 6000;
-              case 'cimol bojot porsi besar': return quantity * 12000;
-              case 'cimol ayam porsi kecil': return quantity * 11000;
-              case 'cimol ayam porsi besar': return quantity * 22000;
-              case 'cimol beef porsi kecil': return quantity * 11000;
-              case 'cimol beef porsi besar': return quantity * 22000;
-              default: return 0;
-            }
-          })(),
+          harga,
         };
       });
 
-      const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
-      const totalHarga = items.reduce((sum, item) => sum + item.harga, 0);
+      const totalQuantity = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
+      const totalHarga = items.reduce((sum, item) => sum + (item.harga || 0), 0);
 
       const status = statusArray[0] === 'pending' ? 'Menunggu' :
         statusArray[0] === 'confirmed' ? 'Diterima' :
@@ -464,25 +598,28 @@ app.get("/api/orders", requireLogin, async (req, res) => {
 
       console.log("Order formatted:", {
         id_pembeli: order.id_pembeli,
-        no: order.no,
+        no: order.row_num,
         nama_cust: order.nama_cust,
         telepon: order.telepon,
         created_at: order.created_at,
         status,
+        totalQuantity,
+        totalHarga,
+        items,
       });
 
       return {
         id_order: order.id_order,
         id_pembeli: order.id_pembeli,
-        no: order.no,
+        no: order.row_num,
         nama: order.nama_cust,
         telepon: order.telepon,
         items,
         totalQuantity,
         totalHarga,
         status,
-        catatan: items[0].catatan,
-        created_at: order.created_at, // Tambahkan created_at ke respons
+        catatan: items[0]?.catatan || '-',
+        created_at: order.created_at,
       };
     });
 
@@ -490,7 +627,7 @@ app.get("/api/orders", requireLogin, async (req, res) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.json(formattedOrders);
   } catch (err) {
-    console.error("Error in GET /api/orders:", err.message);
+    console.error("Error in GET /api/orders:", err.message, err.stack);
     res.status(500).json({ error: "Database error", details: err.message });
   }
 });
@@ -574,7 +711,7 @@ app.delete("/api/orders/pembeli/:id_pembeli", requireLogin, async (req, res) => 
   console.log("DELETE /api/orders/pembeli/:id_pembeli called", {
     id_pembeli: req.params.id_pembeli,
     kode_cabang: req.session.kode_cabang,
-    timestamp: new Date().toISOString(),
+    timestamp: getWIBDateTime(),
   });
   try {
     const id_pembeli = parseInt(req.params.id_pembeli);

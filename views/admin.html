@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Admin Dashboard - Cimol Bojot AA</title>
     <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet" href="/styleadmin.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
+
 <body>
     <div class="navbar">
         <div class="navbar-header">
@@ -40,7 +42,10 @@
                 <div class="filter-container">
                     <div class="filter-group">
                         <label for="order-filter">URUTKAN:</label>
-                        <select id="order-filter" name="order" hx-get="/api/orders" hx-target="#order-list" hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" hx-sync="this:queue" hx-params="order,status" hx-vals='js:{status: document.getElementById("status-filter").value, ts: Date.now()}'>
+                        <select id="order-filter" name="order" hx-get="/api/orders" hx-target="#order-list"
+                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" hx-sync="this:queue"
+                            hx-params="order,status"
+                            hx-vals='js:{status: document.getElementById("status-filter").value, ts: Date.now()}'>
                             <option value="asc">Terlama</option>
                             <option value="desc">Terbaru</option>
                         </select>
@@ -50,18 +55,23 @@
                             <input type="text" id="search-input" placeholder="Cari nama pelanggan..." class="search-bar"
                                 hx-target="#order-list" hx-swap="innerHTML" hx-trigger="keyup delay:300ms"
                                 hx-get="/api/orders" hx-params="order,status"
-                                hx-vals='js:{order: document.getElementById("order-filter").value, status: document.getElementById("status-filter").value, ts: Date.now()}'>
+                                hx-vals='js:{order: document.getElementById("order-filter").value, status: document.getElementById("status-filter").value, ts: Date.now()}' />
                             <span class="search-icon">
-                                <svg width="25" height="25" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M11.435 10.35H10.879L10.668 9.864C11.373 9.045 11.8 8.002 11.8 6.9C11.8 4.195 9.605 2 6.9 2C4.195 2 2 4.195 2 6.9C2 9.605 4.195 11.8 6.9 11.8C8.002 11.8 9.045 11.373 9.864 10.668L10.07 10.879V11.435L13.637 15L15 13.637L11.435 10.07ZM6.9 10.07C5.162 10.07 3.73 8.638 3.73 6.9C3.73 5.162 5.162 3.73 6.9 3.73C8.638 3.73 10.07 5.162 10.07 6.9C10.07 8.638 8.638 10.07 6.9 10.07Z"
-                                        fill="#721414" stroke="#721414" stroke-width="0.2"/>
+                                <svg width="25" height="25" viewBox="0 0 16 16" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M11.435 10.35H10.879L10.668 9.864C11.373 9.045 11.8 8.002 11.8 6.9C11.8 4.195 9.605 2 6.9 2C4.195 2 2 4.195 2 6.9C2 9.605 4.195 11.8 6.9 11.8C8.002 11.8 9.045 11.373 9.864 10.668L10.07 10.879V11.435L13.637 15L15 13.637L11.435 10.07ZM6.9 10.07C5.162 10.07 3.73 8.638 3.73 6.9C3.73 5.162 5.162 3.73 6.9 3.73C8.638 3.73 10.07 5.162 10.07 6.9C10.07 8.638 8.638 10.07 6.9 10.07Z"
+                                        fill="#721414" stroke="#721414" stroke-width="0.2" />
                                 </svg>
                             </span>
                         </div>
                     </div>
                     <div class="filter-group">
                         <label for="status-filter">FILTER STATUS:</label>
-                        <select id="status-filter" name="status" hx-get="/api/orders" hx-target="#order-list" hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" hx-sync="this:queue" hx-params="order,status" hx-vals='js:{order: document.getElementById("order-filter").value, ts: Date.now()}'>
+                        <select id="status-filter" name="status" hx-get="/api/orders" hx-target="#order-list"
+                            hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" hx-sync="this:queue"
+                            hx-params="order,status"
+                            hx-vals='js:{order: document.getElementById("order-filter").value, ts: Date.now()}'>
                             <option value="">Semua</option>
                             <option value="pending">Menunggu</option>
                             <option value="confirmed">Diterima</option>
@@ -83,7 +93,7 @@
                     </thead>
                     <tbody id="order-list" hx-get="/api/orders" hx-trigger="load" hx-swap="innerHTML"
                         hx-indicator=".htmx-indicator" hx-headers='{"Cache-Control": "no-cache"}'
-                        hx-params="order,status" hx-vals='js:{ts: Date.now()}'>
+                        hx-params="order,status" hx-vals="js:{ts: Date.now()}">
                         <!-- Data pesanan akan dimuat di sini -->
                     </tbody>
                 </table>
@@ -91,7 +101,6 @@
         </div>
     </div>
     <script>
-        // Log htmx request untuk debugging
         document.body.addEventListener('htmx:beforeRequest', (event) => {
             console.log('HTMX request:', {
                 method: event.detail.verb,
@@ -142,7 +151,7 @@
                         extra: "Extra"
                     };
 
-                    // Format tanggal ke dalam dd/mm/yyyy hh:mm
+                    // Format tanggal ke DD/MM/YYYY HH:mm
                     function formatDateTime(dateStr) {
                         console.log('Raw created_at:', dateStr);
                         if (!dateStr) {
@@ -151,14 +160,12 @@
                         }
 
                         let date;
-                        // Cek apakah format ISO (YYYY-MM-DDThh:mm:ss.sssZ)
                         if (dateStr.includes('T') && dateStr.endsWith('Z')) {
                             date = new Date(dateStr);
-                            // Konversi ke WIB (UTC+7)
                             date = new Date(date.getTime() + 7 * 60 * 60 * 1000);
                         } else {
-                            // Asumsikan format SQLite lokal (YYYY-MM-DD HH:mm:ss)
-                            date = new Date(dateStr.replace(' ', 'T') + '+07:00');
+                            const isoStr = dateStr.replace(' ', 'T') + '+07:00';
+                            date = new Date(isoStr);
                         }
 
                         if (isNaN(date.getTime())) {
@@ -166,12 +173,12 @@
                             return '-';
                         }
 
-                        // Format ke dd/mm/yyyy hh:mm
                         const day = String(date.getDate()).padStart(2, '0');
                         const month = String(date.getMonth() + 1).padStart(2, '0');
                         const year = date.getFullYear();
                         const hours = String(date.getHours()).padStart(2, '0');
                         const minutes = String(date.getMinutes()).padStart(2, '0');
+                        console.log('Formatted date:', `${day}/${month}/${year} ${hours}:${minutes}`);
                         return `${day}/${month}/${year} ${hours}:${minutes}`;
                     }
 
@@ -182,6 +189,7 @@
 
                         // Bersihkan karakter non-angka
                         phoneStr = phoneStr.replace(/\D/g, '');
+                        console.log('Cleaned phone number:', phoneStr);
 
                         // Format nomor
                         if (phoneStr.startsWith('08')) {
@@ -196,9 +204,10 @@
 
                         // Tambah +62
                         phoneStr = `+62${phoneStr}`;
+                        console.log('Formatted phone number:', phoneStr);
 
-                        // Validasi format nomor
-                        if (!phoneStr.match(/^\+62[0-9]{8,11}$/)) {
+                        // Validasi format nomor (8-12 digit setelah +62)
+                        if (!phoneStr.match(/^\+62[0-9]{8,12}$/)) {
                             console.error('Invalid phone number format:', phoneStr);
                             return null;
                         }
@@ -228,6 +237,17 @@
                     }
 
                     container.innerHTML = orders.map(order => {
+                        console.log("Rendering order:", {
+                            id_order: order.id_order,
+                            nama: order.nama,
+                            telepon: order.telepon,
+                            totalHarga: order.totalHarga,
+                            items: order.items.map(item => ({
+                                menu: item.menu,
+                                quantity: item.quantity,
+                                harga: item.harga
+                            }))
+                        });
                         const waEmptyLink = formatPhoneForWhatsAppEmpty(order.telepon);
                         const waTemplateLink = formatPhoneForWhatsAppTemplate(order.telepon);
                         const waLink = order.status === 'Selesai' ? waTemplateLink : waEmptyLink;
@@ -286,105 +306,128 @@
                                 </div>
                             </td>
                         </tr>
-                    `;
+                        `;
                     }).join('');
 
                     // Event listener untuk status dropdown
-                    document.querySelectorAll('.status-dropdown').forEach(dropdown => {
-                        dropdown.addEventListener('change', async (event) => {
-                            const orderId = event.target.getAttribute('data-order-id');
-                            const status = event.target.value;
-                            console.log('Dropdown status changed:', { orderId, status });
+                    document
+                        .querySelectorAll(".status-dropdown")
+                        .forEach((dropdown) => {
+                            dropdown.addEventListener("change", async (event) => {
+                                const orderId = event.target.getAttribute("data-order-id");
+                                const status = event.target.value;
+                                console.log("Dropdown status changed:", { orderId, status });
 
-                            try {
-                                const response = await fetch(`/api/orders/${orderId}/status`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Cache-Control': 'no-cache'
-                                    },
-                                    body: JSON.stringify({ status })
-                                });
-                                const result = await response.json();
-                                console.log('Update response:', result);
+                                try {
+                                    const response = await fetch(
+                                        `/api/orders/${orderId}/status`,
+                                        {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                "Cache-Control": "no-cache",
+                                            },
+                                            body: JSON.stringify({ status }),
+                                        }
+                                    );
+                                    const result = await response.json();
+                                    console.log("Update response:", result);
 
-                                if (result.success) {
-                                    const statusFilter = document.getElementById('status-filter').value || '';
-                                    const orderFilter = document.getElementById('order-filter').value || 'asc';
-                                    console.log('Refreshing table:', { status: statusFilter, order: orderFilter });
-                                    let url = '/api/orders';
-                                    const params = new URLSearchParams();
-                                    if (statusFilter) params.append('status', statusFilter);
-                                    if (orderFilter) params.append('order', orderFilter);
-                                    params.append('ts', Date.now());
-                                    if (params.toString()) url += `?${params.toString()}`;
-                                    htmx.ajax('GET', url, {
-                                        target: '#order-list',
-                                        swap: 'innerHTML',
-                                        headers: { 'Cache-Control': 'no-cache' }
-                                    });
-                                } else {
-                                    console.error('Update failed:', result.error);
-                                    alert('Gagal update status: ' + result.error);
+                                    if (result.success) {
+                                        const statusFilter =
+                                            document.getElementById("status-filter").value || "";
+                                        const orderFilter =
+                                            document.getElementById("order-filter").value || "asc";
+                                        console.log("Refreshing table:", {
+                                            status: statusFilter,
+                                            order: orderFilter,
+                                        });
+                                        let url = "/api/orders";
+                                        const params = new URLSearchParams();
+                                        if (statusFilter) params.append("status", statusFilter);
+                                        if (orderFilter) params.append("order", orderFilter);
+                                        params.append("ts", Date.now());
+                                        if (params.toString()) url += `?${params.toString()}`;
+                                        htmx.ajax("GET", url, {
+                                            target: "#order-list",
+                                            swap: "innerHTML",
+                                            headers: { "Cache-Control": "no-cache" },
+                                        });
+                                    } else {
+                                        console.error("Update failed:", result.error);
+                                        alert("Gagal update status: " + result.error);
+                                    }
+                                } catch (err) {
+                                    console.error("Error:", err.message);
+                                    alert("Error: Gagal kirim request");
                                 }
-                            } catch (err) {
-                                console.error('Error:', err.message);
-                                alert('Error: Gagal kirim request');
-                            }
+                            });
                         });
-                    });
 
                     // Event listener untuk tombol hapus
-                    document.querySelectorAll('.delete-order').forEach(button => {
-                        button.addEventListener('click', async (event) => {
-                            const pembeliId = button.getAttribute('data-pembeli-id');
-                            const orderName = button.getAttribute('data-order-name');
-                            console.log('Delete button clicked:', { pembeliId, orderName });
+                    document.querySelectorAll(".delete-order").forEach((button) => {
+                        button.addEventListener("click", async (event) => {
+                            const pembeliId = button.getAttribute("data-pembeli-id");
+                            const orderName = button.getAttribute("data-order-name");
+                            console.log("Delete button clicked:", { pembeliId, orderName });
 
                             if (confirm(`Yakin ingin hapus pesanan ${orderName}?`)) {
                                 try {
-                                    const response = await fetch(`/api/orders/pembeli/${pembeliId}`, {
-                                        method: 'DELETE',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'Cache-Control': 'no-cache'
+                                    const response = await fetch(
+                                        `/api/orders/pembeli/${pembeliId}`,
+                                        {
+                                            method: "DELETE",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                "Cache-Control": "no-cache",
+                                            },
                                         }
-                                    });
+                                    );
                                     const result = await response.json();
-                                    console.log('Delete response:', result);
+                                    console.log("Delete response:", result);
 
-                                    if (result.message === 'Semua pesanan pelanggan berhasil dihapus') {
-                                        const statusFilter = document.getElementById('status-filter').value || '';
-                                        const orderFilter = document.getElementById('order-filter').value || 'asc';
-                                        console.log('Refreshing table:', { status: statusFilter, order: orderFilter });
-                                        let url = '/api/orders';
+                                    if (
+                                        result.message ===
+                                        "Semua pesanan pelanggan berhasil dihapus"
+                                    ) {
+                                        const statusFilter =
+                                            document.getElementById("status-filter").value || "";
+                                        const orderFilter =
+                                            document.getElementById("order-filter").value || "asc";
+                                        console.log("Refreshing table:", {
+                                            status: statusFilter,
+                                            order: orderFilter,
+                                        });
+                                        let url = "/api/orders";
                                         const params = new URLSearchParams();
-                                        if (statusFilter) params.append('status', statusFilter);
-                                        if (orderFilter) params.append('order', orderFilter);
-                                        params.append('ts', Date.now());
+                                        if (statusFilter) params.append("status", statusFilter);
+                                        if (orderFilter) params.append("order", orderFilter);
+                                        params.append("ts", Date.now());
                                         if (params.toString()) url += `?${params.toString()}`;
-                                        htmx.ajax('GET', url, {
-                                            target: '#order-list',
-                                            swap: 'innerHTML',
-                                            headers: { 'Cache-Control': 'no-cache' }
+                                        htmx.ajax("GET", url, {
+                                            target: "#order-list",
+                                            swap: "innerHTML",
+                                            headers: { "Cache-Control": "no-cache" },
                                         });
                                     } else {
-                                        console.error('Delete failed:', result.error);
-                                        alert('Gagal hapus pesanan: ' + result.error);
+                                        console.error("Delete failed:", result.error);
+                                        alert("Gagal hapus pesanan: " + result.error);
                                     }
                                 } catch (err) {
-                                    console.error('Error:', err.message);
-                                    alert('Error: Gagal kirim request');
+                                    console.error("Error:", err.message);
+                                    alert("Error: Gagal kirim request");
                                 }
                             }
                         });
                     });
                 } catch (err) {
-                    console.error('Error parsing JSON:', err);
-                    container.innerHTML = '<tr><td colspan="6">Gagal memuat pesanan.</td></tr>';
+                    console.error("Error parsing JSON:", err);
+                    container.innerHTML =
+                        '<tr><td colspan="6">Gagal memuat pesanan.</td></tr>';
                 }
             }
         });
     </script>
 </body>
+
 </html>

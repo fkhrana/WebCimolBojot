@@ -235,7 +235,7 @@
                 const quantity = parseInt(input.value);
                 totalQuantity += quantity;
                 if (quantity > 0) {
-                    let groupHTML = `<div class="menu-group"><h3 class="group-title">${item.name}</></h3>`;
+                    let groupHTML = `<div class="menu-group"><h3 class="group-title">${item.name}</h3>`;
                     for (let i = 1; i <= quantity; i++) {
                         groupHTML += `
                             <div class="menu-detail">
@@ -282,6 +282,29 @@
                 console.log(`${key}: ${value}`);
             }
 
+            // Validasi nomor telepon
+            const teleponInput = document.querySelector("#telepon");
+            const telepon = teleponInput.value.trim();
+            console.log("Validating telepon:", { raw: telepon, hasLetters: /[a-zA-Z]/.test(telepon) });
+
+            // Cek apakah ada huruf
+            if (/[a-zA-Z]/.test(telepon)) {
+                e.preventDefault();
+                alert("Nomor telepon tidak boleh mengandung huruf!");
+                teleponInput.focus();
+                return;
+            }
+
+            // Bersihin non-angka dan cek format
+            const cleanTelepon = telepon.replace(/\D/g, '');
+            if (!cleanTelepon.match(/^08[0-9]{8,10}$/)) {
+                e.preventDefault();
+                alert("Nomor telepon tidak valid! Harus mulai dengan 08 dan berisi 10-12 digit.");
+                teleponInput.focus();
+                return;
+            }
+
+            // Validasi minimal satu menu
             const quantities = document.querySelectorAll(".quantity-input");
             let hasQuantity = false;
             quantities.forEach((input) => {
