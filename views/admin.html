@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
-
 <body>
     <div class="navbar">
         <div class="navbar-header">
@@ -127,14 +125,23 @@
                         extra: "Extra"
                     };
 
-                    // Format nomor telepon untuk WA
+                    // Format nomor telepon untuk WA dengan template pesan
                     function formatPhoneForWhatsApp(phone) {
-                        // Pastiin nomor string dan mulai dengan '08'
-                        const phoneStr = phone.toString();
+                        // Pastikan nomor dalam bentuk string dan mulai dengan '08'
+                        const phoneStr = phone.toString().trim();
+                        let formattedPhone = phoneStr;
                         if (phoneStr.startsWith('08')) {
-                            return `+62${phoneStr.slice(1)}`; // Ganti '08' jadi '+62'
+                            formattedPhone = `+62${phoneStr.slice(1)}`;
+                        } else if (!phoneStr.startsWith('+62')) {
+                            // Jika nomor tidak diawali '08' atau '+62', asumsikan sudah dalam format internasional
+                            formattedPhone = phoneStr;
                         }
-                        return phoneStr; // Kalau format lain, biarin
+                        // Tambahkan template pesan untuk WhatsApp
+                        const message = encodeURIComponent(
+                            "Halo, Sobat AA! Pesanan anda sudah siap dan bisa langsung datang ke cabang untuk bayar dan ambil pesanan!"
+                        );
+                        console.log('Generated WhatsApp URL:', `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${message}`);
+                        return `https://api.whatsapp.com/send?phone=${formattedPhone}&text=${message}`;
                     }
 
                     container.innerHTML = orders.map(order => `
@@ -143,7 +150,7 @@
                             <td>
                                 <div class="pelanggan-details">
                                     <div class="nama">${order.nama}</div>
-                                    <a href="https://wa.me/${formatPhoneForWhatsApp(order.telepon)}" target="_blank" class="telepon">
+                                    <a href="${formatPhoneForWhatsApp(order.telepon)}" target="_blank" class="telepon">
                                         ${order.telepon}
                                     </a>
                                 </div>
