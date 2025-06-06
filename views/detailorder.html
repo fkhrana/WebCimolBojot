@@ -137,7 +137,7 @@
                     const orderItem = document.createElement("div");
                     orderItem.className = "order-item";
                     orderItem.innerHTML = `
-                        <img src="/cimolmoza.png" alt="${item.name || "Menu"}">
+                        <img src="${item.foto || '/cimolmoza.png'}" alt="${item.name || 'Menu'}">
                         <div class="order-item-details">
                             <h3>${formatMenuName(item.name)}</h3>
                             <p>${bumbuMap[item.bumbu] || item.bumbu || "-"}</p>

@@ -145,15 +145,15 @@ app.post("/form/order", async (req, res) => {
     }
 
     const menuBase = [
-      { type: "mozzarella", idBase: 3, name: "Mozarella", priceKecil: 11000, priceBesar: 22000 },
-      { type: "bojot", idBase: 1, name: "Bojot", priceKecil: 6000, priceBesar: 12000 },
-      { type: "ayam", idBase: 5, name: "Ayam", priceKecil: 11000, priceBesar: 22000 },
-      { type: "beef", idBase: 7, name: "Beef", priceKecil: 11000, priceBesar: 22000 },
+      { type: "mozarella", idBase: 3, name: "Mozzarella Porsi Kecil", priceKecil: 11000, priceBesar: 22000 },
+      { type: "bojot", idBase: 1, name: "Bojot Porsi Kecil", priceKecil: 6000, priceBesar: 12000 },
+      { type: "ayam", idBase: 5, name: "Ayam Porsi Kecil", priceKecil: 11000, priceBesar: 22000 },
+      { type: "beef", idBase: 7, name: "Beef Porsi Kecil", priceKecil: 11000, priceBesar: 22000 },
     ];
 
     const menuItems = menuBase.flatMap(({ type, idBase, name, priceKecil, priceBesar }) => [
-      { formName: `cimol_${type}_kecil`, id_menu: idBase, menu: `Cimol ${name} Kecil`, price: priceKecil },
-      { formName: `cimol_${type}_besar`, id_menu: idBase + 1, menu: `Cimol ${name} Besar`, price: priceBesar },
+      { formName: `cimol_${type}_kecil`, idMenu: idBase, menu: `Cimol ${name}`, price: priceKecil },
+      { formName: `cimol_${type}_besar`, idMenu: idBase + 1, menu: `Cimol ${name.replace("Kecil", "Besar")}`, price: priceBesar },
     ]);
 
     if (!nama || !phoneStr || !cabang) {
@@ -166,14 +166,16 @@ app.post("/form/order", async (req, res) => {
 
     menuItems.forEach((item) => {
       const quantity = parseInt(req.body[item.formName]) || 0;
+      console.log(`Processing ${item.formName}: ${quantity}`);
       if (quantity > 0) {
         for (let i = 1; i <= quantity; i++) {
           const bumbu = req.body[`bumbu_${item.formName}_${i}`] || '-';
           const topping = req.body[`topping_${item.formName}_${i}`] || '-';
           const level = req.body[`level_${item.formName}_${i}`] || '-';
+          console.log(`Item ${i} for ${item.formName}:`, { bumbu, topping, level });
           totalHarga += item.price;
           orderedItems.push({
-            id_menu: item.id_menu,
+            id_menu: item.idMenu,
             menu: item.menu,
             quantity: 1,
             price: item.price,
@@ -185,6 +187,8 @@ app.post("/form/order", async (req, res) => {
         }
       }
     });
+
+    console.log("Final orderedItems:", orderedItems);
 
     if (orderedItems.length === 0) {
       console.log("Validation failed: No menu selected");
@@ -231,6 +235,18 @@ app.get("/api/orders/:id", async (req, res) => {
       const cabangStmt = db.prepare("SELECT cabang FROM cabang_tbl WHERE id_cabang = ?");
       const cabang = cabangStmt.get(order.id_cabang);
 
+      // Mapping foto untuk session-based order, sesuai menu_tbl
+      const menuFotoMap = {
+        "Cimol Mozzarella Porsi Kecil": "/cimolmoza.png",
+        "Cimol Mozzarella Porsi Besar": "/cimolmoza.png",
+        "Cimol Bojot Porsi Kecil": "/cimolbojot.png",
+        "Cimol Bojot Porsi Besar": "/cimolbojot.png",
+        "Cimol Ayam Porsi Kecil": "/cimolayam.png",
+        "Cimol Ayam Porsi Besar": "/cimolayam.png",
+        "Cimol Beef Porsi Kecil": "/cimolbeef.png",
+        "Cimol Beef Porsi Besar": "/cimolbeef.png",
+      };
+
       const response = {
         nama: order.nama,
         telepon: order.telepon,
@@ -244,6 +260,7 @@ app.get("/api/orders/:id", async (req, res) => {
           topping: item.topping,
           level: item.level,
           catatan: item.catatan,
+          foto: menuFotoMap[item.menu] || "/cimolmoza.png", // Fallback
         })),
         totalHarga: order.totalHarga,
       };
@@ -265,7 +282,7 @@ app.get("/api/orders/:id", async (req, res) => {
     }
 
     const itemsStmt = db.prepare(`
-      SELECT o.*, m.menu, m.harga
+      SELECT o.*, m.menu, m.harga, m.foto
       FROM order_tbl o
       JOIN menu_tbl m ON o.id_menu = m.id_menu
       WHERE o.id_pembeli = ?
@@ -301,6 +318,7 @@ app.get("/api/orders/:id", async (req, res) => {
         topping,
         level,
         catatan,
+        foto: item.foto || "/cimolmoza.png", // Fallback
       };
     });
 
