@@ -559,12 +559,11 @@ td b {
     max-width: 1000px;
     margin: 0 auto 80px auto;
     color: 721414;
-
 }
 
 #kontak h2 {
     font-size: 2.5rem;
-    margin-bottom: -15px;
+    margin-bottom: 0px;
     margin-top: 10px;
     color: #FAF3E3;
     border-bottom: none;
@@ -576,9 +575,8 @@ td b {
 #kontak p {
     text-align: center;
     color: #FAF3E3;
-    margin-bottom: 15px;
-
-
+    margin-bottom: 25px;
+    line-height: 1.1;
 }
 
 .contact-form {
