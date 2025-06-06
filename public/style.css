@@ -24,16 +24,18 @@ section h2 {
     align-items: flex-start;
     justify-content: space-between;
     color: white;
-    padding: 40px 0 80px 50px;
+    padding: 40px 50px;
     max-width: 1300px;
     margin: 100px auto 80px auto;
-    min-height: auto;
+    min-height: 600px;
     font-family: 'Jua', sans-serif;
 }
 
 .profil-content {
     max-width: 700px;
+    min-width: 700px;
     margin-top: 65px;
+    flex: 0 1 700px;
 }
 
 #profil h2 {
@@ -81,23 +83,25 @@ section h2 {
     display: block;
     margin-right: 0;
     margin-top: -40px;
-    transform: translateX(200px);
+    transform: translateX(250px);
 }
 
 .side-image-secondary {
     width: 150px;
     height: auto;
-    position: absolute;
-    right: 360px;
-    top: 80px;
+    display: block;
+    margin-right: 0;
+    margin-top: -40px;
+    transform: translateX(-450px);
 }
 
 .side-image-tertiary {
-    width: 220px;
+    width: 230px;
     height: auto;
-    position: absolute;
-    right: 380px;
-    top: 420px;
+    display: block;
+    margin-right: 0;
+    margin-top: 300px;
+    transform: translateX(-700px);
 }
 
 .star {
@@ -125,9 +129,7 @@ section h2 {
     left: 0;
     width: 100%;
     height: 40px;
-    /* sesuaikan dengan tinggi gambar pattern */
     background-image: url('/pattern.png');
-    /* ganti dengan path file kamu */
     background-repeat: repeat-x;
     background-size: contain;
     z-index: 1;
@@ -254,9 +256,12 @@ section h2 {
     font-size: 1.3rem;
     color: #721414;
     text-align: left;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     margin-top: 20px;
-    padding-left: 230px;
+    max-width: 870px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -723,41 +728,42 @@ footer {
     color: #FFFFFF;
 }
 
-/* responsivitas buat layar yang lebih kecil */
 @media (max-width: 768px) {
     #profil {
         flex-direction: column;
         align-items: center;
-        padding: 20px;
-        margin-top: 80px;
+        padding: 15px;
+        margin-top: 60px;
+        min-height: 400px;
     }
 
     .profil-content {
         max-width: 100%;
-        margin-top: 20px;
+        min-width: 0;
+        margin-top: 15px;
         text-align: center;
     }
 
     #profil h2 {
-        font-size: 3rem;
-        margin-bottom: 0;
+        font-size: 2.5rem;
+        margin-bottom: 5px;
     }
 
     #profil p {
-        font-size: 1rem;
+        font-size: 0.95rem;
         max-width: 100%;
     }
 
     .lihat-menu-button {
-        padding: 8px 20px;
-        font-size: 0.9rem;
+        padding: 10px 25px;
+        font-size: 0.95rem;
     }
 
     .side-image {
         width: 100%;
-        max-width: 300px;
+        max-width: 250px;
         transform: translateX(0);
-        margin: 20px auto;
+        margin: 15px auto;
     }
 
     .side-image-secondary,
@@ -765,100 +771,98 @@ footer {
         display: none;
     }
 
-    /* Header */
-    header {
-        height: auto;
-        padding: 10px 15px;
-        flex-wrap: wrap;
-    }
-
-    .logo {
-        margin-left: 0;
-        margin-top: 0;
-    }
-
-    .logo img {
-        height: 60px;
-    }
-
-    nav ul {
-        gap: 20px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    nav ul li {
-        font-size: 0.9rem;
-    }
-
-    .order-button {
-        padding: 5px 15px;
-        font-size: 0.9rem;
-    }
-
     /* Section Menu */
+    #menu {
+        padding: 40px 10px;
+    }
 
     #menu .products {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        grid-template-columns: 1fr;
+        gap: 15px;
         max-width: 100%;
     }
 
     .product-card {
-        width: 150px;
-        height: 160px;
+        width: 140px;
+        height: 150px;
     }
 
     .card-front img {
-        height: 110px;
+        height: 100px;
     }
 
     .product-info h3,
     .product-info-back h3 {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
 
     .product-info-back p {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
 
     .subheading {
         padding-left: 0;
         text-align: center;
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 
     .customization-options {
         flex-direction: column;
         align-items: center;
+        gap: 10px;
+    }
+
+    .custom-card {
+        padding: 15px;
     }
 
     .bumbu-card,
     .topping-card,
     .level-card {
         flex: 0 0 100%;
-        max-width: 300px;
+        max-width: 280px;
     }
 
     /* Section Lokasi */
+    #lokasi {
+        padding: 40px 10px;
+    }
+
+    #lokasi h2 {
+        font-size: 2rem;
+    }
+
     table {
-        border-spacing: 10px;
-        font-size: 0.9rem;
+        border-spacing: 5px;
+        font-size: 0.85rem;
     }
 
     td {
         display: block;
         width: 100%;
-        padding: 10px 0;
+        padding: 8px 0;
     }
 
     #map {
-        height: 300px;
+        height: 250px;
     }
 
     /* Section Kontak */
     #kontak {
-        padding: 40px 20px;
+        padding: 30px 10px;
+    }
+
+    #kontak h2 {
+        font-size: 2rem;
+    }
+
+    .contact-form {
+        padding: 20px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 0.85rem;
     }
 
     #kontak ul {
@@ -868,7 +872,7 @@ footer {
     }
 
     #kontak li {
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
 
     /* Footer */
@@ -876,7 +880,7 @@ footer {
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 15px;
+        gap: 10px;
     }
 
     .footer-logo {
@@ -890,7 +894,11 @@ footer {
 
     .footer-nav ul {
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 6px;
+    }
+
+    .footer-nav a {
+        font-size: 0.75rem; 
     }
 
     .footer-contact {

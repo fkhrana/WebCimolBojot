@@ -248,37 +248,72 @@ section {
 }
 
 @media (max-width: 768px) {
+    .order-section {
+        padding: 60px 10px;
+    }
+
+    .order-section h1 {
+        font-size: 1.8rem;
+    }
+
     .menu-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
 
     .order-form {
-        padding: 20px;
-    }
-
-    .menu-group {
         padding: 15px;
     }
 
-    .menu-detail {
+    .menu-group {
         padding: 10px;
+    }
+
+    .menu-detail {
+        padding: 8px;
     }
 
     .menu-detail select,
     .menu-detail textarea {
-        margin-bottom: 8px;
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+
+    .menu-image img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .menu-info h3 {
+        font-size: 0.95rem;
+    }
+
+    .menu-info p {
+        font-size: 0.8rem;
+    }
+
+    .quantity-selector {
+        gap: 3px;
+    }
+
+    .quantity-btn {
+        width: 22px;
+        height: 22px;
+        font-size: 0.9rem;
+    }
+
+    .quantity {
+        font-size: 0.9rem;
     }
 
     .order-submit-button {
         margin: 15px auto;
-        max-width: 150px; 
-    }
-
-    .pilih-rasa {
-        padding: 80px 15px;
+        max-width: 200px;
+        height: 36px;
+        font-size: 0.95rem;
     }
 
     .menu-options {
-        margin: 20px 15px 0;
+        margin: 15px 10px 0;
     }
 }

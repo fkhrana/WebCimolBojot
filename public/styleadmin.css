@@ -503,79 +503,118 @@ body {
 
 @media (max-width: 768px) {
     .navbar {
-        width: auto;
+        width: 100%;
         height: auto;
         position: relative;
+        padding: 5px 0;
+    }
+
+    .navbar-header img {
+        width: 50px;
+        left: -15px;
+    }
+
+    .navbar-header .title h1 {
+        font-size: 1.2rem;
+    }
+
+    .navbar-header .title p {
+        font-size: 0.65rem;
+    }
+
+    .navbar ul li a {
+        font-size: 0.95rem;
+        padding: 8px 0;
     }
 
     .main-content {
-        margin-left: auto;
-        padding: 10px;
+        margin-left: 0;
+        padding: 8px;
     }
 
-    .order-table th,
-    .order-table td {
-        font-size: 0.8rem;
-        padding: 5px;
-        position: relative;
+    .top-bar h2 {
+        font-size: 1.5rem;
     }
 
-    .order-details .details,
-    .order-details .catatan {
-        font-size: 0.8rem;
+    .top-bar .admin-info {
+        font-size: 0.95rem;
     }
 
     .filter-container {
         flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        margin: 15px auto 0 10px;
+        align-items: stretch;
+        gap: 8px;
+        margin: 10px 0;
     }
 
     .filter-group {
+        width: 100%;
         justify-content: center;
-        width: auto;
     }
 
     .search-wrapper {
-        width: auto;
-        max-height: 250px;
+        width: 100%;
     }
 
     .search-bar {
-        width: auto;
+        width: 100%;
+        font-size: 0.85rem;
+    }
+
+    .order-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .order-table th,
+    .order-table td {
+        font-size: 0.75rem;
+        padding: 4px;
+    }
+
+    .order-details .details,
+    .order-details .catatan {
+        font-size: 0.75rem;
     }
 
     .pelanggan-details {
-        gap: 3px;
-        padding-bottom: 20px;
+        gap: 2px;
+        padding-bottom: 15px;
+    }
+
+    .pelanggan-details .nama {
+        font-size: 0.85rem;
+    }
+
+    .pelanggan-details .telepon {
+        font-size: 0.8rem;
     }
 
     .pelanggan-details .order-date {
-        font-size: 0.8rem;
-        bottom: 5px;
-        left: 5px;
+        font-size: 0.75rem;
+        bottom: 3px;
+        left: 3px;
     }
 
-    .order-table td:nth-child(2) {
-        position: relative;
+    .status-dropdown {
+        font-size: 0.8rem;
+        padding: 6px;
+    }
+
+    #masukan h3 {
+        font-size: 1.5rem;
+    }
+
+    #masukan .message-container p {
+        font-size: 0.85rem;
     }
 
     .spacer {
         width: auto;
     }
 
-    .logout-line {
-        margin-right: auto 0 auto 0;
-    }
-
-    .logout-button {
-        margin-top: auto;
-        margin-bottom: auto;
-        margin-right: auto;
-    }
-
     .logout-button img {
-        height: auto;
+        width: 100px;
     }
 }

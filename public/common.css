@@ -82,3 +82,40 @@ nav a:hover {
 .order-button:hover {
     background-color: #ffb83d;
 }
+
+@media (max-width: 768px) {
+    header {
+        height: auto;
+        padding: 8px 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .logo {
+        margin: 0 auto;
+    }
+
+    .logo img {
+        height: 50px;
+    }
+
+    nav {
+        margin: 5px 0;
+    }
+
+    nav ul {
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    nav ul li {
+        font-size: 0.85rem;
+    }
+
+    .order-button {
+        padding: 5px 12px;
+        font-size: 0.85rem;
+        margin: 5px 0;
+    }
+}
