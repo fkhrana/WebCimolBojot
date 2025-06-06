@@ -31,7 +31,7 @@ section {
 
 .order-form {
     background: #FAF3E3;
-    color: #721414;
+    color: #83302E;
     max-width: 800px;
     margin: 0 auto;
     padding: 30px;
@@ -56,6 +56,7 @@ section {
     border-radius: 8px;
     border: 1px solid #D7681C;
     font-family: 'Montserrat', sans-serif;
+    color: #83302E;
     font-size: 1em;
 }
 
@@ -151,8 +152,8 @@ section {
 }
 
 .quantity-btn {
-    background-color: #F9C468;
-    color: #99000D;
+    background-color: #C92F28;
+    color: #FFFFFF;
     border: none;
     border-radius: 50%;
     width: 25px;
@@ -163,14 +164,25 @@ section {
 }
 
 .quantity-btn:hover {
-    background-color: #ffb83d;
+    background-color: #b22b24;
+}
+
+.quantity-container {
+    background: #FFFFFF;
+    border: 1px solid #E18D54;
+    border-radius: 15px;
+    padding: 4px 20px;
+    min-width: 30px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .quantity {
     font-size: 1rem;
     font-family: 'Montserrat', sans-serif;
     color: #721414;
-    min-width: 20px;
     text-align: center;
 }
 
@@ -219,7 +231,7 @@ section {
     text-align: left;
     font-weight: bold;
     font-family: 'Montserrat', sans-serif;
-    color: #721414;
+    color: #83302E;
     margin-bottom: 5px;
     display: block;
 }
@@ -231,6 +243,7 @@ section {
     border-radius: 8px;
     border: 1px solid #D7681C;
     font-family: 'Montserrat', sans-serif;
+    color: #83302E;
     font-size: 1em;
     margin-bottom: 10px;
     background: #FFFFFF;
@@ -293,13 +306,19 @@ section {
     }
 
     .quantity-selector {
-        gap: 3px;
+        gap: 6px; /* Sesuaikan gap untuk mobile */
     }
 
     .quantity-btn {
         width: 22px;
         height: 22px;
         font-size: 0.9rem;
+    }
+
+    .quantity-container {
+        padding: 3px 8px;
+        min-width: 26px;
+        height: 22px;
     }
 
     .quantity {

@@ -573,7 +573,7 @@ app.get("/api/orders", requireLogin, async (req, res) => {
             break;
           default:
             harga = hargaArray[i] ? quantity * hargaArray[i] : 0;
-            console.warn(`Unknown menu: ${menuName}, using harga_menu: ${hargaArray[i]}`);
+            console.warn(`Menu: ${menuName}, using harga_menu: ${hargaArray[i]}`);
         }
 
         return {

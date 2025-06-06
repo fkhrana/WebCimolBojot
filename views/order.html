@@ -51,7 +51,7 @@
                             <p class="price">Rp11.000</p>
                             <div class="quantity-selector">
                                 <button type="button" class="quantity-btn minus">-</button>
-                                <span class="quantity">0</span>
+                                <div class="quantity-container"><span class="quantity">0</span></div>
                                 <button type="button" class="quantity-btn plus">+</button>
                                 <input type="hidden" name="cimol_mozarella_kecil" class="quantity-input" value="0" />
                             </div>
@@ -67,7 +67,7 @@
                             <p class="price">Rp22.000</p>
                             <div class="quantity-selector">
                                 <button type="button" class="quantity-btn minus">-</button>
-                                <span class="quantity">0</span>
+                                <div class="quantity-container"><span class="quantity">0</span></div>
                                 <button type="button" class="quantity-btn plus">+</button>
                                 <input type="hidden" name="cimol_mozarella_besar" class="quantity-input" value="0" />
                             </div>
@@ -83,7 +83,7 @@
                             <p class="price">Rp6.000</p>
                             <div class="quantity-selector">
                                 <button type="button" class="quantity-btn minus">-</button>
-                                <span class="quantity">0</span>
+                                <div class="quantity-container"><span class="quantity">0</span></div>
                                 <button type="button" class="quantity-btn plus">+</button>
                                 <input type="hidden" name="cimol_bojot_kecil" class="quantity-input" value="0" />
                             </div>
@@ -99,7 +99,7 @@
                             <p class="price">Rp12.000</p>
                             <div class="quantity-selector">
                                 <button type="button" class="quantity-btn minus">-</button>
-                                <span class="quantity">0</span>
+                                <div class="quantity-container"><span class="quantity">0</span></div>
                                 <button type="button" class="quantity-btn plus">+</button>
                                 <input type="hidden" name="cimol_bojot_besar" class="quantity-input" value="0" />
                             </div>
@@ -115,7 +115,7 @@
                             <p class="price">Rp11.000</p>
                             <div class="quantity-selector">
                                 <button type="button" class="quantity-btn minus">-</button>
-                                <span class="quantity">0</span>
+                                <div class="quantity-container"><span class="quantity">0</span></div>
                                 <button type="button" class="quantity-btn plus">+</button>
                                 <input type="hidden" name="cimol_ayam_kecil" class="quantity-input" value="0" />
                             </div>
@@ -131,7 +131,7 @@
                             <p class="price">Rp22.000</p>
                             <div class="quantity-selector">
                                 <button type="button" class="quantity-btn minus">-</button>
-                                <span class="quantity">0</span>
+                                <div class="quantity-container"><span class="quantity">0</span></div>
                                 <button type="button" class="quantity-btn plus">+</button>
                                 <input type="hidden" name="cimol_ayam_besar" class="quantity-input" value="0" />
                             </div>
@@ -147,7 +147,7 @@
                             <p class="price">Rp11.000</p>
                             <div class="quantity-selector">
                                 <button type="button" class="quantity-btn minus">-</button>
-                                <span class="quantity">0</span>
+                                <div class="quantity-container"><span class="quantity">0</span></div>
                                 <button type="button" class="quantity-btn plus">+</button>
                                 <input type="hidden" name="cimol_beef_kecil" class="quantity-input" value="0" />
                             </div>
@@ -163,7 +163,7 @@
                             <p class="price">Rp22.000</p>
                             <div class="quantity-selector">
                                 <button type="button" class="quantity-btn minus">-</button>
-                                <span class="quantity">0</span>
+                                <div class="quantity-container"><span class="quantity">0</span></div>
                                 <button type="button" class="quantity-btn plus">+</button>
                                 <input type="hidden" name="cimol_beef_besar" class="quantity-input" value="0" />
                             </div>
@@ -196,7 +196,7 @@
         document.querySelectorAll(".quantity-selector").forEach((selector) => {
             const minusBtn = selector.querySelector(".minus");
             const plusBtn = selector.querySelector(".plus");
-            const quantitySpan = selector.querySelector(".quantity");
+            const quantitySpan = selector.querySelector(".quantity-container .quantity"); // Update selector
             const quantityInput = selector.querySelector(".quantity-input");
             let quantity = 0;
 
@@ -244,7 +244,7 @@
                         groupHTML += `
                             <div class="menu-detail">
                                 <h4>Porsi ${i}</h4>
-                                <label for="bumbu_${item.id}_${i}">Bumbu :</label>
+                                <label for="bumbu_${item.id}_${i}">Bumbu:</label>
                                 <select id="bumbu_${item.id}_${i}" name="bumbu_${item.id}_${i}" required>
                                     <option value="">-- Pilih --</option>
                                     <option value="ayam-bawang">Ayam Bawang</option>
@@ -253,13 +253,13 @@
                                     <option value="barbeque">Barbeque</option>
                                     <option value="balado">Balado</option>
                                 </select>
-                                <label for="topping_${item.id}_${i}">Topping :</label>
+                                <label for="topping_${item.id}_${i}">Topping:</label>
                                 <select id="topping_${item.id}_${i}" name="topping_${item.id}_${i}" required>
                                     <option value="">-- Pilih --</option>
                                     <option value="daun-jeruk">Daun Jeruk</option>
                                     <option value="bawang-goreng">Bawang Goreng</option>
                                 </select>
-                                <label for="level_${item.id}_${i}">Level Kepedasan :</label>
+                                <label for="level_${item.id}_${i}">Level Kepedasan:</label>
                                 <select id="level_${item.id}_${i}" name="level_${item.id}_${i}" required>
                                     <option value="">-- Pilih --</option>
                                     <option value="lv0">Level 0</option>
