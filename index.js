@@ -25,15 +25,8 @@ app.use(
 );
 
 function getWIBDateTime() {
-  const now = new Date();
-  const wibTime = new Date(now.getTime() + 7 * 60 * 60 * 1000);
-  const year = wibTime.getUTCFullYear();
-  const month = String(wibTime.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(wibTime.getUTCDate()).padStart(2, '0');
-  const hours = String(wibTime.getUTCHours()).padStart(2, '0');
-  const minutes = String(wibTime.getUTCMinutes()).padStart(2, '0');
-  const seconds = String(wibTime.getUTCSeconds()).padStart(2, '0');
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  const wibTime = new Date(Date.now() + 7 * 60 * 60 * 1000);
+  return wibTime.toISOString().slice(0, 19).replace('T', ' ');
 }
 
 function requireLogin(req, res, next) {
@@ -48,46 +41,50 @@ function requireLogin(req, res, next) {
 }
 
 function HTMLHandler(req, res, htmlPath, data = {}) {
-  const filePath = path.join(__dirname, htmlPath);
-  fs.readFile(filePath, "utf8", (err, content) => {
-    if (err) {
-      console.error("Error reading file:", err.message);
-      res.writeHead(500);
-      res.end("Could not read file");
-    } else {
-      let modifiedContent = content;
-      for (const [key, value] of Object.entries(data)) {
-        modifiedContent = modifiedContent.replace(`{{${key}}}`, value);
-      }
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(modifiedContent);
+  try {
+    const filePath = path.join(__dirname, htmlPath);
+    let content = fs.readFileSync(filePath, "utf8");
+    for (const [key, value] of Object.entries(data)) {
+      content = content.replace(`{{${key}}}`, value);
     }
-  });
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end(content);
+  } catch (err) {
+    console.error("Error reading file:", err.message);
+    res.status(500).send("Could not read file");
+  }
 }
 
 app.get("/", (req, res) => HTMLHandler(req, res, "views/index.html"));
 app.get("/order", (req, res) => HTMLHandler(req, res, "views/order.html"));
 app.get("/detailorder", (req, res) => HTMLHandler(req, res, "views/detailorder.html"));
 app.get("/admin-login", (req, res) => HTMLHandler(req, res, "views/admin-login.html"));
-app.get("/admin", requireLogin, (req, res) => {
+
+function getCabangName(kode_cabang, db) {
   try {
     const stmt = db.prepare("SELECT cabang FROM cabang_tbl WHERE kode_cabang = ?");
-    const cabang = stmt.get(req.session.kode_cabang);
-    const cabangName = cabang ? cabang.cabang : "Cabang Tidak Diketahui";
-    HTMLHandler(req, res, "views/admin.html", { cabangName: `CIMOL BOJOT AA - ${cabangName.toUpperCase()}` });
+    const cabang = stmt.get(kode_cabang);
+    return cabang ? `CIMOL BOJOT AA - ${cabang.cabang.toUpperCase()}` : "CIMOL BOJOT AA - Cabang Tidak Diketahui";
   } catch (err) {
     console.error("Error fetching cabang:", err.message);
+    throw err;
+  }
+}
+
+app.get("/admin", requireLogin, (req, res) => {
+  try {
+    const cabangName = getCabangName(req.session.kode_cabang, db);
+    HTMLHandler(req, res, "views/admin.html", { cabangName });
+  } catch (err) {
     res.status(500).send("Error fetching cabang");
   }
 });
+
 app.get("/masukan", requireLogin, (req, res) => {
   try {
-    const stmt = db.prepare("SELECT cabang FROM cabang_tbl WHERE kode_cabang = ?");
-    const cabang = stmt.get(req.session.kode_cabang);
-    const cabangName = cabang ? cabang.cabang : "Cabang Tidak Diketahui";
-    HTMLHandler(req, res, "views/masukan.html", { cabangName: `CIMOL BOJOT AA - ${cabangName.toUpperCase()}` });
+    const cabangName = getCabangName(req.session.kode_cabang, db);
+    HTMLHandler(req, res, "views/masukan.html", { cabangName });
   } catch (err) {
-    console.error("Error fetching cabang:", err.message);
     res.status(500).send("Error fetching cabang");
   }
 });
@@ -147,16 +144,17 @@ app.post("/form/order", async (req, res) => {
       return res.status(400).json({ error: "Nomor telepon harus diawali 08 dan berisi 10-13 digit" });
     }
 
-    const menuItems = [
-      { formName: "cimol_mozarella_kecil", id_menu: 3, menu: "Cimol Mozzarella Kecil", price: 11000 },
-      { formName: "cimol_mozarella_besar", id_menu: 4, menu: "Cimol Mozzarella Besar", price: 22000 },
-      { formName: "cimol_bojot_kecil", id_menu: 1, menu: "Cimol Bojot Kecil", price: 6000 },
-      { formName: "cimol_bojot_besar", id_menu: 2, menu: "Cimol Bojot Besar", price: 12000 },
-      { formName: "cimol_ayam_kecil", id_menu: 5, menu: "Cimol Ayam Kecil", price: 11000 },
-      { formName: "cimol_ayam_besar", id_menu: 6, menu: "Cimol Ayam Besar", price: 22000 },
-      { formName: "cimol_beef_kecil", id_menu: 7, menu: "Cimol Beef Kecil", price: 11000 },
-      { formName: "cimol_beef_besar", id_menu: 8, menu: "Cimol Beef Besar", price: 22000 },
+    const menuBase = [
+      { type: "mozzarella", idBase: 3, name: "Mozarella", priceKecil: 11000, priceBesar: 22000 },
+      { type: "bojot", idBase: 1, name: "Bojot", priceKecil: 6000, priceBesar: 12000 },
+      { type: "ayam", idBase: 5, name: "Ayam", priceKecil: 11000, priceBesar: 22000 },
+      { type: "beef", idBase: 7, name: "Beef", priceKecil: 11000, priceBesar: 22000 },
     ];
+
+    const menuItems = menuBase.flatMap(({ type, idBase, name, priceKecil, priceBesar }) => [
+      { formName: `cimol_${type}_kecil`, id_menu: idBase, menu: `Cimol ${name} Kecil`, price: priceKecil },
+      { formName: `cimol_${type}_besar`, id_menu: idBase + 1, menu: `Cimol ${name} Besar`, price: priceBesar },
+    ]);
 
     if (!nama || !phoneStr || !cabang) {
       console.log("Validation failed: Missing nama, telepon, or cabang");
@@ -207,7 +205,7 @@ app.post("/form/order", async (req, res) => {
       id_cabang: cabangRow.id_cabang,
       items: orderedItems,
       totalHarga,
-      created_at: getWIBDateTime(), 
+      created_at: getWIBDateTime(),
     };
 
     const tempOrderId = Date.now();

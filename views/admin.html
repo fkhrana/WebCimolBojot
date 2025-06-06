@@ -151,65 +151,31 @@
                     };
 
                     function formatDateTime(dateStr) {
-                        console.log('Raw created_at:', dateStr);
-                        if (!dateStr) {
-                            console.log('created_at is empty or undefined');
+                        if (!dateStr) return '-';
+                        try {
+                            const date = new Date(dateStr.replace(/ /, 'T') + (dateStr));
+                            if (isNaN(date.getTime())) return '-';
+                            const options = {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false,
+                                timeZone: 'Asia/Jakarta',
+                            };
+                            return new Intl.DateTimeFormat('id-ID', options).format(date).replace(/,/, '');
+                        } catch (err) {
+                            console.error('Invalid date:', dateStr, err);
                             return '-';
                         }
-
-                        let date;
-                        if (dateStr.includes('T') && dateStr.endsWith('Z')) {
-                            date = new Date(dateStr);
-                            date = new Date(date.getTime() + 7 * 60 * 60 * 1000);
-                        } else {
-                            const isoStr = dateStr.replace(' ', 'T') + '+07:00';
-                            date = new Date(isoStr);
-                        }
-
-                        if (isNaN(date.getTime())) {
-                            console.log('Invalid date:', dateStr);
-                            return '-';
-                        }
-
-                        const day = String(date.getDate()).padStart(2, '0');
-                        const month = String(date.getMonth() + 1).padStart(2, '0');
-                        const year = date.getFullYear();
-                        const hours = String(date.getHours()).padStart(2, '0');
-                        const minutes = String(date.getMinutes()).padStart(2, '0');
-                        console.log('Formatted date:', `${day}/${month}/${year} ${hours}:${minutes}`);
-                        return `${day}/${month}/${year} ${hours}:${minutes}`;
                     }
 
                     function formatPhoneNumber(phone) {
-                        let phoneStr = phone.toString().trim();
-                        console.log('Raw phone number:', phoneStr);
-
-                        // Bersihkan karakter non-angka
-                        phoneStr = phoneStr.replace(/\D/g, '');
-                        console.log('Cleaned phone number:', phoneStr);
-
-                        // Format nomor
-                        if (phoneStr.startsWith('08')) {
-                            phoneStr = phoneStr.slice(1);
-                        } else if (phoneStr.startsWith('8')) {
-                            // OK, lanjut
-                        } else if (phoneStr.startsWith('62')) {
-                            phoneStr = phoneStr.slice(2);
-                        } else if (phoneStr.startsWith('+62')) {
-                            phoneStr = phoneStr.slice(3);
-                        }
-
-                        // Tambah +62
+                        let phoneStr = phone.toString().trim().replace(/\D/g, '');
+                        phoneStr = phoneStr.replace(/^(?:\+62|62|08|8)/, '');
                         phoneStr = `+62${phoneStr}`;
-                        console.log('Formatted phone number:', phoneStr);
-
-                        // Validasi format nomor (8-12 digit setelah +62)
-                        if (!phoneStr.match(/^\+62[0-9]{8,12}$/)) {
-                            console.error('Invalid phone number format:', phoneStr);
-                            return null;
-                        }
-
-                        return phoneStr;
+                        return phoneStr.match(/^\+62[0-9]{8,12}$/) ? phoneStr : null;
                     }
 
                     function formatPhoneForWhatsAppEmpty(phone) {
@@ -219,7 +185,7 @@
                         console.log('Generated WhatsApp empty URL:', waUrl);
                         return waUrl;
                     }
-                    
+
                     function formatPhoneForWhatsAppTemplate(phone) {
                         const formattedPhone = formatPhoneNumber(phone);
                         if (!formattedPhone) return null;
