@@ -1,3 +1,7 @@
+body.order-page {
+    background: linear-gradient(to bottom, #C92F28, #880010);
+}
+
 .detail-order-section {
     padding: 100px 20px;
     color: white;

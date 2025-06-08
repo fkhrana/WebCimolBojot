@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,6 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <style>
+        body {
+            background: linear-gradient(to bottom, #C92F28, #880010);
+        }
+
         .admin-login-section {
             padding: 100px 20px;
             color: white;
@@ -127,6 +132,7 @@
         }
     </style>
 </head>
+
 <body class="order-page">
     <header>
         <div class="logo">
@@ -147,7 +153,8 @@
         <div class="admin-login-section">
             <h1>LOGIN ADMIN</h1>
             <div class="login-container">
-                <form class="login-form" id="login-form" hx-post="/admin-login" hx-target="#error-message" hx-swap="outerHTML">
+                <form class="login-form" id="login-form" hx-post="/admin-login" hx-target="#error-message"
+                    hx-swap="outerHTML">
                     <div class="form-group">
                         <label for="username">Username :</label>
                         <input type="text" id="username" name="username" placeholder="Masukkan username" required>
@@ -173,4 +180,5 @@
         });
     </script>
 </body>
+
 </html>

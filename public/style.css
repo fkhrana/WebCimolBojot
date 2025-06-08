@@ -1,9 +1,5 @@
 @import url('/common.css');
 
-body.order-page {
-    background: linear-gradient(to bottom, #C92F28, #880010);
-}
-
 section {
     padding: 80px 20px;
     max-width: 900px;
@@ -286,7 +282,7 @@ section h2 {
 }
 
 .bumbu-card {
-    flex: 0 0 400px;
+    flex: 0 0 350px;
 }
 
 .bumbu-card .options {
@@ -316,7 +312,7 @@ section h2 {
 
 .bumbu-card .option:nth-child(5) {
     grid-area: opt5;
-    width: 195px;
+    width: 170px;
     justify-self: center;
     display: block;
     text-align: center;
@@ -326,7 +322,7 @@ section h2 {
     border: 3px solid #E49C67;
     background-color: #FFE2B1;
     border-radius: 15px;
-    padding: 5px 10px;
+    padding: 6px 10px;
     font-size: 0.8rem;
     color: #721414;
     font-family: 'Montserrat', sans-serif;
@@ -334,25 +330,51 @@ section h2 {
 }
 
 .topping-card {
-    flex: 0 0 200px;
+    flex: 0 0 250px;
 }
 
 .topping-card .options {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 25px;
+    position: relative;
 }
 
-.topping-card .option {
-    border: 3px solid #E49C67;
+.option {
+    position: relative;
+    display: flex;
+    align-items: center;
     background-color: #FFE2B1;
+    border: 3px solid #E49C67;
     border-radius: 15px;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    color: #721414;
+    padding: 6px 15px 6px 50px;
     font-family: 'Montserrat', sans-serif;
-    letter-spacing: 0px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #721414;
 }
+
+.image-wrapper {
+    position: absolute;
+    left: -5px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #FFD085;
+    border: 2px solid #E49C67;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Gambar bulat */
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 
 .level-card {
     flex: 0 0 200px;
@@ -400,6 +422,13 @@ section h2 {
     color: #721414;
     font-family: 'Montserrat', sans-serif;
     letter-spacing: 0px;
+}
+
+.bumbu-card .option,
+.level-card .option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #lokasi {
@@ -479,8 +508,7 @@ td b {
 #kontak {
     padding: 80px 20px;
     max-width: 1000px;
-    margin: 0 auto 80px auto;
-    color: 721414;
+    margin: 0 auto 0px auto;
 }
 
 #kontak h2 {
@@ -509,9 +537,8 @@ td b {
     gap: 15px;
     background-color: #FFE2B1;
     border-radius: 15px;
-    padding: 30px;
+    padding: 30px 30px 10px 30px;
     box-shadow: 0 3px 8px rgb(0 0 0 / 0.2);
-
 }
 
 .form-group {
@@ -542,8 +569,7 @@ td b {
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #ffb83d;
-    box-shadow: 0 0 5px rgba(249, 196, 104, 0.5);
+    border-color: none;
 }
 
 .form-group textarea {
@@ -562,6 +588,7 @@ td b {
     cursor: pointer;
     transition: background-color 0.3s ease;
     align-self: center;
+    margin-top: 5px;
 }
 
 .submit-button:hover {
@@ -572,7 +599,7 @@ td b {
     color: #721414;
     font-size: 0.9rem;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 5px;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -580,7 +607,7 @@ td b {
     color: #99000D;
     font-size: 0.9rem;
     text-align: center;
-    margin-top: 10px;
+    margin-top: 5px;
     font-family: 'Montserrat', sans-serif;
 }
 

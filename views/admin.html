@@ -182,7 +182,7 @@
 
                     function formatPhoneNumber(phone) {
                         let phoneStr = phone.toString().trim().replace(/\D/g, '');
-                        phoneStr = phoneStr.replace(/^(?:\+62|62|08|8)/, '');
+                        phoneStr = phoneStr.replace(/^(?:\+62|62|0)/, '');
                         phoneStr = `+62${phoneStr}`;
                         return phoneStr.match(/^\+62[0-9]{8,12}$/) ? phoneStr : null;
                     }
@@ -199,7 +199,7 @@
                         const formattedPhone = formatPhoneNumber(phone);
                         if (!formattedPhone) return null;
                         const message = encodeURIComponent(
-                            "Halo, Sobat AA! Pesanan anda sudah siap dan bisa langsung datang ke cabang untuk bayar dan ambil pesanan!"
+                            "Halo, Sobat AA! Pesanan anda sudah siap dan bisa langsung datang ke cabang untuk bayar dan ambil pesanan yaa :)"
                         );
                         const waUrl = `https://wa.me/${formattedPhone}?text=${message}`;
                         console.log('Generated WhatsApp template URL:', waUrl);

@@ -306,7 +306,7 @@ section {
     }
 
     .quantity-selector {
-        gap: 6px; /* Sesuaikan gap untuk mobile */
+        gap: 5px;
     }
 
     .quantity-btn {

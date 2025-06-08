@@ -7,7 +7,7 @@
 body {
     font-family: 'Jua', sans-serif;
     line-height: 1.6;
-    background: linear-gradient(to bottom, #C92F28, #880010);
+    background: linear-gradient(to bottom, #C92F28, #880010, #C22A25, #880010);
     scroll-behavior: smooth;
     font-weight: 400;
     letter-spacing: 1px;
