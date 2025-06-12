@@ -48,7 +48,7 @@
                 </div>
             </div>
             <button class="submit-order-button" 
-                    hx-post="/api/orders/confirm" 
+                    hx-post="/orders/api/orders/confirm" 
                     hx-vals='js:{orderId: new URLSearchParams(window.location.search).get("orderId")}'
                     hx-target="body" 
                     hx-swap="none">
@@ -56,7 +56,7 @@
             </button>
             <div id="confirmation-message"></div>
             <a href="/order" class="change-order-link" 
-               hx-post="/api/orders/cancel" 
+               hx-post="/orders/api/orders/cancel" 
                hx-vals='js:{orderId: new URLSearchParams(window.location.search).get("orderId")}'
                hx-target="body"
                hx-swap="none">Ingin ubah pesanan?</a>
@@ -81,7 +81,7 @@
             }
 
             try {
-                const response = await fetch(`/api/orders/${orderId}`);
+                const response = await fetch(`/orders/api/orders/${orderId}`);
                 console.log("API response status:", response.status);
                 if (!response.ok) {
                     throw new Error(`HTTP error ${response.status}: ${await response.text()}`);
@@ -174,7 +174,7 @@
         });
 
         document.body.addEventListener('htmx:confirm', (event) => {
-            if (event.detail.path === '/api/orders/confirm') {
+            if (event.detail.path === 'orders/api/orders/confirm') {
                 event.preventDefault();
                 const submitButton = document.querySelector(".submit-order-button");
                 if (!window.confirm("Yakin ingin kirim pesanan?")) {
@@ -189,7 +189,7 @@
         });
 
         document.body.addEventListener('htmx:afterRequest', (event) => {
-            if (event.detail.requestConfig.path === '/api/orders/confirm') {
+            if (event.detail.requestConfig.path === '/orders/api/orders/confirm') {
                 try {
                     const response = JSON.parse(event.detail.xhr.responseText);
                     const messageDiv = document.getElementById('confirmation-message');

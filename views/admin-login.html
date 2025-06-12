@@ -153,7 +153,8 @@
         <div class="admin-login-section">
             <h1>LOGIN ADMIN</h1>
             <div class="login-container">
-                <form class="login-form" id="login-form" hx-post="/admin-login" hx-target="#error-message"
+                <!-- views/admin-login.html -->
+                <form class="login-form" id="login-form" hx-post="/auth/admin-login" hx-target="#error-message"
                     hx-swap="outerHTML">
                     <div class="form-group">
                         <label for="username">Username :</label>

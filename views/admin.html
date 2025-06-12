@@ -42,7 +42,7 @@
                 <div class="filter-container">
                     <div class="filter-group">
                         <label for="order-filter">URUTKAN:</label>
-                        <select id="order-filter" name="order" hx-get="/api/orders" hx-target="#order-list"
+                        <select id="order-filter" name="order" hx-get="/orders/api/orders" hx-target="#order-list"
                             hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" hx-sync="this:queue"
                             hx-params="order,status"
                             hx-vals='js:{status: document.getElementById("status-filter").value, ts: Date.now()}'>
@@ -54,7 +54,7 @@
                         <div class="search-wrapper">
                             <input type="text" id="search-input" placeholder="Cari nama pelanggan..." class="search-bar"
                                 hx-target="#order-list" hx-swap="innerHTML" hx-trigger="keyup delay:300ms"
-                                hx-get="/api/orders" hx-params="order,status"
+                                hx-get="/orders/api/orders" hx-params="order,status"
                                 hx-vals='js:{order: document.getElementById("order-filter").value, status: document.getElementById("status-filter").value, ts: Date.now()}' />
                             <span class="search-icon">
                                 <svg width="25" height="25" viewBox="0 0 16 16" fill="none"
@@ -68,7 +68,7 @@
                     </div>
                     <div class="filter-group">
                         <label for="status-filter">FILTER STATUS:</label>
-                        <select id="status-filter" name="status" hx-get="/api/orders" hx-target="#order-list"
+                        <select id="status-filter" name="status" hx-get="/orders/api/orders" hx-target="#order-list"
                             hx-swap="innerHTML" hx-trigger="change" hx-indicator=".htmx-indicator" hx-sync="this:queue"
                             hx-params="order,status"
                             hx-vals='js:{order: document.getElementById("order-filter").value, ts: Date.now()}'>
@@ -91,7 +91,7 @@
                             <th>STATUS</th>
                         </tr>
                     </thead>
-                    <tbody id="order-list" hx-get="/api/orders" hx-trigger="load" hx-swap="innerHTML"
+                    <tbody id="order-list" hx-get="/orders/api/orders" hx-trigger="load" hx-swap="innerHTML"
                         hx-indicator=".htmx-indicator" hx-headers='{"Cache-Control": "no-cache"}'
                         hx-params="order,status" hx-vals="js:{ts: Date.now()}">
                         <!-- Data pesanan bakal muncul di sini -->
@@ -290,7 +290,7 @@
 
                                 try {
                                     const response = await fetch(
-                                        `/api/orders/${orderId}/status`,
+                                        `/orders/api/orders/${orderId}/status`,
                                         {
                                             method: "POST",
                                             headers: {
@@ -312,7 +312,7 @@
                                             status: statusFilter,
                                             order: orderFilter,
                                         });
-                                        let url = "/api/orders";
+                                        let url = "/orders/api/orders";
                                         const params = new URLSearchParams();
                                         if (statusFilter) params.append("status", statusFilter);
                                         if (orderFilter) params.append("order", orderFilter);
@@ -344,7 +344,7 @@
                             if (confirm(`Yakin ingin hapus pesanan ${orderName}?`)) {
                                 try {
                                     const response = await fetch(
-                                        `/api/orders/pembeli/${pembeliId}`,
+                                        `/orders/api/orders/pembeli/${pembeliId}`,
                                         {
                                             method: "DELETE",
                                             headers: {
@@ -368,7 +368,7 @@
                                             status: statusFilter,
                                             order: orderFilter,
                                         });
-                                        let url = "/api/orders";
+                                        let url = "/orders/api/orders";
                                         const params = new URLSearchParams();
                                         if (statusFilter) params.append("status", statusFilter);
                                         if (orderFilter) params.append("order", orderFilter);

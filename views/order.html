@@ -28,13 +28,13 @@
         <a href="#" class="order-button">ORDER</a>
     </header>
     <main>
-        <form hx-post="/form/order" method="POST">
+        <form hx-post="/orders/form/order" method="POST">
             <!-- Pilih Cabang -->
             <div class="order-section">
                 <h1>PILIH CABANG</h1>
                 <div class="order-form">
                     <label for="cabang">Pilih Cabang Terdekat</label>
-                    <select id="cabang" name="cabang" hx-get="/api/cabang" hx-trigger="load" required></select>
+                    <select id="cabang" name="cabang" hx-get="/orders/api/cabang" hx-trigger="load" required></select>
                 </div>
             </div>
             <!-- Pilih Menu -->
