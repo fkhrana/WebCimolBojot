@@ -64,6 +64,7 @@
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
+            // ngambil id dari url
             const urlParams = new URLSearchParams(window.location.search);
             const orderId = urlParams.get("orderId");
             console.log("Order ID:", orderId);
@@ -80,6 +81,7 @@
                 return;
             }
 
+            // minta data pesanan dari serverAPI
             try {
                 const response = await fetch(`/orders/api/orders/${orderId}`);
                 console.log("API response status:", response.status);

@@ -2,11 +2,11 @@
 import express from "express";
 import db from "../config/database.js";
 import { requireLogin } from "../middleware/auth.js";
-import { getWIBDateTime } from "../utils/helpers.js";
+import { getWIBDateTime } from "../utils/helpers.js"; //ngambil waktu WIB
 
 const router = express.Router();
 
-// Menu base untuk validasi pesanan
+// daftar menu dasar
 const menuBase = [
     { type: "mozarella", idBase: 3, name: "Mozzarella Porsi Kecil", priceKecil: 11000, priceBesar: 22000 },
     { type: "bojot", idBase: 1, name: "Bojot Porsi Kecil", priceKecil: 6000, priceBesar: 12000 },
@@ -14,16 +14,19 @@ const menuBase = [
     { type: "beef", idBase: 7, name: "Beef Porsi Kecil", priceKecil: 11000, priceBesar: 22000 },
 ];
 
+// dirapiin lagi dari menuBase jadi menuItems buat pas proses
 const menuItems = menuBase.flatMap(({ type, idBase, name, priceKecil, priceBesar }) => [
     { formName: `cimol_${type}_kecil`, idMenu: idBase, menu: `Cimol ${name}`, price: priceKecil },
     { formName: `cimol_${type}_besar`, idMenu: idBase + 1, menu: `Cimol ${name.replace("Kecil", "Besar")}`, price: priceBesar },
 ]);
 
+// API buat ambil daftar cabang dari database
 router.get("/api/cabang", (req, res) => {
     console.log("GET /api/cabang called");
     try {
         const stmt = db.prepare("SELECT * FROM cabang_tbl");
         const cabang = stmt.all();
+        // ngubah data cabang jadi format HTML <option> biar bisa jadi dropdown
         const output = cabang
             .map((element) => `<option value="${element.kode_cabang}">${element.cabang}</option>`)
             .join("");
@@ -34,19 +37,21 @@ router.get("/api/cabang", (req, res) => {
     }
 });
 
+// API buat nerima form pesanan
 router.post("/form/order", async (req, res) => {
   console.log("POST /form/order received:", req.body);
   try {
-    const { nama, telepon, cabang, catatan } = req.body;
-
+    const { nama, telepon, cabang, catatan } = req.body; //ngambil data dari form
     console.log("Extracted form data:", { nama, telepon, cabang, catatan });
 
+    // nomor valid apa engga
     const phoneStr = telepon.toString().trim();
     if (!phoneStr.match(/^08[0-9]{8,11}$/)) {
       console.log("Validation failed: Invalid phone number", phoneStr);
       return res.status(400).json({ error: "Nomor telepon harus diawali 08 dan berisi 10-13 digit" });
     }
 
+    // dah ada /diisi kah nama telpon cabang
     if (!nama || !phoneStr || !cabang) {
       console.log("Validation failed: Missing nama, telepon, or cabang");
       return res.status(400).json({ error: "Nama, telepon, dan cabang wajib diisi" });
@@ -55,10 +60,12 @@ router.post("/form/order", async (req, res) => {
     let totalHarga = 0;
     const orderedItems = [];
 
+    // cek menu, ada yang dipesan/gak
     menuItems.forEach((item) => {
       const quantity = parseInt(req.body[item.formName]) || 0;
       console.log(`Processing ${item.formName}: ${quantity}`);
       if (quantity > 0) {
+        // setiap jumlah menu, ngambl bumbu topping level
         for (let i = 1; i <= quantity; i++) {
           const bumbu = req.body[`bumbu_${item.formName}_${i}`] || "-";
           const topping = req.body[`topping_${item.formName}_${i}`] || "-";
@@ -80,6 +87,7 @@ router.post("/form/order", async (req, res) => {
 
     console.log("Final orderedItems:", orderedItems);
 
+    // error kalo ga masukin menu samsek
     if (orderedItems.length === 0) {
       console.log("Validation failed: No menu selected");
       return res.status(400).json({ error: "Pilih minimal satu menu" });
@@ -92,22 +100,25 @@ router.post("/form/order", async (req, res) => {
       return res.status(400).json({ error: "Cabang tidak valid" });
     }
 
+    // nyimpen data sementara pake sesi
     req.session.pendingOrder = {
       nama,
       telepon: phoneStr,
       cabang,
       id_cabang: cabangRow.id_cabang,
       items: orderedItems,
-      catatan: catatan || "", // Simpan catatan ke sesi
+      catatan: catatan || "",
       totalHarga,
       created_at: getWIBDateTime(),
     };
 
+    // id sementara sebelum jadi id_order yang masuk ke database
     const tempOrderId = Date.now();
     req.session.pendingOrder.tempOrderId = tempOrderId;
 
     console.log("Pending order saved to session:", req.session.pendingOrder);
 
+    // redirect ke detailorder pake htmx
     res.setHeader("HX-Redirect", `/detailorder?orderId=${tempOrderId}`);
     res.status(200).send();
   } catch (err) {
@@ -116,12 +127,13 @@ router.post("/form/order", async (req, res) => {
   }
 });
 
+// API buat ambil ambil detail pesanan sesuai ID
 router.get("/api/orders/:id", async (req, res) => {
   console.log("GET /api/orders/:id called:", req.params.id);
   try {
     const orderId = req.params.id;
 
-    // Cek data di sesi
+    // ngecek data di sesi ada apa engga
     if (req.session.pendingOrder && req.session.pendingOrder.tempOrderId == orderId) {
       const order = req.session.pendingOrder;
       const cabangStmt = db.prepare("SELECT cabang FROM cabang_tbl WHERE id_cabang = ?");
@@ -138,6 +150,7 @@ router.get("/api/orders/:id", async (req, res) => {
         "Cimol Beef Porsi Besar": "/cimolbeef.png",
       };
 
+      // format pesanan untuk dikirim
       const response = {
         nama: order.nama,
         telepon: order.telepon,
@@ -159,7 +172,7 @@ router.get("/api/orders/:id", async (req, res) => {
       return res.json(response);
     }
 
-    // Ambil data pesanan dari database
+    // kalo ga ada datanya di sesi, dia nyoba nyari di database
     const orderStmt = db.prepare(`
       SELECT o.*, c.telepon, cb.cabang, cb.kode_cabang
       FROM order_tbl o
@@ -173,7 +186,7 @@ router.get("/api/orders/:id", async (req, res) => {
       return res.status(404).json({ error: "Pesanan tidak ditemukan" });
     }
 
-    // Ambil semua item dengan created_at yang sama
+    // ngambil semua item dengan created_at yang sama (pesanannya dijadiin satu kategori make created_at)
     const itemsStmt = db.prepare(`
       SELECT o.note, m.menu, m.harga, m.foto
       FROM order_tbl o
@@ -183,7 +196,7 @@ router.get("/api/orders/:id", async (req, res) => {
     const items = itemsStmt.all(order.id_pembeli, order.created_at);
     console.log("Items fetched:", items);
 
-    // Proses item
+    // proses item untuk ngambil detail
     let totalHarga = 0;
     let namaPelanggan = "-";
     const customerStmt = db.prepare("SELECT nama_cust FROM customer_tbl WHERE id_pembeli = ?");
@@ -234,6 +247,7 @@ router.get("/api/orders/:id", async (req, res) => {
   }
 });
 
+// API untuk konfirmasi pesanan
 router.post("/api/orders/confirm", async (req, res) => {
   console.log("POST /api/orders/confirm received:", req.body);
   try {
@@ -252,10 +266,9 @@ router.post("/api/orders/confirm", async (req, res) => {
     const created_at = getWIBDateTime();
     console.log("Order data from session:", { nama, telepon, id_cabang, items, catatan, created_at });
 
-    // Gunakan nomor telepon apa adanya dari sesi
     const normalizedTelepon = telepon.trim();
 
-    // Cari pelanggan dengan telepon dan nama yang sama
+    // ngecek pelanggan dengan telepon dan nama yang sama
     const checkCustomerStmt = db.prepare("SELECT id_pembeli FROM customer_tbl WHERE telepon = ? AND nama_cust = ?");
     const existingCustomer = checkCustomerStmt.get(normalizedTelepon, nama);
     let id_pembeli;
@@ -270,7 +283,7 @@ router.post("/api/orders/confirm", async (req, res) => {
       console.log("New customer saved:", { id_pembeli, nama, telepon: normalizedTelepon });
     }
 
-    // Validasi cabang
+    // validasi cabang
     const cabangStmt = db.prepare("SELECT id_cabang FROM cabang_tbl WHERE id_cabang = ?");
     const cabangRow = cabangStmt.get(id_cabang);
     if (!cabangRow) {
@@ -278,14 +291,14 @@ router.post("/api/orders/confirm", async (req, res) => {
       return res.status(400).json({ error: "Cabang tidak valid" });
     }
 
-    // Simpan pesanan ke order_tbl (satu baris per item)
+    // nyimpen pesanan ke order_tbl (satu baris per item di database)
     let firstOrderId = null;
     const orderStmt = db.prepare(
       "INSERT INTO order_tbl (id_pembeli, id_menu, id_cabang, note, status_order, created_at) VALUES (?, ?, ?, ?, ?, ?)"
     );
 
     for (const item of items) {
-      // Validasi menu
+      // validasi menu
       const menuStmt = db.prepare("SELECT id_menu FROM menu_tbl WHERE menu = ?");
       const menu = menuStmt.get(item.menu);
       if (!menu) {
@@ -293,7 +306,7 @@ router.post("/api/orders/confirm", async (req, res) => {
         return res.status(400).json({ error: `Menu ${item.menu} tidak valid` });
       }
 
-      // Buat note untuk item, termasuk nama pelanggan dan catatan
+      // buat note untuk item, termasuk nama pelanggan dan catatan
       const note = [
         `Nama: ${nama}`,
         catatan ? `Catatan: ${catatan}` : '',
@@ -330,6 +343,7 @@ router.post("/api/orders/confirm", async (req, res) => {
   }
 });
 
+// API buat ngambil pesanan ke admin
 router.post("/api/orders/cancel", async (req, res) => {
     console.log("POST /api/orders/cancel received:", req.body);
     try {
@@ -460,7 +474,7 @@ router.get("/api/orders", requireLogin, async (req, res) => {
         totalQuantity,
         totalHarga,
         status,
-        catatan: items[0]?.catatan || '-', // Gunakan catatan dari item pertama
+        catatan: items[0]?.catatan || '-',
         created_at: order.created_at,
       };
     });
@@ -474,55 +488,7 @@ router.get("/api/orders", requireLogin, async (req, res) => {
   }
 });
 
-router.post("/api/orders/:id/status", requireLogin, async (req, res) => {
-    console.log("=== START POST /api/orders/:id/status ===");
-    console.log("Request Headers:", req.headers);
-    console.log("Request Params:", req.params);
-    console.log("Request Body:", req.body);
-    const transaction = db.transaction(() => {
-        try {
-            const id = parseInt(req.params.id);
-            const { status } = req.body;
-            console.log("Parsed input:", { id_order: id, status });
-
-            if (isNaN(id)) {
-                console.log("Invalid id_order:", req.params.id);
-                return res.status(400).json({ error: "ID pesanan tidak valid" });
-            }
-
-            if (!status || !['pending', 'confirmed', 'completed'].includes(status)) {
-                console.log("Invalid or missing status:", status);
-                return res.status(400).json({ error: "Status tidak valid atau tidak diberikan" });
-            }
-
-            const checkStmt = db.prepare("SELECT id_pembeli, created_at FROM order_tbl WHERE id_order = ?");
-            const order = checkStmt.get(id);
-            console.log("Order check result:", order);
-            if (!order) {
-                console.log("Order not found:", id);
-                return res.status(404).json({ error: "Pesanan tidak ditemukan" });
-            }
-
-            const stmt = db.prepare("UPDATE order_tbl SET status_order = ? WHERE id_pembeli = ? AND created_at = ?");
-            console.log("Executing UPDATE with params:", { status, id_pembeli: order.id_pembeli, created_at: order.created_at });
-            const result = stmt.run(status, order.id_pembeli, order.created_at);
-            console.log("Update result:", { changes: result.changes, id_pembeli: order.id_pembeli, status });
-
-            if (result.changes === 0) {
-                console.log("No rows updated for id_pembeli:", order.id_pembeli);
-                return res.status(404).json({ error: "Gagal memperbarui pesanan" });
-            }
-
-            console.log("Order status updated successfully:", { id_pembeli: order.id_pembeli, status });
-            res.status(200).json({ success: true, message: "Status pesanan diperbarui" });
-        } catch (err) {
-            console.error("Error in POST /api/orders/:id/status:", err.message, err.stack);
-            res.status(500).json({ error: "Kesalahan server", details: err.message });
-        }
-    });
-    transaction();
-});
-
+// ngubah status pesanan di admin
 router.post("/api/orders/:id/status", requireLogin, async (req, res) => {
   console.log("POST /api/orders/:id/status called:", {
     orderId: req.params.id,
@@ -538,7 +504,7 @@ router.post("/api/orders/:id/status", requireLogin, async (req, res) => {
       return res.status(400).json({ error: "Status tidak valid" });
     }
 
-    // Ambil id_pembeli dan created_at dari orderId
+    // ambil id_pembeli dan created_at dari orderId
     const orderStmt = db.prepare(`
       SELECT id_pembeli, created_at
       FROM order_tbl
@@ -552,7 +518,7 @@ router.post("/api/orders/:id/status", requireLogin, async (req, res) => {
       return res.status(404).json({ error: "Pesanan tidak ditemukan atau tidak diizinkan" });
     }
 
-    // Perbarui semua item dengan id_pembeli dan created_at yang sama
+    // perbarui semua item dengan id_pembeli dan created_at yang sama
     const updateStmt = db.prepare(`
       UPDATE order_tbl
       SET status_order = ?
@@ -572,6 +538,7 @@ router.post("/api/orders/:id/status", requireLogin, async (req, res) => {
   }
 });
 
+// API untuk hapus pesana di admin
 router.delete("/api/orders/pembeli/:id_pembeli", requireLogin, async (req, res) => {
     console.log("DELETE /api/orders/pembeli/:id_pembeli called", {
         id_pembeli: req.params.id_pembeli,
@@ -594,7 +561,7 @@ router.delete("/api/orders/pembeli/:id_pembeli", requireLogin, async (req, res) 
             return res.status(400).json({ error: "Parameter created_at diperlukan" });
         }
 
-        // Periksa apakah pesanan ada
+        // periksa apakah pesanan ada
         const checkStmt = db.prepare(`
       SELECT o.id_pembeli
       FROM order_tbl o
@@ -608,7 +575,7 @@ router.delete("/api/orders/pembeli/:id_pembeli", requireLogin, async (req, res) 
             return res.status(404).json({ error: "Pesanan tidak ditemukan atau tidak diizinkan" });
         }
 
-        // Hapus pesanan spesifik
+        // hapus pesanan spesifik
         const deleteStmt = db.prepare(`
       DELETE FROM order_tbl
       WHERE id_pembeli = ? AND created_at = ?
